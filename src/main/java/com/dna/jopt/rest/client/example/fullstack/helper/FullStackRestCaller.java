@@ -1,18 +1,14 @@
 package com.dna.jopt.rest.client.example.fullstack.helper;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.http.MediaType;
-import org.springframework.http.codec.json.Jackson2JsonDecoder;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClient.Builder;
-
 import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.GeoAddress;
 import com.dna.jopt.rest.client.model.GeoNode;
@@ -50,9 +46,11 @@ public class FullStackRestCaller {
     private GeoMatrixRoutingServiceControllerApi geoRouterMatrixApi = new GeoMatrixRoutingServiceControllerApi();
     private GeoTurnByTurnRoutingServiceControllerApi geoRouterTBTApi = new GeoTurnByTurnRoutingServiceControllerApi();
 
-    private OptimizationServiceControllerApi geoOptimizerApi;
+    private OptimizationServiceControllerApi geoOptimizerApi = createOptimizationControllerApi();
 
     public final ObjectMapper tourOptimizerObjectMapper;
+
+    public static final int MAX_TOUROPIMIZER_RESPONSESIZE_MB = 16;
 
     /*
      *
@@ -71,37 +69,6 @@ public class FullStackRestCaller {
 	this.geoCoderHealth.getApiClient().setBasePath(geocoderUrl);
 
 	// Modify endpoint to meet server
-	
-
-//	
-//	DateFormat format = ApiClient.createDefaultDateFormat();
-//	ObjectMapper curMapper = ApiClient.createDefaultObjectMapper(format);
-//	
-//	  ExchangeStrategies strategies = ExchangeStrategies
-//	            .builder()
-//	            .codecs(clientDefaultCodecsConfigurer -> {
-//	                clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(curMapper, MediaType.APPLICATION_JSON));
-//	                clientDefaultCodecsConfigurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(curMapper, MediaType.APPLICATION_JSON));
-//	            }).build();
-//	        WebClient.Builder webClientBuilder = WebClient.builder().exchangeStrategies(strategies);
-//	        
-//	WebClient webClient = ApiClient.buildWebClientBuilder(curMapper)
-//		     // .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
-//		      .build();
-//	
-//	ApiClient apiCLient = new ApiClient(webClientBuilder.build());
-//	
-//	this.geoOptimizerApi = new OptimizationServiceControllerApi(apiCLient);
-//	
-//	
-//	this.geoOptimizerApi = new OptimizationServiceControllerApi();
-//	WebClient mutateClient = this.geoOptimizerApi.getApiClient().getWebClient().mutate().build();
-//	
-//	ApiClient newApiCLient = new ApiClient(mutateClient);
-	
-	
-	this.geoOptimizerApi = new OptimizationServiceControllerApi();
-	
 	this.geoOptimizerApi.getApiClient().setBasePath(tourOptimizerUrl);
 
 	// Modify endpoint to meet our local server
@@ -112,11 +79,6 @@ public class FullStackRestCaller {
 
 	// Get the mapper from the generated files
 	this.tourOptimizerObjectMapper = this.geoOptimizerApi.getApiClient().getObjectMapper();
-
-	// Vital step! - We need to the generated mapper how to treat our JSON data
-	this.tourOptimizerObjectMapper.setSerializationInclusion(Include.NON_NULL)
-		.setSerializationInclusion(Include.NON_ABSENT).registerModule(new JavaTimeModule())
-		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 	// Invoke api key if desired
 	if (azureApiKeyOpt.isPresent()) {
@@ -138,6 +100,24 @@ public class FullStackRestCaller {
 		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
 
 	}
+    }
+
+    private static OptimizationServiceControllerApi createOptimizationControllerApi() {
+
+	DateFormat dateFormat = ApiClient.createDefaultDateFormat();
+	ObjectMapper objectMapper = ApiClient.createDefaultObjectMapper(dateFormat);
+
+	// Vital step! - We need to the generated mapper how to treat our JSON data
+	objectMapper.setSerializationInclusion(Include.NON_NULL).setSerializationInclusion(Include.NON_ABSENT)
+		.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+	WebClient webClient = ApiClient.buildWebClientBuilder(objectMapper).codecs(configurer -> configurer
+		.defaultCodecs().maxInMemorySize(MAX_TOUROPIMIZER_RESPONSESIZE_MB * 1024 * 1024)).build();
+
+	ApiClient myApiClient = new ApiClient(webClient);
+
+	return new OptimizationServiceControllerApi(myApiClient);
+
     }
 
     /*
@@ -225,6 +205,7 @@ public class FullStackRestCaller {
 		.collect(Collectors.toList());
 
 	RestOptimization optimization = TestInput.defaultTouroptimizerTestInput(nodes, ress, jsonLicenseOpt);
+
 	optimization.setElementConnections(connections);
 
 	// Let us attach to streams - Internally the subscription is done on "real"
@@ -237,7 +218,7 @@ public class FullStackRestCaller {
 	// This will keep the example alive. Otherwise just subscribe
 	return resultMono.block();
     }
-    
+
     public Solution optimizeOnlyResult(List<Position> nodePoss, List<Position> ressPoss,
 	    List<ElementConnection> connections, Optional<String> jsonLicenseOpt) {
 	// Map to elements
@@ -247,6 +228,7 @@ public class FullStackRestCaller {
 		.collect(Collectors.toList());
 
 	RestOptimization optimization = TestInput.defaultTouroptimizerTestInput(nodes, ress, jsonLicenseOpt);
+
 	optimization.setElementConnections(connections);
 
 	// Let us attach to streams - Internally the subscription is done on "real"
@@ -259,7 +241,6 @@ public class FullStackRestCaller {
 	// This will keep the example alive. Otherwise just subscribe
 	return resultMono.block();
     }
-
 
     public void attachToStreams() {
 
