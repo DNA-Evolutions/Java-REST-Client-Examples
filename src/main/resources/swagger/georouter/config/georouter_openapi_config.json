@@ -1,0 +1,17 @@
+{
+
+	"apiPackage": "com.dna.jopt.rest.georouter.client.api",
+	"modelPackage": "com.dna.jopt.rest.client.model",
+	"invokerPackage": "com.dna.jopt.rest.georouter.client",
+
+	"artifactDescription": "DNA GeoRouter OpenApi Java",
+	"artifactId": "com.dna.client.georouter ",
+	"artifactVersion": "0.0.1",
+	"groupId": "com.dna",
+	"dateLibrary": "java8",
+	"developerEmail": "info@dna-evolutions.com",
+	"developerName": "Dr.Jens Richter",
+	"developerOrganization": "DNA Evolutions",
+	"developerOrganizationUrl": "https: //dna-evolutions.com"
+
+}

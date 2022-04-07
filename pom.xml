@@ -1,0 +1,357 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- General info -->
+	<url>http://www.dna-evolutions.com/</url>
+	<groupId>jopt</groupId>
+	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>jopt.public.rest.client</artifactId>
+	<name>Java clients for DNA Rest endpoints</name>
+	<inceptionYear>2017</inceptionYear>
+	<description>Public example of generated clients for DNA swagger rest endpoints.</description>
+
+	<properties>
+		<project.build.sourceEncoding>cp1252</project.build.sourceEncoding>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+
+		<!-- This is an optional dependency. It is only used for creating a kml 
+			file from the results 
+		<jopt.core.pg.version.number>7.4.9-SNAPSHOT</jopt.core.pg.version.number>-->
+
+		<swagger-annotations-version>1.5.8</swagger-annotations-version>
+		<jersey-version>2.35</jersey-version>
+		<jackson-version>2.12.4</jackson-version>
+		<jackson-version-jsr310>2.12.5</jackson-version-jsr310>
+		<jackson-version-threeten>2.12.2</jackson-version-threeten>
+		<jackson-databind-nullable-version>0.2.0</jackson-databind-nullable-version>
+		<jodatime-version>2.7</jodatime-version>
+		<maven-plugin-version>1.0.0</maven-plugin-version>
+		<junit-version>4.8.1</junit-version>
+		<scribejava-apis-version>6.9.0</scribejava-apis-version>
+		<threetenbp-version>1.3.5</threetenbp-version>
+		<spring-web-version>5.3.9</spring-web-version>
+		<spring-webflux-version>5.3.9</spring-webflux-version>
+		<springboot-starter-webflux-version>2.5.4</springboot-starter-webflux-version>
+	</properties>
+
+	<developers>
+		<developer>
+			<id>jens@dnaevolutions</id>
+			<name>Jens Richter</name>
+			<email>jens.richter@dna-evolutions.com</email>
+		</developer>
+	</developers>
+
+
+	<organization>
+		<name>DNA Evolutions GmbH</name>
+		<url>http://www.dna-evolutions.com/</url>
+	</organization>
+
+
+	<licenses>
+		<license>
+			<name>Custom DNA evolutions license</name>
+			<url>https://www.dna-evolutions.com</url>
+		</license>
+	</licenses>
+
+
+	<repositories>
+		<repository>
+			<id>jopt-maven-public</id>
+			<url>https://public.repo.dna-evolutions.com/repository/maven-public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+
+	<dependencies>
+	<!-- 
+		<dependency>
+			<groupId>jopt</groupId>
+			<artifactId>jopt.core</artifactId>
+			<version>${jopt.core.pg.version.number}</version>
+		</dependency>
+
+		-->
+		<dependency>
+			<groupId>org.threeten</groupId>
+			<artifactId>threetenbp</artifactId>
+			<version>${threetenbp-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger-annotations-version}</version>
+		</dependency>
+
+		<!-- You can find the dependencies for the library configuration you chose 
+			by looking in JavaClientCodegen. Then find the corresponding dependency on 
+			Maven Central, and set the versions in the property section below -->
+
+		<!-- HTTP client: jersey-client -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+
+		<!-- @Nullable annotation -->
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+
+		<!-- JSON processing: jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-base</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>${jackson-databind-nullable-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.joschi.jackson</groupId>
+			<artifactId>jackson-datatype-threetenbp</artifactId>
+			<version>${jackson-version-threeten}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson-version-jsr310}</version>
+		</dependency>
+
+		<!-- Joda time: if you use it -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${jodatime-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.scribejava</groupId>
+			<artifactId>scribejava-apis</artifactId>
+			<version>${scribejava-apis-version}</version>
+		</dependency>
+		<!-- Base64 encoding that works in both JVM and Android -->
+		<dependency>
+			<groupId>com.brsanthu</groupId>
+			<artifactId>migbase64</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<!-- -->
+
+		<!-- For weblcient setting -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring-web-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+			<version>${spring-webflux-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+			<version>${springboot-starter-webflux-version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+		</dependency>
+
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+			<!-- -->
+			<!-- activate the plugin -->
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<!-- RELEASE_VERSION -->
+				<version>5.2.1</version>
+				<!-- /RELEASE_VERSION -->
+				<executions>
+					<execution>
+						<id>touroptimizer</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<!-- specify the swagger yaml -->
+							<inputSpec>
+								${project.basedir}/src/main/resources/swagger/touroptimizer/spec/touroptimizer_spec.json</inputSpec>
+							<configurationFile>${project.basedir}/src/main/resources/swagger/touroptimizer/config/touroptimizer_openapi_config.json</configurationFile>
+
+							<!-- target to generate java client code -->
+							<generatorName>java</generatorName>
+
+							<verbose>false</verbose>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=Instant</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+							</importMappings>
+
+							<!-- override the default library to jersey2 - Need to be set here -->
+							<library>webclient</library>
+							<!--<modelNamePrefix></modelNamePrefix> -->
+
+							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
+
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>geocoder</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+
+							<verbose>false</verbose>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=Instant</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+							</importMappings>
+
+							<!-- specify the swagger yaml -->
+							<inputSpec>
+								${project.basedir}/src/main/resources/swagger/geocoder/spec/geocoder_spec.json</inputSpec>
+							<configurationFile>${project.basedir}/src/main/resources/swagger/geocoder/config/geocoder_openapi_config.json</configurationFile>
+
+							<!-- target to generate java client code -->
+							<generatorName>java</generatorName>
+
+							<!-- override the default library to jersey2 - Need to be set here -->
+							<library>webclient</library>
+							<!-- <modelNamePrefix></modelNamePrefix> -->
+
+							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
+
+
+						</configuration>
+					</execution>
+					<execution>
+						<id>georouter</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+
+							<verbose>false</verbose>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=Instant</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+							</importMappings>
+
+							<!-- specify the swagger yaml -->
+							<inputSpec>
+								${project.basedir}/src/main/resources/swagger/georouter/spec/georouter_spec.json</inputSpec>
+							<configurationFile>${project.basedir}/src/main/resources/swagger/georouter/config/georouter_openapi_config.json</configurationFile>
+
+							<!-- target to generate java client code -->
+							<generatorName>java</generatorName>
+
+							<!-- override the default library to jersey2 - Need to be set here -->
+							<library>webclient</library>
+
+							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
+
+
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+</project>

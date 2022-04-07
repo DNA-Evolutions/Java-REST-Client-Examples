@@ -1,0 +1,1837 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "DNA Evolutions - JOpt.GeoRouter",
+    "description" : "This is DNA's JOpt.GeoRouter service. A RESTful Spring Boot application using springdoc-openapi and OpenAPI 3. This service is based on JOpt (7.4.9-SNAPSHOT) and Valhalla.",
+    "contact" : {
+      "name" : "DNA Evolutions GmbH",
+      "url" : "https://dna-evolutions.com",
+      "email" : "info@dna-evolutions.com"
+    },
+    "version" : "unknown"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "tags" : [ {
+    "name" : "GeoTurnByTurnRoutingServiceController",
+    "description" : "GeoRouting API"
+  }, {
+    "name" : "GeoRoutingHealthController",
+    "description" : "Provides the basic functionality to check if GeoRouting endpoint is still healthy."
+  }, {
+    "name" : "GeoMatrixRoutingServiceController",
+    "description" : "GeoRouting API for matrix calls"
+  } ],
+  "paths" : {
+    "/api/tbt/solution" : {
+      "post" : {
+        "tags" : [ "turnByTurn", "GeoTurnByTurnRoutingServiceController" ],
+        "summary" : "Post a solution object. The routes of the solution will be supplemented with the geocoded polyline using user provided routing settings.",
+        "description" : "Georoute an existing solution with custom settings.",
+        "operationId" : "solution",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SolutionWithSettings"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request / Are you providing at least two positions?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tbt/solutionWithDefaultSettings" : {
+      "post" : {
+        "tags" : [ "turnByTurn", "GeoTurnByTurnRoutingServiceController" ],
+        "summary" : "Post a solution object. The routes of the solution will be supplemented with the geocoded polyline using default routing settings.",
+        "description" : "Georoute an existing solution with default settings.",
+        "operationId" : "solutionWithDefaultSettings",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Solution"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request / Are you providing at least two positions?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tbt/single" : {
+      "post" : {
+        "tags" : [ "turnByTurn", "GeoTurnByTurnRoutingServiceController" ],
+        "summary" : "Post a TurnByTurnRoutingRequest. The positions of the request object are are used to generate a polyline.",
+        "description" : "Georoute mutliple postitions.",
+        "operationId" : "single",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TurnByTurnRoutingRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request / Are you providing at least two positions?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TurnByTurnResponseItem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tbt/route" : {
+      "post" : {
+        "tags" : [ "turnByTurn", "GeoTurnByTurnRoutingServiceController" ],
+        "summary" : "Post a route object with settings. The route will be supplemented with the geocoded polyline using user provided settings.",
+        "description" : "Georoute an existing route with custom settings.",
+        "operationId" : "route",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RouteWithSettings"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request / Are you providing at least two positions?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Route"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tbt/routeWithDefaultSettings" : {
+      "post" : {
+        "tags" : [ "turnByTurn", "GeoTurnByTurnRoutingServiceController" ],
+        "summary" : "Post a route object. The route will be supplemented with the geocoded polyline using default routing settings.",
+        "description" : "Georoute an existing route with default settings.",
+        "operationId" : "routeWithDefaultSettings",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Route"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request / Are you providing at least two positions?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Route"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/matrix/matrix" : {
+      "post" : {
+        "tags" : [ "GeoMatrixRoutingServiceController" ],
+        "summary" : "Post addresses to be routed",
+        "description" : "An input to run geocoding",
+        "operationId" : "matrix",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MatrixRoutingRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request / Are you providing at least two positions?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MatrixResponseItem"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/matrix/correctedConnections" : {
+      "post" : {
+        "tags" : [ "GeoMatrixRoutingServiceController" ],
+        "summary" : "Post addresses to be routed",
+        "description" : "An input to run geocoding and getting an optimizer compatible list of connections. The connections are corrected in time by using DNA's corrections service (if active and available).",
+        "operationId" : "correctedConnections",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MatrixRoutingRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ElementConnection"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error / Is the correction service running?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request / Is your input valid?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/matrix/connections" : {
+      "post" : {
+        "tags" : [ "GeoMatrixRoutingServiceController" ],
+        "summary" : "Post addresses to be routed",
+        "description" : "An input to run geocoding and getting an optimizer compatible list of connections.",
+        "operationId" : "connections",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MatrixRoutingRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Bad Request / Are you providing at least two positions?",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ElementConnection"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthStatus" : {
+      "get" : {
+        "tags" : [ "healthStatus", "GeoRoutingHealthController" ],
+        "summary" : "Get the health status of this endpoint.",
+        "description" : "Get the health status of this endpoint.",
+        "operationId" : "healthStatus",
+        "responses" : {
+          "200" : {
+            "description" : "The endpoint is up and running.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "AutoCostingOptions" : {
+        "required" : [ "relatedCostingModel" ],
+        "type" : "object",
+        "properties" : {
+          "relatedCostingModel" : {
+            "type" : "string",
+            "description" : "Each costing options refers to a selected cost model.",
+            "example" : "auto"
+          },
+          "maneuverPenalty" : {
+            "type" : "number",
+            "description" : "A penalty applied when transitioning between roads that do not have consistent naming–in other words, no road names in common. This penalty can be used to create simpler routes that tend to have fewer maneuvers or narrative guidance instructions. The default maneuver penalty is five seconds.",
+            "format" : "double",
+            "example" : 5.0
+          },
+          "gateCost" : {
+            "type" : "number",
+            "description" : "A cost applied when a gate is encountered. This cost is added to the estimated time / elapsed time. The default gate cost is 30 seconds.",
+            "format" : "double",
+            "example" : 0.0
+          },
+          "tollBoothCost" : {
+            "type" : "number",
+            "description" : "A cost applied when a toll booth is encountered. This cost is added to the estimated and elapsed times. The default cost is 15 seconds.",
+            "format" : "double",
+            "example" : 15.0
+          },
+          "ferryCost" : {
+            "type" : "number",
+            "description" : "A cost applied when entering a ferry. This cost is added to the estimated and elapsed times. The default cost is 300 seconds (5 minutes).",
+            "format" : "double",
+            "example" : 300.0
+          },
+          "useHighways" : {
+            "type" : "number",
+            "description" : "Values near 0 attempt to avoid highways and values near 1 will favor highways. Default value is 1.0.",
+            "format" : "double",
+            "example" : 1.0
+          },
+          "useTolls" : {
+            "type" : "number",
+            "description" : "This value indicates the willingness to take roads with tolls. This is a range of values between 0 and 1. Values near 0 attempt to avoid tolls and values near 1 will not attempt to avoid them. The default value is 0.5. Note that sometimes roads with tolls are required to complete a route so values of 0 are not guaranteed to avoid them entirely.",
+            "format" : "double",
+            "example" : 0.5
+          },
+          "countryCrossingCost" : {
+            "type" : "number",
+            "description" : "A cost applied when encountering an international border. This cost is added to the estimated and elapsed times. The default cost is 600 seconds.",
+            "format" : "double",
+            "example" : 600.0
+          },
+          "countryCrossingPenalty" : {
+            "type" : "number",
+            "description" : "A penalty applied for a country crossing. This penalty can be used to create paths that avoid spanning country boundaries. The default penalty is 0.",
+            "format" : "double",
+            "example" : 0.0
+          }
+        },
+        "description" : "When using auto as costingModel, further options can be defined."
+      },
+      "BaseRoutingRequest" : {
+        "required" : [ "attachRawResponse", "requestId", "throwErrorOnFailure" ],
+        "type" : "object",
+        "properties" : {
+          "requestId" : {
+            "type" : "string",
+            "description" : "An id for identyfiying the request",
+            "example" : "myRequestId"
+          },
+          "attachRawResponse" : {
+            "type" : "boolean",
+            "description" : "The response will contain the raw response."
+          },
+          "throwErrorOnFailure" : {
+            "type" : "boolean",
+            "description" : "In case no trip is found, an error is thrown if true."
+          },
+          "costingModel" : {
+            "type" : "string",
+            "description" : "The costing model for the vehicle/item in use.",
+            "example" : "auto"
+          },
+          "directionsOptions" : {
+            "$ref" : "#/components/schemas/RequestDirectionsOptions"
+          },
+          "autoCostingOptions" : {
+            "$ref" : "#/components/schemas/AutoCostingOptions"
+          }
+        },
+        "description" : "The optional settings for the routing."
+      },
+      "EncodedPolyline" : {
+        "required" : [ "encodedPolyline", "precision" ],
+        "type" : "object",
+        "properties" : {
+          "encodedPolyline" : {
+            "type" : "string",
+            "description" : "An encoded polyline (see e.g.: https://developers.google.com/maps/documentation/utilities/polylinealgorithm)."
+          },
+          "precision" : {
+            "type" : "number",
+            "description" : "The precision of the encoded polyline.",
+            "format" : "double"
+          }
+        },
+        "description" : "The encoded polyline describing a connection."
+      },
+      "GeoAddress" : {
+        "type" : "object",
+        "properties" : {
+          "locationId" : {
+            "type" : "string",
+            "description" : "The locationId",
+            "example" : "MyLocationId"
+          },
+          "housenumber" : {
+            "type" : "string",
+            "description" : "The housenumber",
+            "example" : "5"
+          },
+          "streetname" : {
+            "type" : "string",
+            "description" : "The streetname",
+            "example" : "Marlene-Dietrich-Strasse"
+          },
+          "city" : {
+            "type" : "string",
+            "description" : "The city",
+            "example" : "Neu-Ulm"
+          },
+          "county" : {
+            "type" : "string",
+            "description" : "The county"
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "The state"
+          },
+          "statecode" : {
+            "type" : "string",
+            "description" : "The statecode"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "The country",
+            "example" : "Germany"
+          },
+          "macrocountry" : {
+            "type" : "string",
+            "description" : "The macrocountry",
+            "example" : "Berlin"
+          },
+          "countrycode" : {
+            "type" : "string",
+            "description" : "The country code (ISO CODE)",
+            "example" : "DE"
+          },
+          "postalcode" : {
+            "type" : "string",
+            "description" : "The postalcode",
+            "example" : "89231"
+          },
+          "layer" : {
+            "type" : "string",
+            "description" : "The layer"
+          },
+          "source" : {
+            "type" : "string",
+            "description" : "The source the data was extracted from"
+          },
+          "accuracy" : {
+            "type" : "string",
+            "description" : "The accuracy"
+          },
+          "confidence" : {
+            "type" : "number",
+            "description" : "This is a general score computed to calculate how likely result is what was asked for. It's meant to be a combination of all the information available to Pelias. It's not super sophisticated, and results may not be sorted in confidence-score order. In that case results returned first should be trusted more. Confidence scores are floating point numbers ranging from '0.0' to '1.0'.",
+            "format" : "double",
+            "example" : 1.0
+          },
+          "label" : {
+            "type" : "string",
+            "description" : "The label"
+          }
+        },
+        "description" : "The geographical address of the Position in case geo-coding will be applied."
+      },
+      "ILoad" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "priority" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "fuzzyVisit" : {
+            "type" : "boolean"
+          },
+          "loadValue" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "request" : {
+            "type" : "boolean"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The Load type that can contain different loads",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "SimpleLoad" : "#/components/schemas/SimpleLoad",
+            "UnloadAllLoad" : "#/components/schemas/UnloadAllLoad",
+            "MixedFlexLoad" : "#/components/schemas/MixedFlexLoad",
+            "SupplyFlexLoad" : "#/components/schemas/SupplyFlexLoad",
+            "RequestFlexLoad" : "#/components/schemas/RequestFlexLoad"
+          }
+        }
+      },
+      "INodeDepot" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ILoad"
+            }
+          },
+          "depotId" : {
+            "type" : "string"
+          },
+          "hasFlexLoad" : {
+            "type" : "boolean",
+            "writeOnly" : true
+          },
+          "hasTimedLoads" : {
+            "type" : "boolean",
+            "writeOnly" : true
+          },
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The NodeDepot type",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "SimpleNodeDepot" : "#/components/schemas/SimpleNodeDepot"
+          }
+        }
+      },
+      "JsonNode" : {
+        "type" : "object",
+        "description" : "The raw json descirbing the trip."
+      },
+      "LocationParameters" : {
+        "type" : "object",
+        "properties" : {
+          "layers" : {
+            "type" : "string",
+            "description" : "The layers in which the location can be detected. Use 'auto' for automatically selecting the best (highest confidence) layer.",
+            "example" : "address"
+          },
+          "size" : {
+            "type" : "integer",
+            "description" : "The number of layers the location can be related to. Further, in case of a query the number of results that might be found/desired.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "radius" : {
+            "type" : "number",
+            "description" : "The number of meters about this input location within which edges (roads between intersections) will be considered as candidates for said location. When correlating this location to the route network, try to only return results within this distance (meters) from this location. If there are no candidates within this distance it will return the closest candidate within reason. If this value is larger than the configured service limit it will be clamped to that limit. The default is 20 meters.",
+            "format" : "double",
+            "example" : 20
+          },
+          "sources" : {
+            "type" : "string",
+            "description" : "If you use the sources parameter, you can choose which of these data sources to include in your search. So if you're only interested in finding an address in data from OpenAddresses, for example, you can build a query specifying that data source 'oa'. (OpenAddresses='oa', OpenstreetMap = 'osm', Who's on First ='wof',GeoNames='gn' ). If, for example, OpenAddresses and OpenstreetMap is desired use 'osm,oa'. Default is 'all' ",
+            "example" : "all"
+          }
+        },
+        "description" : "Location parameters that can support geographical routing."
+      },
+      "MixedFlexLoad" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ILoad"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "loadId" : {
+              "type" : "string"
+            },
+            "isRequest" : {
+              "type" : "boolean"
+            },
+            "isFuzzyVisit" : {
+              "type" : "boolean"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "MixedFlexLoad",
+              "default" : "MixedFlexLoad"
+            }
+          }
+        } ]
+      },
+      "Position" : {
+        "required" : [ "latitude", "longitude" ],
+        "type" : "object",
+        "properties" : {
+          "latitude" : {
+            "type" : "number",
+            "description" : "The latitude of the position",
+            "format" : "double",
+            "example" : 48.384037
+          },
+          "longitude" : {
+            "type" : "number",
+            "description" : "The longitude of the position",
+            "format" : "double",
+            "example" : 10.005226
+          },
+          "locationId" : {
+            "type" : "string",
+            "description" : "The locationId",
+            "example" : "MyLocationId"
+          },
+          "geoAddress" : {
+            "$ref" : "#/components/schemas/GeoAddress"
+          },
+          "locationParameters" : {
+            "$ref" : "#/components/schemas/LocationParameters"
+          }
+        },
+        "description" : "The optional to position."
+      },
+      "RequestDirectionsOptions" : {
+        "type" : "object",
+        "properties" : {
+          "distanceUnit" : {
+            "type" : "string",
+            "description" : "Distance units for output. Allowable unit types are miles (or mi) and kilometers (or km). If no unit type is specified, the units default to kilometers.",
+            "example" : "kilometers"
+          },
+          "language" : {
+            "type" : "string",
+            "description" : "The lagnuage for route instructions. Not available for matrix search.",
+            "example" : "en-US"
+          },
+          "narrative" : {
+            "type" : "boolean",
+            "description" : "Include route instructions in routeSearch. Not available for matrix search.",
+            "example" : true
+          }
+        },
+        "description" : "Directions options for the matrix request."
+      },
+      "RequestFlexLoad" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ILoad"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "loadId" : {
+              "type" : "string"
+            },
+            "isRequest" : {
+              "type" : "boolean"
+            },
+            "isFuzzyVisit" : {
+              "type" : "boolean"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "RequestFlexLoad",
+              "default" : "RequestFlexLoad"
+            }
+          }
+        } ]
+      },
+      "ResourceTrip" : {
+        "required" : [ "fromElementId", "line", "toElementId" ],
+        "type" : "object",
+        "properties" : {
+          "line" : {
+            "$ref" : "#/components/schemas/EncodedPolyline"
+          },
+          "fromElementId" : {
+            "type" : "string",
+            "description" : "The position the polyline starts."
+          },
+          "toElementId" : {
+            "type" : "string",
+            "description" : "The position the polyline ends."
+          },
+          "rawJson" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          }
+        },
+        "description" : "Trips representing the route."
+      },
+      "Route" : {
+        "required" : [ "elementDetails", "endElementId", "id", "nonOptimizableElementIds", "optimizableElementIds", "optionalOptimizableElementIds", "pillarElementIds", "resourceId", "startElementId", "startTime" ],
+        "type" : "object",
+        "properties" : {
+          "header" : {
+            "$ref" : "#/components/schemas/RouteHeader"
+          },
+          "id" : {
+            "type" : "integer",
+            "description" : "The id is an optimizer provided number identifiying a route.",
+            "format" : "int32",
+            "example" : 11
+          },
+          "resourceId" : {
+            "type" : "string",
+            "description" : "The resourceId of the Visitor owning this route.",
+            "example" : "Laura"
+          },
+          "routeTrip" : {
+            "$ref" : "#/components/schemas/RouteTrip"
+          },
+          "startTime" : {
+            "type" : "string",
+            "description" : "The startTime of the route. This is usually the start of the workingHours of the Resource. However, when using flextime/reduction-time the starttime can be different from the working hours start.",
+            "format" : "date-time",
+            "example" : "2020-03-06T07:00:00Z"
+          },
+          "startElementId" : {
+            "type" : "string",
+            "description" : "The startElementId, is the element from where the route starts. By default, it is the Resource itself.",
+            "example" : "Laura"
+          },
+          "startPosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "endElementId" : {
+            "type" : "string",
+            "description" : "The endElementId, is the element where the route stops. By default, it is the Resource itself.",
+            "example" : "Laura"
+          },
+          "endPosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "optimizableElementIds" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The optimizableElementIds. The list of optimizable elements that are part of the route.",
+            "items" : {
+              "type" : "string",
+              "description" : "The optimizableElementIds. The list of optimizable elements that are part of the route."
+            }
+          },
+          "nonOptimizableElementIds" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The nonOptimizableElementIds. The list of non-optimizable elements that are part of the route.",
+            "items" : {
+              "type" : "string",
+              "description" : "The nonOptimizableElementIds. The list of non-optimizable elements that are part of the route."
+            }
+          },
+          "optionalOptimizableElementIds" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The optionalOptimizableElementIds. The list of optional elements that are part of the route.",
+            "items" : {
+              "type" : "string",
+              "description" : "The optionalOptimizableElementIds. The list of optional elements that are part of the route."
+            }
+          },
+          "pillarElementIds" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The pillarElementIds. The list of pillar elements that are part of the route.",
+            "items" : {
+              "type" : "string",
+              "description" : "The pillarElementIds. The list of pillar elements that are part of the route."
+            }
+          },
+          "elementDetails" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The elementDetails. The list of details describing the route schedule.",
+            "items" : {
+              "$ref" : "#/components/schemas/RouteElementDetail"
+            }
+          },
+          "pillarLatestEffectiveArrivalOffsetMap" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "integer",
+              "description" : "The pillarLatestEffectiveArrivalOffsetMap. A map of additional time offsets for pillar elements. Each pillar has a latest possible arrival. As a route can consist of multiple pillars, the latest arrival at a certain pillar is also a function of  subsequent pillars. This latest arrival may shifted to a later time spot to allow shifitig a pillar around a normal node, even the normal node would fit before the pillar.",
+              "format" : "int64"
+            },
+            "description" : "The pillarLatestEffectiveArrivalOffsetMap. A map of additional time offsets for pillar elements. Each pillar has a latest possible arrival. As a route can consist of multiple pillars, the latest arrival at a certain pillar is also a function of  subsequent pillars. This latest arrival may shifted to a later time spot to allow shifitig a pillar around a normal node, even the normal node would fit before the pillar."
+          },
+          "flags" : {
+            "type" : "array",
+            "description" : "The flags. A list of flags indicating statii like which source finalized a route.",
+            "items" : {
+              "type" : "string",
+              "description" : "The flags. A list of flags indicating statii like which source finalized a route.",
+              "enum" : [ "FINALIZED_PILLARFORCEARRANGER", "INACTIVE_PILLARFORCEARRANGER", "FINALIZED_ROUTE_FINALIZER", "INACTIVE_ROUTE_FINALIZER" ]
+            }
+          },
+          "isInactive" : {
+            "type" : "boolean",
+            "description" : "The isInactive boolean describes if a route is deactivated.",
+            "example" : false
+          },
+          "isFinalized" : {
+            "type" : "boolean",
+            "description" : "The isFinalized. Describes if a route was undergoing finalization.",
+            "example" : false
+          },
+          "isLockedDown" : {
+            "type" : "boolean",
+            "description" : "The isLockedDown. Describes if a route was undergoing lockdown.",
+            "example" : false
+          }
+        }
+      },
+      "RouteElementDetail" : {
+        "required" : [ "arrivalTime", "departureTime", "durationTime", "elementId", "idleTime", "startTime", "transitionDistance", "transitionTime" ],
+        "type" : "object",
+        "properties" : {
+          "elementId" : {
+            "type" : "string",
+            "description" : "The elementId that the detail item belongs to.",
+            "example" : "Customer-A"
+          },
+          "startTime" : {
+            "type" : "string",
+            "description" : "The startTime defines the time when a vistior (Resource) starts serving a node.",
+            "format" : "date-time",
+            "example" : "2020-03-06T08:00:00Z"
+          },
+          "arrivalTime" : {
+            "type" : "string",
+            "description" : "The arrivalTime defines the time when a vistior (Resource) arrives at a node. It is possible that a Visitior needs to idle at the node until a node opens.",
+            "format" : "date-time",
+            "example" : "2020-03-06T07:00:00Z"
+          },
+          "departureTime" : {
+            "type" : "string",
+            "description" : "The departureTime defines the time a resource is leaving a node.",
+            "format" : "date-time",
+            "example" : "2020-03-06T10:00:00Z"
+          },
+          "transitionTime" : {
+            "type" : "string",
+            "description" : "The transitionTime gives the time taken for the connection from the previous element to this element.",
+            "example" : "PT23M"
+          },
+          "effectivePosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "idleTime" : {
+            "type" : "string",
+            "description" : "The idleTime is the time the Visitor has to wait until a node can be served. By default idle time arrises at the node to be visited. For example, a the arrival time of a Visitor is at 7 in the morning but the node opens at 8. The Visitor has to wait for one hour at the node location until the node can be served.",
+            "example" : "PT60M"
+          },
+          "whiteSpaceIdleTime" : {
+            "type" : "string",
+            "description" : "The whiteSpaceIdleTime only occurs if the Visitor is using a different reduction time definition for normal nodes and PillarNodes. It is usually introduced to avoid a violation where Pillars are allowed to be served before workingTime and Nodes are not.",
+            "example" : "PT26M"
+          },
+          "durationTime" : {
+            "type" : "string",
+            "description" : "The durationTime defines how long a node is serverd by a Visitor.",
+            "example" : "PT120M"
+          },
+          "transitionDistance" : {
+            "type" : "string",
+            "description" : "The transitionDistance gives the distance taken for the connection from the previous element to this element.",
+            "example" : "100.0 km"
+          },
+          "choosenWorkingHoursIndex" : {
+            "type" : "integer",
+            "description" : "Each visitor can have a list of workingHours. The choosenWorkingHoursIndex is the index of the Visitors workingHour in which the element is visited.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "earlyDeviation" : {
+            "type" : "string",
+            "description" : "The earlyDeviation. The early deviation describes how long before the element opens the Visitor arrives. If the value is negative, the Vistor arrives after the element already opens.",
+            "example" : "PT30M"
+          },
+          "lateDeviation" : {
+            "type" : "string",
+            "description" : "The lateDeviation. The late deviation describes how much lateness the Vistor has. For example, the element to be visited is open from 8-11 and the desired visit duration is 2 hours. The Visitor has to arrive latest by 9 to finish the Job until 11. If the Visitor arrives at 10 the late deviation will be one hour, as the Visitor needs till 12 to finish the Job. The late deviation can be also negative indicating not beeing late. For example if the Visitor reaches the element by 8 and finishes the Job by 10 and the element closes at 11 the late deviation will be -1 hour.",
+            "example" : "PT-30M"
+          },
+          "scheduleStatus" : {
+            "type" : "string",
+            "description" : "The scheduleStatus.",
+            "example" : "INTIME",
+            "enum" : [ "UNKNOWN", "EARLY", "IDLE", "INTIME", "LATE" ]
+          },
+          "visitorId" : {
+            "type" : "string",
+            "description" : "The visitorId. The id of the Visitor serving the element.",
+            "example" : "Laura"
+          },
+          "loadChange" : {
+            "type" : "array",
+            "description" : "LEGACY: The change of the load of the element caused by the Visitor. For example, when the element requested 2 items and the Visitor provided only 1 item the loadChange value would be 1.",
+            "items" : {
+              "type" : "number",
+              "description" : "LEGACY: The change of the load of the element caused by the Visitor. For example, when the element requested 2 items and the Visitor provided only 1 item the loadChange value would be 1.",
+              "format" : "double"
+            }
+          },
+          "curCapacity" : {
+            "type" : "array",
+            "description" : "LEGACY: The curCapacity of the visitor after visiting the element.",
+            "items" : {
+              "type" : "number",
+              "description" : "LEGACY: The curCapacity of the visitor after visiting the element.",
+              "format" : "double"
+            }
+          },
+          "beforeVisitNodeDepot" : {
+            "$ref" : "#/components/schemas/INodeDepot"
+          },
+          "afterVisitNodeDepot" : {
+            "$ref" : "#/components/schemas/INodeDepot"
+          },
+          "nodeViolations" : {
+            "type" : "array",
+            "description" : "The nodeViolations. The violations collected at the element/node. For example, lateViolation, early violation etc.",
+            "items" : {
+              "$ref" : "#/components/schemas/Violation"
+            }
+          },
+          "isUnlocatedIdleTime" : {
+            "type" : "boolean",
+            "description" : "The isUnlocatedIdleTime changes the representation of the idle time in the solution. By default idle time is located at the node to be waited for. If true, the idle time becomes unlocated. For example, a Visitor can reach a node (that opens at 8) by 7 in the morning. If the idle time is unlocated, the arrival time  will be represented as 8 (instead of 7). "
+          }
+        },
+        "description" : "The elementDetails. The list of details describing the route schedule."
+      },
+      "RouteHeader" : {
+        "required" : [ "cost", "distance", "idleTime", "isAlternateDestination", "isClosed", "prodTime", "routeViolations", "termiDistance", "termiTime", "time", "tranTime" ],
+        "type" : "object",
+        "properties" : {
+          "cost" : {
+            "type" : "number",
+            "description" : "The abstract cost value of the route.",
+            "format" : "double",
+            "example" : 2468.32
+          },
+          "time" : {
+            "type" : "string",
+            "description" : "The time that is needed for the route.",
+            "example" : "PT30M"
+          },
+          "idleTime" : {
+            "type" : "string",
+            "description" : "The accumlated idleTime of the route.",
+            "example" : "PT30M"
+          },
+          "prodTime" : {
+            "type" : "string",
+            "description" : "The productive time of the route. Productive time is working-time spend at a node.",
+            "example" : "PT30M"
+          },
+          "tranTime" : {
+            "type" : "string",
+            "description" : "The tranTime. The summed transit time of the route.",
+            "example" : "PT310M"
+          },
+          "termiTime" : {
+            "type" : "string",
+            "description" : "The termiTime. The time taken from the last element to the termination element of the route.",
+            "example" : "PT800M"
+          },
+          "distance" : {
+            "type" : "string",
+            "description" : "The distance. The summed transit distance of the route.",
+            "example" : "800.0 km"
+          },
+          "termiDistance" : {
+            "type" : "string",
+            "description" : "The termiDistance. The distance taken from the last element to the termination element of the route.",
+            "example" : "53.0 km"
+          },
+          "routeViolations" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The routeViolations. Violations that occur on route level. For example, overtime, overdistance etc.",
+            "items" : {
+              "$ref" : "#/components/schemas/Violation"
+            }
+          },
+          "isClosed" : {
+            "type" : "boolean",
+            "description" : "The isClosed boolean describes if a Resource has to visit the termination element of the Route. By default, the start element and the termination element of a Route is the Resource itself. In case of a closed route, by default, the Resource returns to its original starting location."
+          },
+          "isAlternateDestination" : {
+            "type" : "boolean",
+            "description" : "The isAlternateDestination boolean. Descibes of the Resource has an alternate destination. The Resource has to end it's Route at the alternate destination there but  will start from the original route start again the next working hour."
+          }
+        },
+        "description" : "The header of the solution per route is summarizing important data like number of elements in the route , total time needed for the route etc."
+      },
+      "RouteTrip" : {
+        "required" : [ "trips" ],
+        "type" : "object",
+        "properties" : {
+          "trips" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "Trips representing the route.",
+            "items" : {
+              "$ref" : "#/components/schemas/ResourceTrip"
+            }
+          }
+        },
+        "description" : "Additional data aobut the route trip. For example, the polylines for map reprsentation purposes."
+      },
+      "SimpleLoad" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ILoad"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "loadId" : {
+              "type" : "string"
+            },
+            "isRequest" : {
+              "type" : "boolean"
+            },
+            "isFuzzyVisit" : {
+              "type" : "boolean"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "SimpleLoad",
+              "default" : "SimpleLoad"
+            }
+          }
+        } ]
+      },
+      "SimpleNodeDepot" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/INodeDepot"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "SimpleNodeDepot",
+              "default" : "SimpleNodeDepot"
+            }
+          }
+        } ]
+      },
+      "Solution" : {
+        "required" : [ "routes" ],
+        "type" : "object",
+        "properties" : {
+          "ident" : {
+            "type" : "string",
+            "description" : "An optional title/ident inhertited from the OptimizationCondig.",
+            "example" : "JOpt-Run-603886271000"
+          },
+          "header" : {
+            "$ref" : "#/components/schemas/SolutionHeader"
+          },
+          "routes" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The routes of the solution.",
+            "items" : {
+              "$ref" : "#/components/schemas/Route"
+            }
+          }
+        }
+      },
+      "SolutionHeader" : {
+        "required" : [ "jobViolations", "numRoutes", "numScheduledRoutes", "totCost", "totDistance", "totElements", "totIdleTime", "totProdTime", "totTermiDistance", "totTermiTime", "totTime", "totTranTime", "unassignedElementIds" ],
+        "type" : "object",
+        "properties" : {
+          "numRoutes" : {
+            "type" : "integer",
+            "description" : "The numRoutes. The number of routes.",
+            "format" : "int32",
+            "example" : 10
+          },
+          "numScheduledRoutes" : {
+            "type" : "integer",
+            "description" : "The numScheduledRoutes. The number of routes that have non-zero time.",
+            "format" : "int32",
+            "example" : 8
+          },
+          "totElements" : {
+            "type" : "integer",
+            "description" : "The total number of Elements inlucidng Nodes and Resoures",
+            "format" : "int32",
+            "example" : 516
+          },
+          "unassignedElementIds" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The unassignedElementIds, The ids of the elements that were unassigned during the Optimization run. Either by the AutoFilter or at start up due to conflicting hard-constraints.",
+            "items" : {
+              "type" : "string",
+              "description" : "The unassignedElementIds, The ids of the elements that were unassigned during the Optimization run. Either by the AutoFilter or at start up due to conflicting hard-constraints."
+            }
+          },
+          "totCost" : {
+            "type" : "number",
+            "description" : "The total cost is the abstract value that is used as figure of merit during the Optimization run.",
+            "format" : "double",
+            "example" : 95164.1314
+          },
+          "totTime" : {
+            "type" : "string",
+            "description" : "The total time needed for all routes.",
+            "example" : "PT480M"
+          },
+          "totIdleTime" : {
+            "type" : "string",
+            "description" : "The total IdleTime accumulated over all routes.",
+            "example" : "PT30M"
+          },
+          "totProdTime" : {
+            "type" : "string",
+            "description" : "The total Productive Time accumulated over all routes",
+            "example" : "PT300M"
+          },
+          "totTranTime" : {
+            "type" : "string",
+            "description" : "The total transit Time accumulated over all routes",
+            "example" : "PT200M"
+          },
+          "totTermiTime" : {
+            "type" : "string",
+            "description" : "The total termination Time accumulated over all routes",
+            "example" : "PT30M"
+          },
+          "totDistance" : {
+            "type" : "string",
+            "description" : "The total distance accumulated over all routes",
+            "example" : "100.0 km"
+          },
+          "totTermiDistance" : {
+            "type" : "string",
+            "description" : "The total termiantion distance accumulated over all routes",
+            "example" : "100.0 km"
+          },
+          "jobViolations" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The jobViolations. The violation that occured on Job level. This does NOT contain individual node violations like lateness etc. Moreover,  it contains violations like relation-constraints between nodes. For example, node 'A' needs to be visited before node 'B' is violated.",
+            "items" : {
+              "$ref" : "#/components/schemas/Violation"
+            }
+          }
+        },
+        "description" : "The header of the whole solution. Summarizing important data like total number of routes, total time needed for ALL routes etc."
+      },
+      "SolutionWithSettings" : {
+        "required" : [ "settings", "solution" ],
+        "type" : "object",
+        "properties" : {
+          "settings" : {
+            "$ref" : "#/components/schemas/BaseRoutingRequest"
+          },
+          "solution" : {
+            "$ref" : "#/components/schemas/Solution"
+          }
+        }
+      },
+      "SupplyFlexLoad" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ILoad"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "loadId" : {
+              "type" : "string"
+            },
+            "isRequest" : {
+              "type" : "boolean"
+            },
+            "isFuzzyVisit" : {
+              "type" : "boolean"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "SupplyFlexLoad",
+              "default" : "SupplyFlexLoad"
+            }
+          }
+        } ]
+      },
+      "UnloadAllLoad" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ILoad"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "loadId" : {
+              "type" : "string"
+            },
+            "isRequest" : {
+              "type" : "boolean"
+            },
+            "isFuzzyVisit" : {
+              "type" : "boolean"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "UnloadAllLoad",
+              "default" : "UnloadAllLoad"
+            }
+          }
+        } ]
+      },
+      "Violation" : {
+        "required" : [ "attribute", "category", "code", "desc", "subAttribute", "value" ],
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string",
+            "description" : "The value is a violation specfic value. For example, if the violation is of subAttribute 'LATE', the value contains the late violation value in minutes.",
+            "example" : "507.98525"
+          },
+          "desc" : {
+            "type" : "string",
+            "description" : "The description of the violation. A human readable description of the violation",
+            "example" : "Late time [min]: 507.98525"
+          },
+          "category" : {
+            "type" : "string",
+            "description" : "The category of the violation. The main category of the violation.",
+            "example" : "CONSTRAINTVIOLATION"
+          },
+          "attribute" : {
+            "type" : "string",
+            "description" : "The attribute is further defining the type of the violation. For example, late and early violation belong to the attribute 'TIMECONSTRAINT'.",
+            "example" : "TIMECONSTRAINT"
+          },
+          "subAttribute" : {
+            "type" : "string",
+            "description" : "The subAttribute defines what kind of violation we are dealing with.",
+            "example" : "LATE"
+          },
+          "code" : {
+            "type" : "integer",
+            "description" : "The code is the unique code for each Violation type.",
+            "format" : "int32",
+            "example" : 5
+          }
+        },
+        "description" : "The nodeViolations. The violations collected at the element/node. For example, lateViolation, early violation etc."
+      },
+      "TurnByTurnRoutingRequest" : {
+        "required" : [ "attachRawResponse", "positions", "requestId", "throwErrorOnFailure" ],
+        "type" : "object",
+        "properties" : {
+          "requestId" : {
+            "type" : "string",
+            "description" : "An id for identyfiying the request",
+            "example" : "myRequestId"
+          },
+          "attachRawResponse" : {
+            "type" : "boolean",
+            "description" : "The response will contain the raw response."
+          },
+          "throwErrorOnFailure" : {
+            "type" : "boolean",
+            "description" : "In case no trip is found, an error is thrown if true."
+          },
+          "costingModel" : {
+            "type" : "string",
+            "description" : "The costing model for the vehicle/item in use.",
+            "example" : "auto"
+          },
+          "directionsOptions" : {
+            "$ref" : "#/components/schemas/RequestDirectionsOptions"
+          },
+          "autoCostingOptions" : {
+            "$ref" : "#/components/schemas/AutoCostingOptions"
+          },
+          "positions" : {
+            "type" : "array",
+            "description" : "A list of positions to be routed in order.",
+            "example" : [ {
+              "latitude" : 50.940889,
+              "longitude" : 6.958686,
+              "locationId" : "Cologne Museum"
+            }, {
+              "latitude" : 50.940833,
+              "longitude" : 6.969462,
+              "locationId" : "Cologne Hyatt"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/Position"
+            }
+          }
+        }
+      },
+      "TurnByTurnResponseItem" : {
+        "required" : [ "fromId", "id", "toId" ],
+        "type" : "object",
+        "properties" : {
+          "fromId" : {
+            "type" : "string",
+            "description" : "The id where the connections starts",
+            "example" : "fromId"
+          },
+          "toId" : {
+            "type" : "string",
+            "description" : "The id where the connections ends",
+            "example" : "toId"
+          },
+          "breakIds" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "The reqeust id.",
+            "example" : "myRequest"
+          },
+          "trip" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          },
+          "encodedShape" : {
+            "type" : "string",
+            "description" : "The encoded shape if present."
+          }
+        }
+      },
+      "RouteWithSettings" : {
+        "required" : [ "route", "settings" ],
+        "type" : "object",
+        "properties" : {
+          "settings" : {
+            "$ref" : "#/components/schemas/BaseRoutingRequest"
+          },
+          "route" : {
+            "$ref" : "#/components/schemas/Route"
+          }
+        }
+      },
+      "MatrixRoutingRequest" : {
+        "required" : [ "attachRawResponse", "requestId", "sourcePositions", "targetPositions", "throwErrorOnFailure" ],
+        "type" : "object",
+        "properties" : {
+          "requestId" : {
+            "type" : "string",
+            "description" : "An id for identyfiying the request",
+            "example" : "myRequestId"
+          },
+          "attachRawResponse" : {
+            "type" : "boolean",
+            "description" : "The response will contain the raw response."
+          },
+          "throwErrorOnFailure" : {
+            "type" : "boolean",
+            "description" : "In case no trip is found, an error is thrown if true."
+          },
+          "costingModel" : {
+            "type" : "string",
+            "description" : "The costing model for the vehicle/item in use.",
+            "example" : "auto"
+          },
+          "directionsOptions" : {
+            "$ref" : "#/components/schemas/RequestDirectionsOptions"
+          },
+          "autoCostingOptions" : {
+            "$ref" : "#/components/schemas/AutoCostingOptions"
+          },
+          "sourcePositions" : {
+            "type" : "array",
+            "description" : "A list of source positions.",
+            "example" : [ {
+              "latitude" : 50.942581,
+              "longitude" : 6.950962,
+              "locationId" : "Cologne Jack Home"
+            }, {
+              "latitude" : 50.948549,
+              "longitude" : 6.957331,
+              "locationId" : "Cologne Supermarket"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/Position"
+            }
+          },
+          "targetPositions" : {
+            "type" : "array",
+            "description" : "A list of target positions. If empty or not provided, the sourcePositions will be also used as target positions.",
+            "example" : [ {
+              "latitude" : 50.942581,
+              "longitude" : 6.950962,
+              "locationId" : "Cologne Jack Home"
+            }, {
+              "latitude" : 50.948549,
+              "longitude" : 6.957331,
+              "locationId" : "Cologne Supermarket"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/Position"
+            }
+          }
+        }
+      },
+      "MatrixResponseItem" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "units" : {
+            "type" : "string"
+          },
+          "sources_to_targets" : {
+            "type" : "array",
+            "items" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RoutingConnectionItem"
+              }
+            }
+          }
+        }
+      },
+      "RoutingConnectionItem" : {
+        "type" : "object",
+        "properties" : {
+          "fromId" : {
+            "type" : "string"
+          },
+          "toId" : {
+            "type" : "string"
+          },
+          "fromPosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "toPosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "distance" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "time" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "to_index" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "from_index" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "location_index_to" : {
+            "type" : "string"
+          },
+          "location_index_from" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ConnectionByTime" : {
+        "required" : [ "distanceMeters", "timeDefinitions", "timeMillis" ],
+        "type" : "object",
+        "properties" : {
+          "timeDefinitions" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The timeDefinitions describe at which times, what connection should be used.",
+            "items" : {
+              "$ref" : "#/components/schemas/DateDef"
+            }
+          },
+          "timeMillis" : {
+            "type" : "array",
+            "description" : "The times to pass the connection in milliseconds for the underlying time defitions.",
+            "items" : {
+              "type" : "integer",
+              "description" : "The times to pass the connection in milliseconds for the underlying time defitions.",
+              "format" : "int64"
+            }
+          },
+          "distanceMeters" : {
+            "type" : "array",
+            "description" : "The length of the connection in meters.",
+            "items" : {
+              "type" : "number",
+              "description" : "The length of the connection in meters.",
+              "format" : "double"
+            }
+          }
+        },
+        "description" : "The connectionByTime defines an extension to the connection. For example, on Monday morning we need 2 hours to path a conneciton, whereas on Sunday morning we only need 1 hour."
+      },
+      "DateDef" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The timeDefinitions describe at which times, what connection should be used.",
+        "discriminator" : {
+          "propertyName" : "typeName"
+        }
+      },
+      "EdgeElementConnection" : {
+        "required" : [ "distance", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ElementConnectionType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "distance" : {
+              "type" : "string",
+              "description" : "The distance of the connection.",
+              "example" : "100.0 km"
+            },
+            "time" : {
+              "type" : "string",
+              "description" : "The time needed to pass the connection.",
+              "example" : "PT30M"
+            },
+            "fromPosition" : {
+              "$ref" : "#/components/schemas/Position"
+            },
+            "toPosition" : {
+              "$ref" : "#/components/schemas/Position"
+            },
+            "connectionByTime" : {
+              "$ref" : "#/components/schemas/ConnectionByTime"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "Edge",
+              "default" : "Edge"
+            }
+          }
+        } ]
+      },
+      "ElementConnection" : {
+        "required" : [ "fromElementId", "toElementId", "type" ],
+        "type" : "object",
+        "properties" : {
+          "fromElementId" : {
+            "type" : "string",
+            "description" : "The fromElementId defines the element where the connections starts.",
+            "example" : "MyStartElementId"
+          },
+          "toElementId" : {
+            "type" : "string",
+            "description" : "The toElementId defines the element where the connections ends.",
+            "example" : "MyToElementId"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/ElementConnectionType"
+          }
+        }
+      },
+      "ElementConnectionType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The type of the connection. Usually a connection of tyoe 'Edge' is used.",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "Edge" : "#/components/schemas/EdgeElementConnection"
+          }
+        }
+      },
+      "Status" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}

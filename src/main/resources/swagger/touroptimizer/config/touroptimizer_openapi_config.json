@@ -1,0 +1,16 @@
+{
+
+	"apiPackage": "com.dna.jopt.rest.touroptimizer.client.api",
+	"modelPackage": "com.dna.jopt.rest.client.model",
+	"invokerPackage": "com.dna.jopt.rest.touroptimizer.client",
+
+	"artifactDescription": "DNA TourOptimizer OpenApi Java",
+	"artifactId": "com.dna.client.touroptimizer ",
+	"artifactVersion": "0.0.1",
+	"groupId": "com.dna",
+	"developerEmail": "info@dna-evolutions.com",
+	"developerName": "Dr.Jens Richter",
+	"developerOrganization": "DNA Evolutions",
+	"developerOrganizationUrl": "https: //dna-evolutions.com"
+
+}

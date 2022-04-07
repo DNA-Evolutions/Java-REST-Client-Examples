@@ -1,0 +1,17 @@
+{
+
+	"apiPackage": "com.dna.jopt.rest.geocoder.client.api",
+	"modelPackage": "com.dna.jopt.rest.client.model",
+	"invokerPackage": "com.dna.jopt.rest.geocoder.client",
+
+	"artifactDescription": "DNA GeoCoder OpenApi Java",
+	"artifactId": "com.dna.client.geocoder ",
+	"artifactVersion": "0.0.1",
+	"groupId": "com.dna",
+	"dateLibrary": "java8",
+	"developerEmail": "info@dna-evolutions.com",
+	"developerName": "Dirk Maassen, Dr. Jens Richter",
+	"developerOrganization": "DNA Evolutions",
+	"developerOrganizationUrl": "https: //dna-evolutions.com"
+
+}

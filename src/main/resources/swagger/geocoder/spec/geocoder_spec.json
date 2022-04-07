@@ -1,0 +1,537 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "DNA Evolutions - JOpt.GeoCoder",
+    "description" : "This is DNA's JOpt.GeoCoder service.A RESTful Spring Boot application using springdoc-openapi and OpenAPI 3. This service is based on JOpt (7.4.9-SNAPSHOT) and Pelias.",
+    "contact" : {
+      "name" : "DNA Evolutions GmbH",
+      "url" : "https://dna-evolutions.com",
+      "email" : "info@dna-evolutions.com"
+    },
+    "version" : "unknown"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "tags" : [ {
+    "name" : "ForwardGeoCodingServiceController",
+    "description" : "GeoCoding Forward API"
+  }, {
+    "name" : "BatchForwardGeoCodingServiceController",
+    "description" : "GeoCoding Forward API for Batch calls"
+  }, {
+    "name" : "BatchReverseGeoCodingServiceController",
+    "description" : "GeoCoding Reverse API for Batch calls"
+  }, {
+    "name" : "GeoCodingHealthController",
+    "description" : "Provides the basic functionality to check if Optimization endpoint is still healthy."
+  }, {
+    "name" : "ReverseGeoCodingServiceController",
+    "description" : "GeoCoding Reverse API"
+  } ],
+  "paths" : {
+    "/api/reverse/reverse" : {
+      "post" : {
+        "tags" : [ "ReverseGeoCodingServiceController", "reverse" ],
+        "summary" : "Post an address to be geocoded",
+        "description" : "An input to run geocoding",
+        "operationId" : "reverse",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Position"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Position"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reverse/rawReverse" : {
+      "post" : {
+        "tags" : [ "ReverseGeoCodingServiceController", "reverse" ],
+        "summary" : "Post an address to be geocoded",
+        "description" : "An input to run geocoding",
+        "operationId" : "rawReverse",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Position"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GeoJsonObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reverse/batchReverse" : {
+      "post" : {
+        "tags" : [ "geoCode", "BatchReverseGeoCodingServiceController" ],
+        "summary" : "Post addresses to be geocoded",
+        "description" : "An input to run geocoding",
+        "operationId" : "batchReverse",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Position"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "504" : {
+            "description" : "The upstream server is not available",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "All Positions were succesfully geo coded (reverse).",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Position"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "None of the Positions were succesfully geo coded (reverse). Either the positions were not found, or all of them are already geocoded.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Position"
+                  }
+                }
+              }
+            }
+          },
+          "417" : {
+            "description" : "Not all position were geocoded. Either, some failed or some elements have the same locationId or the identicalAddress and therfore got fitlererd.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Position"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during JsonProcessing",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forward/rawForward" : {
+      "post" : {
+        "tags" : [ "geoCode", "ForwardGeoCodingServiceController" ],
+        "summary" : "Post an address to be geocoded",
+        "description" : "An input to run geocoding",
+        "operationId" : "rawForward",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GeoAddress"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GeoJsonObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forward/forward" : {
+      "post" : {
+        "tags" : [ "forward", "ForwardGeoCodingServiceController" ],
+        "summary" : "Post an address to be geocoded",
+        "description" : "An input to run geocoding",
+        "operationId" : "forward",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GeoAddress"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Position"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/forward/batchForward" : {
+      "post" : {
+        "tags" : [ "geoCode", "BatchForwardGeoCodingServiceController" ],
+        "summary" : "Post addresses to be geocoded",
+        "description" : "An input to run geocoding",
+        "operationId" : "batchForward",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/GeoAddress"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "504" : {
+            "description" : "The upstream server is not available",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "417" : {
+            "description" : "Only some Positions were succesfully geo coded (forward).",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Position"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "None of the Positions were succesfully geo coded (forward). Either the positions were not found, or all of them are already geocoded.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Position"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "All Positions were succesfully geo coded (forward).",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Position"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during JsonProcessing",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthStatus" : {
+      "get" : {
+        "tags" : [ "GeoCodingHealthController", "healthStatus" ],
+        "summary" : "Get the health status of this endpoint.",
+        "description" : "Get the health status of this endpoint.",
+        "operationId" : "healthStatus",
+        "responses" : {
+          "503" : {
+            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "The endpoint is up and running.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "GeoAddress" : {
+        "type" : "object",
+        "properties" : {
+          "locationId" : {
+            "type" : "string",
+            "description" : "The locationId",
+            "example" : "MyLocationId"
+          },
+          "housenumber" : {
+            "type" : "string",
+            "description" : "The housenumber",
+            "example" : "5"
+          },
+          "streetname" : {
+            "type" : "string",
+            "description" : "The streetname",
+            "example" : "Marlene-Dietrich-Strasse"
+          },
+          "city" : {
+            "type" : "string",
+            "description" : "The city",
+            "example" : "Neu-Ulm"
+          },
+          "county" : {
+            "type" : "string",
+            "description" : "The county"
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "The state"
+          },
+          "statecode" : {
+            "type" : "string",
+            "description" : "The statecode"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "The country",
+            "example" : "Germany"
+          },
+          "macrocountry" : {
+            "type" : "string",
+            "description" : "The macrocountry",
+            "example" : "Berlin"
+          },
+          "countrycode" : {
+            "type" : "string",
+            "description" : "The country code (ISO CODE)",
+            "example" : "DE"
+          },
+          "postalcode" : {
+            "type" : "string",
+            "description" : "The postalcode",
+            "example" : "89231"
+          },
+          "layer" : {
+            "type" : "string",
+            "description" : "The layer"
+          },
+          "source" : {
+            "type" : "string",
+            "description" : "The source the data was extracted from"
+          },
+          "accuracy" : {
+            "type" : "string",
+            "description" : "The accuracy"
+          },
+          "confidence" : {
+            "type" : "number",
+            "description" : "This is a general score computed to calculate how likely result is what was asked for. It's meant to be a combination of all the information available to Pelias. It's not super sophisticated, and results may not be sorted in confidence-score order. In that case results returned first should be trusted more. Confidence scores are floating point numbers ranging from '0.0' to '1.0'.",
+            "format" : "double",
+            "example" : 1.0
+          },
+          "label" : {
+            "type" : "string",
+            "description" : "The label"
+          }
+        },
+        "description" : "The geographical address of the Position in case geo-coding will be applied."
+      },
+      "LocationParameters" : {
+        "type" : "object",
+        "properties" : {
+          "layers" : {
+            "type" : "string",
+            "description" : "The layers in which the location can be detected. Use 'auto' for automatically selecting the best (highest confidence) layer.",
+            "example" : "address"
+          },
+          "size" : {
+            "type" : "integer",
+            "description" : "The number of layers the location can be related to. Further, in case of a query the number of results that might be found/desired.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "radius" : {
+            "type" : "number",
+            "description" : "The number of meters about this input location within which edges (roads between intersections) will be considered as candidates for said location. When correlating this location to the route network, try to only return results within this distance (meters) from this location. If there are no candidates within this distance it will return the closest candidate within reason. If this value is larger than the configured service limit it will be clamped to that limit. The default is 20 meters.",
+            "format" : "double",
+            "example" : 20
+          },
+          "sources" : {
+            "type" : "string",
+            "description" : "If you use the sources parameter, you can choose which of these data sources to include in your search. So if you're only interested in finding an address in data from OpenAddresses, for example, you can build a query specifying that data source 'oa'. (OpenAddresses='oa', OpenstreetMap = 'osm', Who's on First ='wof',GeoNames='gn' ). If, for example, OpenAddresses and OpenstreetMap is desired use 'osm,oa'. Default is 'all' ",
+            "example" : "all"
+          }
+        },
+        "description" : "Location parameters that can support geographical routing."
+      },
+      "Position" : {
+        "required" : [ "latitude", "longitude" ],
+        "type" : "object",
+        "properties" : {
+          "latitude" : {
+            "type" : "number",
+            "description" : "The latitude of the position",
+            "format" : "double",
+            "example" : 48.384037
+          },
+          "longitude" : {
+            "type" : "number",
+            "description" : "The longitude of the position",
+            "format" : "double",
+            "example" : 10.005226
+          },
+          "locationId" : {
+            "type" : "string",
+            "description" : "The locationId",
+            "example" : "MyLocationId"
+          },
+          "geoAddress" : {
+            "$ref" : "#/components/schemas/GeoAddress"
+          },
+          "locationParameters" : {
+            "$ref" : "#/components/schemas/LocationParameters"
+          }
+        }
+      },
+      "Crs" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "name", "link" ]
+          },
+          "properties" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "object"
+            }
+          }
+        }
+      },
+      "GeoJsonObject" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "crs" : {
+            "$ref" : "#/components/schemas/Crs"
+          },
+          "bbox" : {
+            "type" : "array",
+            "items" : {
+              "type" : "number",
+              "format" : "double"
+            }
+          },
+          "type" : {
+            "type" : "string"
+          }
+        },
+        "discriminator" : {
+          "propertyName" : "type"
+        }
+      },
+      "Status" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
