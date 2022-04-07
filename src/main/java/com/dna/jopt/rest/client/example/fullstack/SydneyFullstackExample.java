@@ -51,7 +51,7 @@ public class SydneyFullstackExample {
 	 */
 	Status status = optimzerExample.checkGeoCoderHealth();
 
-	if (status.getStatus().equals("up")) {
+	if (!status.getStatus().equals("UP")) {
 
 	    System.out.println("GeoCoder not healthy - stoping process! (Status: " + status + " )");
 
