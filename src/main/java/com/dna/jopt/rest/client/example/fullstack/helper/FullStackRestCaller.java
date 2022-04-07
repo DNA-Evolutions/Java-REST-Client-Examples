@@ -1,5 +1,6 @@
 package com.dna.jopt.rest.client.example.fullstack.helper;
 
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class FullStackRestCaller {
     private OptimizationServiceControllerApi geoOptimizerApi = createOptimizationControllerApi();
 
     public final ObjectMapper tourOptimizerObjectMapper;
+    private PrintStream printOutStream;
 
     public static final int MAX_TOUROPIMIZER_RESPONSESIZE_MB = 16;
 
@@ -97,6 +99,18 @@ public class FullStackRestCaller {
 	    this.geoRouterTBTApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
 		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
 
+	}
+    }
+    
+    public void setPrintOutStream(PrintStream outstream) {
+	this.printOutStream = outstream;
+    }
+    
+    private PrintStream getPrintOutStream() {
+	if(this.printOutStream!=null) {
+	    return this.printOutStream;
+	}else {
+	    return System.out;
 	}
     }
 
@@ -217,7 +231,7 @@ public class FullStackRestCaller {
 
 	// Let us attach to streams - Internally the subscription is done on "real"
 	// optimization start
-	attachToStreams();
+	attachToStreams(this.getPrintOutStream());
 
 	// Trigger the Optimization
 	Mono<RestOptimization> resultMono = geoOptimizerApi.run(optimization);
@@ -240,7 +254,7 @@ public class FullStackRestCaller {
 
 	// Let us attach to streams - Internally the subscription is done on "real"
 	// optimization start
-	attachToStreams();
+	attachToStreams(this.getPrintOutStream());
 
 	// Trigger the Optimization
 	Mono<Solution> resultMono = geoOptimizerApi.runOnlyResult(optimization);
@@ -249,19 +263,19 @@ public class FullStackRestCaller {
 	return resultMono.block();
     }
 
-    public void attachToStreams() {
+    public void attachToStreams(PrintStream outstream) {
+	
 
 	geoOptimizerApi.runStartedSginal().subscribe(b -> {
-	    System.out.print("Optimization - Running");
 
 	    geoOptimizerApi.progress()
-		    .subscribe(pr -> System.out.println("  " + pr.getCallerId() + ", " + pr.getCurProgress()));
+		    .subscribe(pr -> outstream.println("  " + pr.getCallerId() + ", " + pr.getCurProgress()));
 
-	    geoOptimizerApi.status().subscribe(s -> System.out.println("  " + s.getMessage()));
+	    geoOptimizerApi.status().subscribe(s -> outstream.println("  " + s.getMessage()));
 
-	    geoOptimizerApi.error().subscribe(e -> System.out.println("  " + e.getMessage()));
+	    geoOptimizerApi.error().subscribe(e -> outstream.println("  " + e.getMessage()));
 
-	    geoOptimizerApi.warning().subscribe(w -> System.out.println(" " + w.getMessage()));
+	    geoOptimizerApi.warning().subscribe(w -> outstream.println(" " + w.getMessage()));
 	});
     }
 
