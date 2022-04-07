@@ -29,7 +29,7 @@ public class SydneyFllstackExample {
 	if (isAzureCall) {
 
 	    optimzerExample = new FullStackRestCaller(Endpoints.AZURE_SWAGGER_GEOCODER_URL,
-		    Endpoints.AZURE_SWAGGER_GEOROUTER_URL, Endpoints.AZURE_SWAGGER_TOUROPTIMIZER_URL,
+		    Endpoints.AZURE_SWAGGER_GEOROUTER_URL, Endpoints.LOCAL_SWAGGER_TOUROPTIMIZER_URL,
 		    Optional.of(m.get("azure")));
 	} else {
 	    optimzerExample = new FullStackRestCaller(Endpoints.LOCAL_SWAGGER_GEOCODER_URL,
@@ -74,13 +74,13 @@ public class SydneyFllstackExample {
 	 * 3) Optimize
 	 *
 	 */
-//	System.out.println("3) Optimizing input data");
-//	RestOptimization result = optimzerExample.optimize(nodePoss, ressPoss, connections,
-//		Optional.of(m.get("joptlic")));
-	
 	System.out.println("3) Optimizing input data");
-	Solution solution = optimzerExample.optimizeOnlyResult(nodePoss, ressPoss, connections,
+	RestOptimization result = optimzerExample.optimize(nodePoss, ressPoss, connections,
 		Optional.of(m.get("joptlic")));
+	
+//	It is also possible to only ask for a result instead of the full data
+//	Solution solution = optimzerExample.optimizeOnlyResult(nodePoss, ressPoss, connections,
+//		Optional.of(m.get("joptlic")));
 
 
 	/*
@@ -89,7 +89,7 @@ public class SydneyFllstackExample {
 	 *
 	 */
 	System.out.println("4) Creating polylines for optimized routes in solution");
-	Solution routedSolution = optimzerExample.geoRouteSolution(solution);
+	Solution routedSolution = optimzerExample.geoRouteSolution(result.getSolution());
 
 	/*
 	 *
@@ -103,8 +103,8 @@ public class SydneyFllstackExample {
 
 	// 6) Show result
 	// Contains the polylines - "routedSolution";
-	//System.out.println("6) Printing text solution");
-	//System.out.println(result.getExtension().getTextSolution());
+	System.out.println("6) Printing text solution");
+	System.out.println(result.getExtension().getTextSolution());
     }
 
 }
