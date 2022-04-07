@@ -17,7 +17,7 @@ import com.dna.jopt.rest.client.util.export.kml.RestSolutionKMLExporter;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
 import com.dna.jopt.rest.client.util.testinput.TestInput;
 
-public class SydneyFllstackExample {
+public class SydneyFullstackExample {
 
     public static void main(String[] args) throws IOException {
 
