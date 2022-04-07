@@ -11,6 +11,7 @@ import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.model.Status;
+import com.dna.jopt.rest.client.model.TextSolution;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.export.kml.RestSolutionKMLExporter;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
@@ -20,8 +21,15 @@ public class SydneyFllstackExample {
 
     public static void main(String[] args) throws IOException {
 
+	// Modify me
 	boolean isAzureCall = true;
+	boolean useConnectionCorretion = true;
+	boolean onlyReturnResultAfterOptimization = !true;
 
+	/*
+	 * 
+	 * 
+	 */
 	FullStackRestCaller optimzerExample;
 
 	SecretsManager m = new SecretsManager();
@@ -29,7 +37,7 @@ public class SydneyFllstackExample {
 	if (isAzureCall) {
 
 	    optimzerExample = new FullStackRestCaller(Endpoints.AZURE_SWAGGER_GEOCODER_URL,
-		    Endpoints.AZURE_SWAGGER_GEOROUTER_URL, Endpoints.LOCAL_SWAGGER_TOUROPTIMIZER_URL,
+		    Endpoints.AZURE_SWAGGER_GEOROUTER_URL, Endpoints.AZURE_SWAGGER_TOUROPTIMIZER_URL,
 		    Optional.of(m.get("azure")));
 	} else {
 	    optimzerExample = new FullStackRestCaller(Endpoints.LOCAL_SWAGGER_GEOCODER_URL,
@@ -67,21 +75,35 @@ public class SydneyFllstackExample {
 	 *
 	 */
 	System.out.println("2) Creating matrix connection data");
-	List<ElementConnection> connections = optimzerExample.geoRouteMatrix(nodePoss, ressPoss);
+	List<ElementConnection> connections;
+
+	if (useConnectionCorretion) {
+	    connections = optimzerExample.geoRouteMatrixCorrected(nodePoss, ressPoss);
+	} else {
+	    connections = optimzerExample.geoRouteMatrix(nodePoss, ressPoss);
+	}
 
 	/*
 	 *
 	 * 3) Optimize
 	 *
 	 */
-	System.out.println("3) Optimizing input data");
-	RestOptimization result = optimzerExample.optimize(nodePoss, ressPoss, connections,
-		Optional.of(m.get("joptlic")));
-	
-//	It is also possible to only ask for a result instead of the full data
-//	Solution solution = optimzerExample.optimizeOnlyResult(nodePoss, ressPoss, connections,
-//		Optional.of(m.get("joptlic")));
+	Solution solution;
+	Optional<TextSolution> textSolutionOpt;
 
+	if (onlyReturnResultAfterOptimization) {
+	    solution = optimzerExample.optimizeOnlyResult(nodePoss, ressPoss, connections,
+		    Optional.of(m.get("joptlic")));
+
+	    textSolutionOpt = Optional.empty();
+	} else {
+	    System.out.println("3) Optimizing input data");
+	    RestOptimization result = optimzerExample.optimize(nodePoss, ressPoss, connections,
+		    Optional.of(m.get("joptlic")));
+
+	    solution = result.getSolution();
+	    textSolutionOpt = Optional.ofNullable(result.getExtension().getTextSolution());
+	}
 
 	/*
 	 *
@@ -89,7 +111,7 @@ public class SydneyFllstackExample {
 	 *
 	 */
 	System.out.println("4) Creating polylines for optimized routes in solution");
-	Solution routedSolution = optimzerExample.geoRouteSolution(result.getSolution());
+	Solution routedSolution = optimzerExample.geoRouteSolution(solution);
 
 	/*
 	 *
@@ -103,8 +125,11 @@ public class SydneyFllstackExample {
 
 	// 6) Show result
 	// Contains the polylines - "routedSolution";
-	System.out.println("6) Printing text solution");
-	System.out.println(result.getExtension().getTextSolution());
+	textSolutionOpt.ifPresent(ts -> {
+	    System.out.println("6) Printing text solution");
+	    System.out.println(ts);
+	});
+
     }
 
 }

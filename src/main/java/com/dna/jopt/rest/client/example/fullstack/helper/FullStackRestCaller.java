@@ -1,7 +1,5 @@
 package com.dna.jopt.rest.client.example.fullstack.helper;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,6 +156,15 @@ public class FullStackRestCaller {
 
 	MatrixRoutingRequest request = createMatrixRequest(nodeSrcPoss, ressSrcPoss);
 	Flux<ElementConnection> consFlux = geoRouterMatrixApi.connections(request);
+
+	// Wait for the connections
+	return consFlux.collectList().block();
+    }
+    
+    public List<ElementConnection> geoRouteMatrixCorrected(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
+
+	MatrixRoutingRequest request = createMatrixRequest(nodeSrcPoss, ressSrcPoss);
+	Flux<ElementConnection> consFlux = geoRouterMatrixApi.correctedConnections(request);
 
 	// Wait for the connections
 	return consFlux.collectList().block();
