@@ -7,40 +7,50 @@ import java.util.Optional;
 
 import com.dna.jopt.rest.client.example.fullstack.helper.FullStackRestCaller;
 import com.dna.jopt.rest.client.model.ElementConnection;
+import com.dna.jopt.rest.client.model.GeoAddress;
 import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.model.Status;
 import com.dna.jopt.rest.client.model.TextSolution;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
-import com.dna.jopt.rest.client.util.export.kml.RestSolutionKMLExporter;
+import com.dna.jopt.rest.client.util.io.export.kml.RestSolutionKMLExporter;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
-import com.dna.jopt.rest.client.util.testinput.TestInput;
+import com.dna.jopt.rest.client.util.testinputcreation.TestAddressInput;
 
 public class SydneyFullstackExample {
 
     public static void main(String[] args) throws IOException {
 
-	// Modify me
+	/*
+	 * 
+	 * Modify me
+	 * 
+	 */
 	boolean isAzureCall = true;
 	boolean useConnectionCorretion = true;
 	boolean onlyReturnResultAfterOptimization = !true;
+
+	List<GeoAddress> nodeAddresses = TestAddressInput.defaultSydneyNodeAddresses();
+	List<GeoAddress> resourceAddresses = TestAddressInput.defaultSydneyResourceAddresses();
+
+	// Define the data to be used
 
 	/*
 	 * 
 	 * 
 	 */
-	FullStackRestCaller optimzerExample;
+	FullStackRestCaller fullStackCaller;
 
 	SecretsManager m = new SecretsManager();
 
 	if (isAzureCall) {
 
-	    optimzerExample = new FullStackRestCaller(Endpoints.AZURE_SWAGGER_GEOCODER_URL,
+	    fullStackCaller = new FullStackRestCaller(Endpoints.AZURE_SWAGGER_GEOCODER_URL,
 		    Endpoints.AZURE_SWAGGER_GEOROUTER_URL, Endpoints.AZURE_SWAGGER_TOUROPTIMIZER_URL,
 		    Optional.of(m.get("azure")));
 	} else {
-	    optimzerExample = new FullStackRestCaller(Endpoints.LOCAL_SWAGGER_GEOCODER_URL,
+	    fullStackCaller = new FullStackRestCaller(Endpoints.LOCAL_SWAGGER_GEOCODER_URL,
 		    Endpoints.LOCAL_SWAGGER_GEOROUTER_URL, Endpoints.LOCAL_SWAGGER_TOUROPTIMIZER_URL);
 	}
 
@@ -49,7 +59,7 @@ public class SydneyFullstackExample {
 	 * 0) For example check health of geoCoder
 	 *
 	 */
-	Status status = optimzerExample.checkGeoCoderHealth();
+	Status status = fullStackCaller.checkGeoCoderHealth();
 
 	if (!status.getStatus().equals("UP")) {
 
@@ -66,8 +76,8 @@ public class SydneyFullstackExample {
 	 *
 	 */
 	System.out.println("1) Geocoding test data");
-	List<Position> nodePoss = optimzerExample.geoCodeNodePositions(TestInput.defaultSydneyNodeAddresses());
-	List<Position> ressPoss = optimzerExample.geoCodeResourcePositions(TestInput.defaultSydneyResourceAddresses());
+	List<Position> nodePoss = fullStackCaller.geoCodeNodePositions(nodeAddresses);
+	List<Position> ressPoss = fullStackCaller.geoCodeResourcePositions(resourceAddresses);
 
 	/*
 	 *
@@ -78,9 +88,9 @@ public class SydneyFullstackExample {
 	List<ElementConnection> connections;
 
 	if (useConnectionCorretion) {
-	    connections = optimzerExample.geoRouteMatrixCorrected(nodePoss, ressPoss);
+	    connections = fullStackCaller.geoRouteMatrixCorrected(nodePoss, ressPoss);
 	} else {
-	    connections = optimzerExample.geoRouteMatrix(nodePoss, ressPoss);
+	    connections = fullStackCaller.geoRouteMatrix(nodePoss, ressPoss);
 	}
 
 	/*
@@ -92,13 +102,13 @@ public class SydneyFullstackExample {
 	Optional<TextSolution> textSolutionOpt;
 
 	if (onlyReturnResultAfterOptimization) {
-	    solution = optimzerExample.optimizeOnlyResult(nodePoss, ressPoss, connections,
+	    solution = fullStackCaller.optimizeOnlyResult(nodePoss, ressPoss, connections,
 		    Optional.of(m.get("joptlic")));
 
 	    textSolutionOpt = Optional.empty();
 	} else {
 	    System.out.println("3) Optimizing input data");
-	    RestOptimization result = optimzerExample.optimize(nodePoss, ressPoss, connections,
+	    RestOptimization result = fullStackCaller.optimize(nodePoss, ressPoss, connections,
 		    Optional.of(m.get("joptlic")));
 
 	    solution = result.getSolution();
@@ -111,7 +121,7 @@ public class SydneyFullstackExample {
 	 *
 	 */
 	System.out.println("4) Creating polylines for optimized routes in solution");
-	Solution routedSolution = optimzerExample.geoRouteSolution(solution);
+	Solution routedSolution = fullStackCaller.geoRouteSolution(solution);
 
 	/*
 	 *
@@ -129,6 +139,7 @@ public class SydneyFullstackExample {
 	    System.out.println("6) Printing text solution");
 	    System.out.println(ts);
 	});
+	
 
     }
 

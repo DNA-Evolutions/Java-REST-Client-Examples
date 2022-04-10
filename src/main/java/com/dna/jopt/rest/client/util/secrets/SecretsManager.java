@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SecretsManager {
@@ -22,11 +20,11 @@ public class SecretsManager {
 
     private static final String DEFAULT_SECRETS_PATH = "src/main/resources/secrets/secrets.json";
 
-    public SecretsManager() throws JsonParseException, JsonMappingException, IOException {
+    public SecretsManager() throws  IOException {
 	this(new File(DEFAULT_SECRETS_PATH));
     }
 
-    public SecretsManager(File secretFile) throws JsonParseException, JsonMappingException, IOException {
+    public SecretsManager(File secretFile) throws IOException {
 	// Read in secrets
 
 	ObjectMapper mapper = new ObjectMapper();
@@ -42,12 +40,4 @@ public class SecretsManager {
 	return this.secretsMap.getOrDefault(key, "");
 
     }
-
-    public static void main(String args[]) throws JsonParseException, JsonMappingException, IOException {
-	SecretsManager m = new SecretsManager();
-
-	System.out.println(m.get("azure"));
-
-    }
-
 }

@@ -1,56 +1,24 @@
 package com.dna.jopt.rest.client.example.fullstack.helper;
 
 import java.io.PrintStream;
-import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.web.reactive.function.client.WebClient;
+import com.dna.jopt.rest.client.example.geocoder.helper.GeoCoderRestCaller;
+import com.dna.jopt.rest.client.example.routeplanner.helper.RoutePlannerRestCaller;
+import com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller;
 import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.GeoAddress;
-import com.dna.jopt.rest.client.model.GeoNode;
 import com.dna.jopt.rest.client.model.MatrixRoutingRequest;
-import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.Position;
-import com.dna.jopt.rest.client.model.RequestDirectionsOptions;
-import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.model.Status;
-import com.dna.jopt.rest.client.util.testinput.TestInput;
-import com.dna.jopt.rest.geocoder.client.api.BatchForwardGeoCodingServiceControllerApi;
-import com.dna.jopt.rest.geocoder.client.api.HealthStatusApi;
-import com.dna.jopt.rest.georouter.client.api.GeoMatrixRoutingServiceControllerApi;
-import com.dna.jopt.rest.georouter.client.api.GeoTurnByTurnRoutingServiceControllerApi;
-import com.dna.jopt.rest.touroptimizer.client.ApiClient;
-import com.dna.jopt.rest.touroptimizer.client.api.OptimizationServiceControllerApi;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 public class FullStackRestCaller {
 
-    /*
-     * Define api services
-     */
-    private BatchForwardGeoCodingServiceControllerApi geoCoderBatchForwardApi = new BatchForwardGeoCodingServiceControllerApi();
-    private HealthStatusApi geoCoderHealth = new HealthStatusApi();
-
-    private GeoMatrixRoutingServiceControllerApi geoRouterMatrixApi = new GeoMatrixRoutingServiceControllerApi();
-    private GeoTurnByTurnRoutingServiceControllerApi geoRouterTBTApi = new GeoTurnByTurnRoutingServiceControllerApi();
-
-    private OptimizationServiceControllerApi geoOptimizerApi = createOptimizationControllerApi();
-
-    public final ObjectMapper tourOptimizerObjectMapper;
-    private PrintStream printOutStream;
-
-    public static final int MAX_TOUROPIMIZER_RESPONSESIZE_MB = 16;
+    private TourOptimizerRestCaller tourOptimizer;
+    private RoutePlannerRestCaller routePlanner;
+    private GeoCoderRestCaller geoCoder;
 
     /*
      *
@@ -63,73 +31,9 @@ public class FullStackRestCaller {
     public FullStackRestCaller(String geocoderUrl, String georouterUrl, String tourOptimizerUrl,
 	    Optional<String> azureApiKeyOpt) {
 
-	// Modify endpoint to meet server
-	this.geoCoderBatchForwardApi.getApiClient().setBasePath(geocoderUrl);
-
-	this.geoCoderHealth.getApiClient().setBasePath(geocoderUrl);
-
-	// Modify endpoint to meet server
-	this.geoOptimizerApi.getApiClient().setBasePath(tourOptimizerUrl);
-
-	// Modify endpoint to meet our local server
-	this.geoRouterMatrixApi.getApiClient().setBasePath(georouterUrl);
-
-	// Modify endpoint to meet our local server
-	this.geoRouterTBTApi.getApiClient().setBasePath(georouterUrl);
-
-	// Get the mapper from the generated files
-	this.tourOptimizerObjectMapper = this.geoOptimizerApi.getApiClient().getObjectMapper();
-
-	// Invoke api key if desired
-	if (azureApiKeyOpt.isPresent()) {
-	    String azureApiKey = azureApiKeyOpt.get();
-
-	    this.geoCoderBatchForwardApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
-		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
-
-	    this.geoCoderHealth.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
-		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
-
-	    this.geoOptimizerApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
-		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
-
-	    this.geoRouterMatrixApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
-		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
-
-	    this.geoRouterTBTApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
-		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
-
-	}
-    }
-    
-    public void setPrintOutStream(PrintStream outstream) {
-	this.printOutStream = outstream;
-    }
-    
-    private PrintStream getPrintOutStream() {
-	if(this.printOutStream!=null) {
-	    return this.printOutStream;
-	}else {
-	    return System.out;
-	}
-    }
-
-    private static OptimizationServiceControllerApi createOptimizationControllerApi() {
-
-	DateFormat dateFormat = ApiClient.createDefaultDateFormat();
-	ObjectMapper objectMapper = ApiClient.createDefaultObjectMapper(dateFormat);
-
-	// Vital step! - We need to the generated mapper how to treat our JSON data
-	objectMapper.setSerializationInclusion(Include.NON_NULL).setSerializationInclusion(Include.NON_ABSENT)
-		.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-	WebClient webClient = ApiClient.buildWebClientBuilder(objectMapper).codecs(configurer -> configurer
-		.defaultCodecs().maxInMemorySize(MAX_TOUROPIMIZER_RESPONSESIZE_MB * 1024 * 1024)).build();
-
-	ApiClient myApiClient = new ApiClient(webClient);
-
-	return new OptimizationServiceControllerApi(myApiClient);
-
+	this.tourOptimizer = new TourOptimizerRestCaller(tourOptimizerUrl, azureApiKeyOpt);
+	this.routePlanner = new RoutePlannerRestCaller(georouterUrl, azureApiKeyOpt);
+	this.geoCoder = new GeoCoderRestCaller(geocoderUrl, azureApiKeyOpt);
     }
 
     /*
@@ -138,7 +42,7 @@ public class FullStackRestCaller {
      * 
      */
     public Status checkGeoCoderHealth() {
-	return this.geoCoderHealth.healthStatus().block();
+	return this.geoCoder.checkGeoCoderHealth();
     }
 
     /*
@@ -147,18 +51,13 @@ public class FullStackRestCaller {
      *
      */
     public List<Position> geoCodeNodePositions(List<GeoAddress> nodeAddresses) {
-	Flux<Position> nodePositionsFlux = geoCoderBatchForwardApi.batchForward(nodeAddresses);
 
-	// Wait for the connections
-	return nodePositionsFlux.collectList().block();
+	return this.geoCoder.geoCodeNodePositions(nodeAddresses);
     }
 
     public List<Position> geoCodeResourcePositions(List<GeoAddress> ressAddresses) {
 
-	Flux<Position> ressPositionsFlux = geoCoderBatchForwardApi.batchForward(ressAddresses);
-
-	// Wait for the connections
-	return ressPositionsFlux.collectList().block();
+	return this.geoCoder.geoCodeResourcePositions(ressAddresses);
     }
 
     /*
@@ -168,47 +67,18 @@ public class FullStackRestCaller {
      */
     public List<ElementConnection> geoRouteMatrix(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
 
-	MatrixRoutingRequest request = createMatrixRequest(nodeSrcPoss, ressSrcPoss);
-	Flux<ElementConnection> consFlux = geoRouterMatrixApi.connections(request);
-
-	// Wait for the connections
-	return consFlux.collectList().block();
+	return this.routePlanner.geoRouteMatrix(nodeSrcPoss, ressSrcPoss);
     }
-    
+
     public List<ElementConnection> geoRouteMatrixCorrected(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
 
-	MatrixRoutingRequest request = createMatrixRequest(nodeSrcPoss, ressSrcPoss);
-	Flux<ElementConnection> consFlux = geoRouterMatrixApi.correctedConnections(request);
-
-	// Wait for the connections
-	return consFlux.collectList().block();
+	return this.routePlanner.geoRouteMatrixCorrected(nodeSrcPoss, ressSrcPoss);
     }
 
     public static MatrixRoutingRequest createMatrixRequest(RestOptimization input) {
-	List<Position> nodeSrcPoss = input.getNodes().stream().filter(n -> n.getType().getTypeName().equals("Geo"))
-		.map(n -> ((GeoNode) n.getType()).getPosition()).collect(Collectors.toList());
 
-	List<Position> ressSrcPoss = input.getResources().stream().map(Resource::getPosition)
-		.collect(Collectors.toList());
+	return RoutePlannerRestCaller.createMatrixRequest(input);
 
-	return createMatrixRequest(nodeSrcPoss, ressSrcPoss);
-    }
-
-    public static MatrixRoutingRequest createMatrixRequest(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
-
-	MatrixRoutingRequest request = new MatrixRoutingRequest();
-
-	List<Position> sourcePositions = new ArrayList<>();
-	sourcePositions.addAll(nodeSrcPoss);
-	sourcePositions.addAll(ressSrcPoss);
-
-	request.sourcePositions(sourcePositions);
-
-	RequestDirectionsOptions directionsOptions = new RequestDirectionsOptions();
-	directionsOptions.setNarrative(false);
-	request.setDirectionsOptions(directionsOptions);
-
-	return request;
     }
 
     /*
@@ -219,64 +89,20 @@ public class FullStackRestCaller {
 
     public RestOptimization optimize(List<Position> nodePoss, List<Position> ressPoss,
 	    List<ElementConnection> connections, Optional<String> jsonLicenseOpt) {
-	// Map to elements
-	List<Node> nodes = nodePoss.stream().map(p -> TestInput.defaultGeoNode(p, p.getLocationId()))
-		.collect(Collectors.toList());
-	List<Resource> ress = ressPoss.stream().map(p -> TestInput.defaultCapacityResource(p, p.getLocationId()))
-		.collect(Collectors.toList());
 
-	RestOptimization optimization = TestInput.defaultTouroptimizerTestInput(nodes, ress, jsonLicenseOpt);
+	return this.tourOptimizer.optimize(nodePoss, ressPoss, connections, jsonLicenseOpt);
 
-	optimization.setElementConnections(connections);
-
-	// Let us attach to streams - Internally the subscription is done on "real"
-	// optimization start
-	attachToStreams(this.getPrintOutStream());
-
-	// Trigger the Optimization
-	Mono<RestOptimization> resultMono = geoOptimizerApi.run(optimization);
-
-	// This will keep the example alive. Otherwise just subscribe
-	return resultMono.block();
     }
 
     public Solution optimizeOnlyResult(List<Position> nodePoss, List<Position> ressPoss,
 	    List<ElementConnection> connections, Optional<String> jsonLicenseOpt) {
-	// Map to elements
-	List<Node> nodes = nodePoss.stream().map(p -> TestInput.defaultGeoNode(p, p.getLocationId()))
-		.collect(Collectors.toList());
-	List<Resource> ress = ressPoss.stream().map(p -> TestInput.defaultCapacityResource(p, p.getLocationId()))
-		.collect(Collectors.toList());
 
-	RestOptimization optimization = TestInput.defaultTouroptimizerTestInput(nodes, ress, jsonLicenseOpt);
-
-	optimization.setElementConnections(connections);
-
-	// Let us attach to streams - Internally the subscription is done on "real"
-	// optimization start
-	attachToStreams(this.getPrintOutStream());
-
-	// Trigger the Optimization
-	Mono<Solution> resultMono = geoOptimizerApi.runOnlyResult(optimization);
-
-	// This will keep the example alive. Otherwise just subscribe
-	return resultMono.block();
+	return this.tourOptimizer.optimizeOnlyResult(nodePoss, ressPoss, connections, jsonLicenseOpt);
     }
 
     public void attachToStreams(PrintStream outstream) {
-	
 
-	geoOptimizerApi.runStartedSginal().subscribe(b -> {
-
-	    geoOptimizerApi.progress()
-		    .subscribe(pr -> outstream.println("  " + pr.getCallerId() + ", " + pr.getCurProgress()));
-
-	    geoOptimizerApi.status().subscribe(s -> outstream.println("  " + s.getMessage()));
-
-	    geoOptimizerApi.error().subscribe(e -> outstream.println("  " + e.getMessage()));
-
-	    geoOptimizerApi.warning().subscribe(w -> outstream.println(" " + w.getMessage()));
-	});
+	this.tourOptimizer.attachToStreams(outstream);
     }
 
     /*
@@ -286,10 +112,7 @@ public class FullStackRestCaller {
      */
     public Solution geoRouteSolution(Solution existing) {
 
-	// Create routes
-	Mono<Solution> routedSolutionMono = geoRouterTBTApi.solutionWithDefaultSettings(existing);
-
-	return routedSolutionMono.block();
+	return this.routePlanner.geoRouteSolution(existing);
     }
 
 }

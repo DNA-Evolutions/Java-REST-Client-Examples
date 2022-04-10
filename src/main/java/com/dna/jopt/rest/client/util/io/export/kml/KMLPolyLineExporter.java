@@ -1,4 +1,4 @@
-package com.dna.jopt.rest.client.util.export.kml;
+package com.dna.jopt.rest.client.util.io.export.kml;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
