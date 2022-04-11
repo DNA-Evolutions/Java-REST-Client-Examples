@@ -65,14 +65,9 @@ public class FullStackRestCaller {
      * Step 2) - GeoRouteMatrix
      *
      */
-    public List<ElementConnection> geoRouteMatrix(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
+    public List<ElementConnection> geoRouteMatrix(List<Position> nodeSrcPoss, List<Position> ressSrcPoss, boolean isUseCorrection) {
 
-	return this.routePlanner.geoRouteMatrix(nodeSrcPoss, ressSrcPoss);
-    }
-
-    public List<ElementConnection> geoRouteMatrixCorrected(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
-
-	return this.routePlanner.geoRouteMatrixCorrected(nodeSrcPoss, ressSrcPoss);
+	return this.routePlanner.geoRouteMatrix(nodeSrcPoss, ressSrcPoss,isUseCorrection);
     }
 
     public static MatrixRoutingRequest createMatrixRequest(RestOptimization input) {

@@ -2,6 +2,7 @@ package com.dna.jopt.rest.client.util.testinputcreation;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -79,6 +80,25 @@ public class TestElementsCreator {
      * Node specific
      *
      */
+    
+    public static Node defaultGeoNode(Position pos, String id, List<OpeningHours> openingHours) {
+
+	Node node = new Node();
+
+	node.setOpeningHours(openingHours);
+	node.setId(id);
+	node.setLocationId(pos.getLocationId());
+	node.setVisitDuration("PT30M");
+	node.setPriority(1);
+
+	GeoNode geoPart = new GeoNode();
+	geoPart.setPosition(pos);
+	geoPart.setTypeName("Geo");
+
+	node.setType(geoPart);
+
+	return node;
+    }
 
     public static Node defaultGeoNode(Position pos, String id) {
 
@@ -97,6 +117,21 @@ public class TestElementsCreator {
 	node.setType(geoPart);
 
 	return node;
+    }
+    
+    public static List<OpeningHours> defaultTestOpeninghours(int choosenSingleDayIndex) {
+	
+	if(choosenSingleDayIndex<0) {
+	    throw new IllegalStateException("Choosen day index cannot be negative");
+	}
+	
+	List<OpeningHours> fullHours = defaultTestOpeninghours();
+	
+	if(choosenSingleDayIndex>fullHours.size()-1) {
+	    throw new IllegalStateException("Choosen day cannot be greater than "+ (fullHours.size()-1));
+	}
+	
+	return Collections.singletonList(fullHours.get(choosenSingleDayIndex));
     }
 
     public static List<OpeningHours> defaultTestOpeninghours() {

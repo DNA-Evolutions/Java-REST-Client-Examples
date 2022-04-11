@@ -252,37 +252,9 @@
 				<!-- RELEASE_VERSION -->
 				<version>5.2.1</version>
 				<!-- /RELEASE_VERSION -->
+				
 				<executions>
-					<execution>
-						<id>touroptimizer</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<!-- specify the swagger yaml -->
-							<inputSpec>
-								${project.basedir}/src/main/resources/swagger/touroptimizer/spec/touroptimizer_spec.json</inputSpec>
-							<configurationFile>${project.basedir}/src/main/resources/swagger/touroptimizer/config/touroptimizer_openapi_config.json</configurationFile>
 
-							<!-- target to generate java client code -->
-							<generatorName>java</generatorName>
-
-							<verbose>false</verbose>
-							<typeMappings>
-								<typeMapping>OffsetDateTime=Instant</typeMapping>
-							</typeMappings>
-							<importMappings>
-								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
-							</importMappings>
-
-							<!-- override the default library to jersey2 - Need to be set here -->
-							<library>webclient</library>
-							<!--<modelNamePrefix></modelNamePrefix> -->
-
-							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
-
-						</configuration>
-					</execution>
 
 					<execution>
 						<id>geocoder</id>
@@ -299,17 +271,17 @@
 								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
 							</importMappings>
 
-							<!-- specify the swagger yaml -->
+							
 							<inputSpec>
 								${project.basedir}/src/main/resources/swagger/geocoder/spec/geocoder_spec.json</inputSpec>
 							<configurationFile>${project.basedir}/src/main/resources/swagger/geocoder/config/geocoder_openapi_config.json</configurationFile>
 
-							<!-- target to generate java client code -->
+							
 							<generatorName>java</generatorName>
 
-							<!-- override the default library to jersey2 - Need to be set here -->
+							
 							<library>webclient</library>
-							<!-- <modelNamePrefix></modelNamePrefix> -->
+							
 
 							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
 
@@ -344,6 +316,37 @@
 
 							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
 
+
+						</configuration>
+					</execution>
+									
+					<execution>
+						<id>touroptimizer</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+						
+							<inputSpec>
+								${project.basedir}/src/main/resources/swagger/touroptimizer/spec/touroptimizer_spec.json</inputSpec>
+							<configurationFile>${project.basedir}/src/main/resources/swagger/touroptimizer/config/touroptimizer_openapi_config.json</configurationFile>
+
+							
+							<generatorName>java</generatorName>
+
+							<verbose>false</verbose>
+							<typeMappings>
+								<typeMapping>OffsetDateTime=Instant</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
+							</importMappings>
+
+							
+							<library>webclient</library>
+							
+
+							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
 
 						</configuration>
 					</execution>

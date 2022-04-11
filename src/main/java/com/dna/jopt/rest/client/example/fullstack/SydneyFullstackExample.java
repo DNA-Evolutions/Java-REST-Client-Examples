@@ -87,11 +87,8 @@ public class SydneyFullstackExample {
 	System.out.println("2) Creating matrix connection data");
 	List<ElementConnection> connections;
 
-	if (useConnectionCorretion) {
-	    connections = fullStackCaller.geoRouteMatrixCorrected(nodePoss, ressPoss);
-	} else {
-	    connections = fullStackCaller.geoRouteMatrix(nodePoss, ressPoss);
-	}
+	connections = fullStackCaller.geoRouteMatrix(nodePoss, ressPoss,useConnectionCorretion);
+	
 
 	/*
 	 *

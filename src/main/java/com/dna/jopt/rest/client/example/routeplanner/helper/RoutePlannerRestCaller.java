@@ -4,16 +4,19 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.web.reactive.function.client.WebClient;
 import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.GeoNode;
 import com.dna.jopt.rest.client.model.MatrixRoutingRequest;
+import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.RequestDirectionsOptions;
 import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
+import com.dna.jopt.rest.client.model.SmartMatrixRoutingRequest;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.model.TurnByTurnResponseItem;
 import com.dna.jopt.rest.client.model.TurnByTurnRoutingRequest;
@@ -97,20 +100,31 @@ public class RoutePlannerRestCaller {
      * Step 2) - GeoRouteMatrix
      *
      */
-    public List<ElementConnection> geoRouteMatrix(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
+
+    public List<ElementConnection> geoRouteMatrix(List<Position> nodeSrcPoss, List<Position> ressSrcPoss, boolean isUseCorrection) {
 
 	MatrixRoutingRequest request = createMatrixRequest(nodeSrcPoss, ressSrcPoss);
+	request.setUseCorrection(isUseCorrection);
 	Flux<ElementConnection> consFlux = geoRouterMatrixApi.connections(request);
 
 	// Wait for the connections
 	return consFlux.onErrorResume(RestErrorHandler.connectionListErrorResumer(routePlannerObjectMapper))
 		.collectList().block();
     }
+    
+    public List<ElementConnection> geoRouteSmartMatrix(Set<Node> nodes, Set<Resource> ress, boolean isUseCorrection) {
 
-    public List<ElementConnection> geoRouteMatrixCorrected(List<Position> nodeSrcPoss, List<Position> ressSrcPoss) {
+	SmartMatrixRoutingRequest smartRequest = new SmartMatrixRoutingRequest();
 
-	MatrixRoutingRequest request = createMatrixRequest(nodeSrcPoss, ressSrcPoss);
-	Flux<ElementConnection> consFlux = geoRouterMatrixApi.correctedConnections(request);
+	smartRequest.setNodes(nodes);
+	smartRequest.setResources(ress);
+
+	RequestDirectionsOptions directionsOptions = new RequestDirectionsOptions();
+	directionsOptions.setNarrative(false);
+	smartRequest.setDirectionsOptions(directionsOptions);
+	smartRequest.setUseCorrection(isUseCorrection);
+
+	Flux<ElementConnection> consFlux = geoRouterMatrixApi.smartConnections(smartRequest);
 
 	// Wait for the connections
 	return consFlux.onErrorResume(RestErrorHandler.connectionListErrorResumer(routePlannerObjectMapper))

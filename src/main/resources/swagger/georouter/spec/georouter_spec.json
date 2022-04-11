@@ -51,22 +51,22 @@
               }
             }
           },
-          "200" : {
-            "description" : "successful operation",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Solution"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal server error",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
                 }
               }
             }
@@ -101,22 +101,22 @@
               }
             }
           },
-          "200" : {
-            "description" : "successful operation",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Solution"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal server error",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
                 }
               }
             }
@@ -151,22 +151,22 @@
               }
             }
           },
-          "200" : {
-            "description" : "successful operation",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/TurnByTurnResponseItem"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal server error",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TurnByTurnResponseItem"
                 }
               }
             }
@@ -201,22 +201,22 @@
               }
             }
           },
-          "200" : {
-            "description" : "successful operation",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Route"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal server error",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Route"
                 }
               }
             }
@@ -251,6 +251,16 @@
               }
             }
           },
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "successful operation",
             "content" : {
@@ -260,13 +270,56 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/matrix/smartConnections" : {
+      "post" : {
+        "tags" : [ "GeoMatrixRoutingServiceController" ],
+        "summary" : "Post nodes and resources to be smart routed",
+        "description" : "An input to run georouting and getting an optimizer compatible list of connections.",
+        "operationId" : "smartConnections",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SmartMatrixRoutingRequest"
+              }
+            }
           },
+          "required" : true
+        },
+        "responses" : {
           "500" : {
             "description" : "Internal server error",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ElementConnection"
+                  }
                 }
               }
             }
@@ -277,7 +330,7 @@
     "/api/matrix/matrix" : {
       "post" : {
         "tags" : [ "GeoMatrixRoutingServiceController" ],
-        "summary" : "Post addresses to be routed",
+        "summary" : "An input to run georouting and getting raw responses.",
         "description" : "An input to run geocoding",
         "operationId" : "matrix",
         "requestBody" : {
@@ -301,16 +354,6 @@
               }
             }
           },
-          "200" : {
-            "description" : "successful operation",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/MatrixResponseItem"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal server error",
             "content" : {
@@ -320,42 +363,38 @@
                 }
               }
             }
+          },
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MatrixResponseItem"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/matrix/correctedConnections" : {
+    "/api/matrix/echoRun" : {
       "post" : {
-        "tags" : [ "GeoMatrixRoutingServiceController" ],
-        "summary" : "Post addresses to be routed",
-        "description" : "An input to run geocoding and getting an optimizer compatible list of connections. The connections are corrected in time by using DNA's corrections service (if active and available).",
-        "operationId" : "correctedConnections",
+        "tags" : [ "GeoMatrixRoutingServiceController", "optimization" ],
+        "description" : "The entry point to access the JOpt.TourOptimization optimization service. Once you have set up an input, you can let JOpt find an optimal solution for your setup.",
+        "operationId" : "echoRun",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/MatrixRoutingRequest"
+                "$ref" : "#/components/schemas/RestOptimization"
               }
             }
           },
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "successful operation",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/ElementConnection"
-                  }
-                }
-              }
-            }
-          },
           "500" : {
-            "description" : "Internal server error / Is the correction service running?",
+            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -364,8 +403,28 @@
               }
             }
           },
-          "400" : {
-            "description" : "Bad Request / Is your input valid?",
+          "200" : {
+            "description" : "Once the optimizer has finished the optimization run, it will return an OptimizationConfig JSON that contains the initial definition and the solution.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RestOptimization"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Timeout / Optimization took too long",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -380,8 +439,8 @@
     "/api/matrix/connections" : {
       "post" : {
         "tags" : [ "GeoMatrixRoutingServiceController" ],
-        "summary" : "Post addresses to be routed",
-        "description" : "An input to run geocoding and getting an optimizer compatible list of connections.",
+        "summary" : "Post positions to be routed",
+        "description" : "An input to run georouting and getting an optimizer compatible list of connections.",
         "operationId" : "connections",
         "requestBody" : {
           "content" : {
@@ -394,8 +453,18 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "400" : {
-            "description" : "Bad Request / Are you providing at least two positions?",
+            "description" : "Bad Request",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -416,16 +485,6 @@
                 }
               }
             }
-          },
-          "500" : {
-            "description" : "Internal server error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
           }
         }
       }
@@ -437,8 +496,8 @@
         "description" : "Get the health status of this endpoint.",
         "operationId" : "healthStatus",
         "responses" : {
-          "200" : {
-            "description" : "The endpoint is up and running.",
+          "503" : {
+            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -447,8 +506,8 @@
               }
             }
           },
-          "503" : {
-            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
+          "200" : {
+            "description" : "The endpoint is up and running.",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -658,14 +717,14 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "fuzzyVisit" : {
-            "type" : "boolean"
-          },
           "loadValue" : {
             "type" : "number",
             "format" : "double"
           },
           "request" : {
+            "type" : "boolean"
+          },
+          "fuzzyVisit" : {
             "type" : "boolean"
           },
           "id" : {
@@ -700,11 +759,11 @@
           "depotId" : {
             "type" : "string"
           },
-          "hasFlexLoad" : {
+          "hasTimedLoads" : {
             "type" : "boolean",
             "writeOnly" : true
           },
-          "hasTimedLoads" : {
+          "hasFlexLoad" : {
             "type" : "boolean",
             "writeOnly" : true
           },
@@ -1016,7 +1075,8 @@
             "description" : "The isLockedDown. Describes if a route was undergoing lockdown.",
             "example" : false
           }
-        }
+        },
+        "description" : "The routes of the solution."
       },
       "RouteElementDetail" : {
         "required" : [ "arrivalTime", "departureTime", "durationTime", "elementId", "idleTime", "startTime", "transitionDistance", "transitionTime" ],
@@ -1292,7 +1352,8 @@
               "$ref" : "#/components/schemas/Route"
             }
           }
-        }
+        },
+        "description" : "The solution. Either provided by the library or by the user and used as starting solution for the optimization run"
       },
       "SolutionHeader" : {
         "required" : [ "jobViolations", "numRoutes", "numScheduledRoutes", "totCost", "totDistance", "totElements", "totIdleTime", "totProdTime", "totTermiDistance", "totTermiTime", "totTime", "totTranTime", "unassignedElementIds" ],
@@ -1579,8 +1640,1172 @@
           }
         }
       },
-      "MatrixRoutingRequest" : {
-        "required" : [ "attachRawResponse", "requestId", "sourcePositions", "targetPositions", "throwErrorOnFailure" ],
+      "BindingResourceConstraint" : {
+        "required" : [ "resources", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "resources" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "The resources that can be choosen to visit a certain node.",
+              "items" : {
+                "$ref" : "#/components/schemas/ResourceWithPriority"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "BindingResource",
+              "default" : "BindingResource"
+            }
+          }
+        } ]
+      },
+      "CapacityResource" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ResourceType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "Capacity",
+              "default" : "Capacity"
+            }
+          }
+        } ]
+      },
+      "ConnectedConstraint" : {
+        "required" : [ "connectionType", "constraintOne", "constraintTwo", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "constraintOne" : {
+              "$ref" : "#/components/schemas/Constraint"
+            },
+            "constraintTwo" : {
+              "$ref" : "#/components/schemas/Constraint"
+            },
+            "connectionType" : {
+              "type" : "string",
+              "description" : "The connectionType",
+              "enum" : [ "AND_CONNECTION_TYPE", "OR_CONNECTION_TYPE" ]
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "ConnectedConstraint",
+              "default" : "ConnectedConstraint"
+            }
+          }
+        } ]
+      },
+      "ConnectionRelatedLateMargin" : {
+        "required" : [ "marginFactor", "maxMargin" ],
+        "type" : "object",
+        "properties" : {
+          "shiftElementConnectionRealtedLateMargin" : {
+            "type" : "boolean",
+            "description" : "The isDoElementShiftConnectionRealtedLateMargin"
+          },
+          "applyPartialConnectionRelatedLateMargin" : {
+            "type" : "boolean",
+            "description" : "The applyPartialConnectionRelatedLateMargin"
+          },
+          "maxMargin" : {
+            "type" : "string",
+            "description" : "The maxMargin",
+            "example" : "PT10M"
+          },
+          "marginFactor" : {
+            "type" : "number",
+            "description" : "The marginFactor between 0 (inclusive) and 1 (inclusive)",
+            "format" : "double",
+            "example" : 0.2
+          }
+        },
+        "description" : "The connectionRelatedLateMargin"
+      },
+      "Constraint" : {
+        "required" : [ "isHard", "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "$ref" : "#/components/schemas/ConstraintType"
+          },
+          "isHard" : {
+            "type" : "boolean",
+            "description" : "Defines if a constraint is soft contrained or hard constraint. A hard constraint is fullfilled by the architectural design of the Optimzer. Therefore a hard constraint violation cannot occure. However, not all constraints can be hard-constraint-"
+          }
+        },
+        "description" : "The constraints  of the Resource"
+      },
+      "ConstraintType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The type",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "ConnectedConstraint" : "#/components/schemas/ConnectedConstraint",
+            "BindingResource" : "#/components/schemas/BindingResourceConstraint",
+            "ExcludingResource" : "#/components/schemas/ExcludingResourceConstraint",
+            "ResourceLocationConstraint" : "#/components/schemas/ResourceLocationConstraint",
+            "Type" : "#/components/schemas/TypeConstraint",
+            "TypeWithExpertise" : "#/components/schemas/TypeWithExpertiseConstraint",
+            "ZoneNumberConstraint" : "#/components/schemas/ZoneNumberConstraint",
+            "UKPostCodeConstraint" : "#/components/schemas/UKPostCodeConstraint",
+            "NodeColorMultiRouteConstraint" : "#/components/schemas/NodeColorMultiRouteConstraint"
+          }
+        }
+      },
+      "DegradingLoadCapacity" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ILoadCapacity"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "loadCapacityId" : {
+              "type" : "string"
+            },
+            "maxCapacityValue" : {
+              "type" : "integer",
+              "format" : "int32",
+              "writeOnly" : true
+            },
+            "capacityDegradationPerStop" : {
+              "type" : "number",
+              "format" : "double"
+            },
+            "minimalTotaDegradatedCapacity" : {
+              "type" : "number",
+              "format" : "double"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "DegradingLoadCapacity",
+              "default" : "DegradingLoadCapacity"
+            }
+          }
+        } ]
+      },
+      "EventNode" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NodeType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "pillarNode" : {
+              "$ref" : "#/components/schemas/EventPillarNode"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "Event",
+              "default" : "Event"
+            }
+          }
+        } ]
+      },
+      "EventPillarNode" : {
+        "type" : "object",
+        "properties" : {
+          "attachedResourceId" : {
+            "type" : "string",
+            "description" : "The attached resourceId. A geoPillar must be visited by this resource."
+          },
+          "onlyScheduledInCompany" : {
+            "type" : "boolean",
+            "description" : "The onlyScheduledInCompany"
+          },
+          "isExtendableEnd" : {
+            "type" : "boolean",
+            "description" : "The isExtendableEnd"
+          },
+          "isOverwritingRouteTermination" : {
+            "type" : "boolean",
+            "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
+          },
+          "isTimeAdjustableAnchor" : {
+            "type" : "boolean",
+            "description" : "The isTimeAdjustableAnchor"
+          },
+          "isSchedulableAfterWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableAfterWorkingHours"
+          },
+          "isSchedulableBeforeWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableBeforeWorkingHours"
+          }
+        },
+        "description" : "The pillarNode"
+      },
+      "ExcludingResourceConstraint" : {
+        "required" : [ "resources", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "resources" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "The list of resources that should NOT visit a certain node.",
+              "items" : {
+                "$ref" : "#/components/schemas/ResourceWithPriority"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "ExcludingResource",
+              "default" : "ExcludingResource"
+            }
+          }
+        } ]
+      },
+      "GeoNode" : {
+        "required" : [ "pillarNode", "position", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NodeType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "position" : {
+              "$ref" : "#/components/schemas/Position"
+            },
+            "pillarNode" : {
+              "$ref" : "#/components/schemas/GeoPillarNode"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "Geo",
+              "default" : "Geo"
+            }
+          }
+        } ]
+      },
+      "GeoPillarNode" : {
+        "type" : "object",
+        "properties" : {
+          "attachedResourceId" : {
+            "type" : "string",
+            "description" : "The attached resourceId. A geoPillar must be visited by this resource."
+          },
+          "onlyScheduledInCompany" : {
+            "type" : "boolean",
+            "description" : "The onlyScheduledInCompany"
+          },
+          "connectionRelatedLateMargin" : {
+            "$ref" : "#/components/schemas/ConnectionRelatedLateMargin"
+          },
+          "isForcedStayNode" : {
+            "type" : "boolean",
+            "description" : "The isForcedStayNode"
+          },
+          "isAutoTransformable2StartAnchor" : {
+            "type" : "boolean",
+            "description" : "The isAutoTransformable2StartAnchor"
+          },
+          "isOverwritingRouteStart" : {
+            "type" : "boolean",
+            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
+          },
+          "isOverwritingRouteTermination" : {
+            "type" : "boolean",
+            "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
+          },
+          "isTimeAdjustableAnchor" : {
+            "type" : "boolean",
+            "description" : "The isTimeAdjustableAnchor"
+          },
+          "isSchedulableAfterWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableAfterWorkingHours"
+          },
+          "isSchedulableBeforeWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableBeforeWorkingHours"
+          }
+        },
+        "description" : "The optional pillarNode. If a node has the pillarNode attibute attached, it becomes a pillar node itself. A pillar nodes openingHour cannot be violated. If a violation cannot be avoided, the pillar will be unassigned instead of being violated."
+      },
+      "ILoadCapacity" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "loadPickupTime" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "maximalIndividualLoadCapacity" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "currentLoad" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The LoadCapacity type",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "SimpleLoadCapacity" : "#/components/schemas/SimpleLoadCapacity",
+            "DegradingLoadCapacity" : "#/components/schemas/DegradingLoadCapacity"
+          }
+        }
+      },
+      "IResourceDepot" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ILoadCapacity"
+            }
+          },
+          "depotId" : {
+            "type" : "string"
+          },
+          "maximalTotalCapacity" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "capacityUnitMap" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "number",
+              "format" : "double"
+            },
+            "writeOnly" : true
+          },
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The resourceDepot",
+        "discriminator" : {
+          "propertyName" : "typeName"
+        }
+      },
+      "IdleEventNode" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NodeType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "pillarNode" : {
+              "$ref" : "#/components/schemas/EventPillarNode"
+            },
+            "masterId" : {
+              "type" : "string",
+              "description" : "The masterId"
+            },
+            "relatedId" : {
+              "type" : "string",
+              "description" : "The relatedId"
+            },
+            "creationTimeStamp" : {
+              "type" : "integer",
+              "description" : "The creationTimeStamp",
+              "format" : "int64"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "IdleEvent",
+              "default" : "IdleEvent"
+            }
+          }
+        } ]
+      },
+      "IntegerMultiConstraintHelperItem" : {
+        "required" : [ "pairs" ],
+        "type" : "object",
+        "properties" : {
+          "pairs" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The pairs",
+            "items" : {
+              "$ref" : "#/components/schemas/StringIntegerPair"
+            }
+          }
+        },
+        "description" : "The mirrorItem"
+      },
+      "LoadDimension" : {
+        "required" : [ "totalLoadDimension", "unloadAllDimension" ],
+        "type" : "object",
+        "properties" : {
+          "unloadAllDimension" : {
+            "type" : "integer",
+            "description" : "The unloadAllDimension",
+            "format" : "int32"
+          },
+          "totalLoadDimension" : {
+            "type" : "integer",
+            "description" : "The totalLoadDimension",
+            "format" : "int32"
+          },
+          "unloadAll" : {
+            "type" : "boolean",
+            "description" : "The unloadAll"
+          }
+        },
+        "description" : "The loadDimension"
+      },
+      "LongLongPair" : {
+        "required" : [ "left", "right" ],
+        "type" : "object",
+        "properties" : {
+          "left" : {
+            "type" : "integer",
+            "description" : "The left",
+            "format" : "int64"
+          },
+          "right" : {
+            "type" : "integer",
+            "description" : "The right",
+            "format" : "int64"
+          }
+        },
+        "description" : "The serviceHoursOffsets"
+      },
+      "Node" : {
+        "required" : [ "constraints", "id", "load", "openingHours", "qualifications", "type", "visitDuration" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "The unique id of the node. It is not possible, to create mutliple elements (also Resources) with the same id.",
+            "example" : "MySecondNode"
+          },
+          "locationId" : {
+            "type" : "string",
+            "description" : "The location id can relate a node to the connection of another node. For example  the node 'MyFirstNode' and 'MySecondNode' have the same location. It is sufficient to provide the  connection data for 'MyFirstNode' and set the LocationId of 'MySecondNode' to be 'MyFirstNode'",
+            "example" : "MyFirstNode"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/NodeType"
+          },
+          "openingHours" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The list of non-overlapping openingHours of the nodes.",
+            "items" : {
+              "$ref" : "#/components/schemas/OpeningHours"
+            }
+          },
+          "visitDuration" : {
+            "type" : "string",
+            "description" : "The visitDuration defines how long a visitor needs to stay at the node.",
+            "example" : "PT60M"
+          },
+          "constraints" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The constraints of this node",
+            "items" : {
+              "$ref" : "#/components/schemas/Constraint"
+            }
+          },
+          "offeredNode" : {
+            "$ref" : "#/components/schemas/OfferedNode"
+          },
+          "loadDimension" : {
+            "$ref" : "#/components/schemas/LoadDimension"
+          },
+          "load" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The load",
+            "items" : {
+              "type" : "number",
+              "description" : "The load",
+              "format" : "double"
+            }
+          },
+          "qualifications" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The qualifications of the node.",
+            "items" : {
+              "$ref" : "#/components/schemas/Qualification"
+            }
+          },
+          "lockdownTime" : {
+            "type" : "integer",
+            "description" : "The lockdownTime",
+            "format" : "int64"
+          },
+          "fixCost" : {
+            "type" : "number",
+            "description" : "The fixCost defines an abstract cost that arrises when this node is visited.",
+            "format" : "double"
+          },
+          "priority" : {
+            "type" : "integer",
+            "description" : "The priority of the node. A higher priority leads to a higher cost if a node shows violations. As the Optimizer tries to reduce cost, a higher priority results in lower chance  of seeing violations on this node. However, if all nodes of an Optimization have a priority, the effect vanishes.",
+            "format" : "int32"
+          },
+          "priorityFirst" : {
+            "type" : "integer",
+            "description" : "The priorityFirst defines if we want a node to be the first node in a route-solution.",
+            "format" : "int32"
+          },
+          "priorityLast" : {
+            "type" : "integer",
+            "description" : "The priorityLast defines if we want a node to be the last node in a route-solution.",
+            "format" : "int32"
+          },
+          "nodeColor" : {
+            "$ref" : "#/components/schemas/NodeColor"
+          },
+          "minAutoFilterProtectedExecutions" : {
+            "type" : "integer",
+            "description" : "The minAutoFilterProtectedExecutions",
+            "format" : "int32"
+          },
+          "nodeDepot" : {
+            "$ref" : "#/components/schemas/INodeDepot"
+          },
+          "routeDependentVisitDuration" : {
+            "type" : "boolean",
+            "description" : "The routeDependentVisitDuration"
+          },
+          "minVisitDuration" : {
+            "type" : "string",
+            "description" : "The minVisitDuration",
+            "example" : "PT10M"
+          },
+          "jointVisitDuration" : {
+            "type" : "string",
+            "description" : "The jointVisitDuration. If nodes are situated closely to each other (defined via property 'JOpt.JointVisitDuration.maxRadiusMeter') a joint visit duration can be defined. For example, 3 nodes have a visit duration of 20 minutes each. The  joint visit duration for ALL nodes is set to be 10 minutes. Further, they are close enough to each other, that the joint visit duration logic can be triggered. The optimizer finds a solution in which all three nodes are visted in direct succession. The first node (of the three) needs to be visted for the original visit duration of 20 minutes. The seconds and third nodes only needs to be visited for 10 minutes.",
+            "example" : "PT60M"
+          },
+          "returnStartDuration" : {
+            "type" : "string",
+            "description" : "The returnStartDuration"
+          },
+          "isOptimizable" : {
+            "type" : "boolean",
+            "description" : "The boolean isOptimizable. Defines if a node is optimizable. This property will be auto-defined by the optimizer.."
+          },
+          "isOptional" : {
+            "type" : "boolean",
+            "description" : "The boolean isOptional. If a node is optional, the Optimizer can decide on its own, if the node is visited or not. Usually, this settings only makes sense in PND problems."
+          },
+          "isUnassigned" : {
+            "type" : "boolean",
+            "description" : "The boolean isUnassigned. Defines if a node was unassigned by the Optimizer."
+          },
+          "isWorkNode" : {
+            "type" : "boolean",
+            "description" : "The isWorkNode"
+          },
+          "isStayNode" : {
+            "type" : "boolean",
+            "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'."
+          },
+          "isOpeningHoursIncludesDuration" : {
+            "type" : "boolean",
+            "description" : "The boolean isOpeningHoursIncludesDuration. By default a node's openingHour defines the time-window  in which a task has to be fulfilled, meaning a Visitor has to arrive, work, and leave within that time-window. If isOpeningHoursIncludesDuration is set to false, the time-window only counts as arrival-window for the Resource."
+          },
+          "isWaitOnEarlyArrival" : {
+            "type" : "boolean",
+            "description" : "The boolean isWaitOnEarlyArrival. In case a Resources reaches a node too early (before the start of the node's OpeningHours), the Resource can either start working direclty (false) or wait for the node to open (true, default)."
+          },
+          "isCausingIdleTimeCost" : {
+            "type" : "boolean",
+            "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created."
+          },
+          "isWaitOnEarlyArrivalFirstNode" : {
+            "type" : "boolean",
+            "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true."
+          }
+        },
+        "description" : "The list of nodes"
+      },
+      "NodeColor" : {
+        "required" : [ "colorCode", "colorId" ],
+        "type" : "object",
+        "properties" : {
+          "colorCode" : {
+            "type" : "integer",
+            "description" : "The colorCode",
+            "format" : "int32"
+          },
+          "colorId" : {
+            "type" : "string",
+            "description" : "The colorId"
+          }
+        },
+        "description" : "The nodeColor"
+      },
+      "NodeColorCapacity" : {
+        "required" : [ "maxUsage", "nodeColor" ],
+        "type" : "object",
+        "properties" : {
+          "nodeColor" : {
+            "$ref" : "#/components/schemas/NodeColor"
+          },
+          "maxUsage" : {
+            "type" : "number",
+            "description" : "The maxUsage",
+            "format" : "double"
+          }
+        },
+        "description" : "The nodeColorCapacities"
+      },
+      "NodeColorMultiRouteConstraint" : {
+        "required" : [ "mirrorItem", "nodeColorCapacities", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "mirrorItem" : {
+              "$ref" : "#/components/schemas/IntegerMultiConstraintHelperItem"
+            },
+            "nodeColorCapacities" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "The nodeColorCapacities",
+              "items" : {
+                "$ref" : "#/components/schemas/NodeColorCapacity"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "NodeColorMultiRouteConstraint",
+              "default" : "NodeColorMultiRouteConstraint"
+            }
+          }
+        } ]
+      },
+      "NodeType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The Nodetype that can contain different Nodes",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "Geo" : "#/components/schemas/GeoNode",
+            "Event" : "#/components/schemas/EventNode",
+            "IdleEvent" : "#/components/schemas/IdleEventNode"
+          }
+        }
+      },
+      "OfferedNode" : {
+        "type" : "object",
+        "properties" : {
+          "individualMultiplier" : {
+            "type" : "number",
+            "description" : "The cost multiplier for an offered node. If the multiplier is bigger than 1.0 the chances that the node shows violations is getting less.",
+            "format" : "double"
+          }
+        },
+        "description" : "Defines if the node should be treated as offered node."
+      },
+      "OpeningHours" : {
+        "required" : [ "begin", "end", "zoneId" ],
+        "type" : "object",
+        "properties" : {
+          "begin" : {
+            "type" : "string",
+            "description" : "The begin of the Opening Hour",
+            "format" : "date-time",
+            "example" : "2020-03-06T06:00:00Z"
+          },
+          "end" : {
+            "type" : "string",
+            "description" : "The end of the Opening Hour",
+            "format" : "date-time",
+            "example" : "2020-03-06T19:00:00Z"
+          },
+          "zoneId" : {
+            "type" : "string",
+            "description" : "The zoneId of the Opening Hour",
+            "example" : "UTC"
+          },
+          "serviceHoursOffsets" : {
+            "type" : "array",
+            "description" : "The serviceHoursOffsets",
+            "items" : {
+              "$ref" : "#/components/schemas/LongLongPair"
+            }
+          },
+          "isPreffered" : {
+            "type" : "boolean",
+            "description" : "The isPreffered boolean. If an Opening Hour is preffered the Optimizer will try to visit the node inside this Opening Hour. By default, the first Openinghour of a node is the preffered opening hour.",
+            "example" : false
+          },
+          "isSoloAccessHours" : {
+            "type" : "boolean",
+            "description" : "The isSoloAccessHours"
+          }
+        },
+        "description" : "The list of non-overlapping openingHours of the nodes."
+      },
+      "Qualification" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "$ref" : "#/components/schemas/QualificationType"
+          }
+        },
+        "description" : "The qualifications of the Resource."
+      },
+      "QualificationType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The type of the Qualification",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "Type" : "#/components/schemas/TypeQualification",
+            "TypeWithExpertise" : "#/components/schemas/TypeWithExpertiseQualification",
+            "ZoneNumberQualification" : "#/components/schemas/ZoneNumberQualification",
+            "UKPostCodeQualification" : "#/components/schemas/UKPostCodeQualification"
+          }
+        }
+      },
+      "Resource" : {
+        "required" : [ "capacity", "capacityDegPerStop", "id", "initialLoad", "maxDistance", "maxTime", "minDegratedCapacity", "position", "qualifications", "type", "workingHours" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "The unique id of the Resource. It is not possible, to create mutliple elements (also Nodes) with the same id.",
+            "example" : "MyResouce"
+          },
+          "locationId" : {
+            "type" : "string",
+            "description" : "The location id can relate a Resouce to the connection of another resource. See also locationId of Node.",
+            "example" : "MySecondResource"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/ResourceType"
+          },
+          "position" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "workingHours" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The list of non-overlapping workingHours.",
+            "items" : {
+              "$ref" : "#/components/schemas/WorkingHours"
+            }
+          },
+          "maxTime" : {
+            "type" : "string",
+            "description" : "The maxTime. The maximal time a Resource should work within the WorkingHour. This value is NOT logically coupled to the workingHours. For example, a working hour is defined from 8 in the morning till  5 in the afternoon and the maxTime is defined as 4 hours. In this situation an overime violation will be already  generated  when the Resource works from 8 till 1 (one hour of overtime). As JOpt supports flexible start times, the Resource might work from 12-4 (4 hours => not violation). The workingHour itself should be seen as a frame that is used primarily for matching WokingHours of Resources and OpeningHours of nodes. If no flexTime is used, the Resource will always start working at the beginning of its current working hours.",
+            "example" : "PT8H"
+          },
+          "maxDistance" : {
+            "type" : "string",
+            "description" : "The maxDistance. The maximal distance a Resource is allowed to drive within a certain working hours.",
+            "example" : "100.0 km"
+          },
+          "destinationPosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "stayOutDefinition" : {
+            "$ref" : "#/components/schemas/StayOutDefinition"
+          },
+          "stayOutCycleDefinition" : {
+            "$ref" : "#/components/schemas/StayOutCycleDefinition"
+          },
+          "stayOutPolicyTime" : {
+            "type" : "string",
+            "description" : "The stayOutPolicyTime",
+            "example" : "PT1H"
+          },
+          "stayOutPolicyDistance" : {
+            "type" : "string",
+            "description" : "The stayOutPolicyDistance",
+            "example" : "100.0 km"
+          },
+          "capacity" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The capacity",
+            "items" : {
+              "type" : "number",
+              "description" : "The capacity",
+              "format" : "double"
+            }
+          },
+          "initialLoad" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The initialLoad",
+            "items" : {
+              "type" : "number",
+              "description" : "The initialLoad",
+              "format" : "double"
+            }
+          },
+          "minDegratedCapacity" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The minDegratedCapacity",
+            "items" : {
+              "type" : "number",
+              "description" : "The minDegratedCapacity",
+              "format" : "double"
+            }
+          },
+          "capacityDegPerStop" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The capacityDegPerStop",
+            "items" : {
+              "type" : "number",
+              "description" : "The capacityDegPerStop",
+              "format" : "double"
+            }
+          },
+          "startReductionTimeDefinition" : {
+            "$ref" : "#/components/schemas/StartReductionTimeDefinition"
+          },
+          "startReductionTimePillarDefinition" : {
+            "$ref" : "#/components/schemas/StartReductionTimePillarDefinition"
+          },
+          "startReductionTimeIncludeDefinition" : {
+            "$ref" : "#/components/schemas/StartReductionTimeIncludeDefinition"
+          },
+          "flexTime" : {
+            "type" : "string",
+            "description" : "The local flexible time. In some cases a Resource should start working later compared to what is defined in the working hours. This way idle time can be reduced. The local flex time is the maximum a Resource is allowed to start working later, depending on the Optimization maybe flex time is not or only partially used.",
+            "example" : "PT1H"
+          },
+          "postFlexTime" : {
+            "type" : "string",
+            "description" : "The postFlexTime",
+            "example" : "PT1H"
+          },
+          "postFlexTimeOnlyOnOvertime" : {
+            "type" : "boolean",
+            "description" : "The post flextime is only applied to reduce overtime."
+          },
+          "maxPillarAfterHoursTime" : {
+            "type" : "string",
+            "description" : "The maxPillarAfterHoursTime",
+            "example" : "PT1H"
+          },
+          "maxDriveTimeFirstNode" : {
+            "type" : "string",
+            "description" : "The maxDriveTimeFirstNode",
+            "example" : "PT1H"
+          },
+          "maxDriveDistanceFirstNode" : {
+            "type" : "string",
+            "description" : "The maxDriveDistanceFirstNode",
+            "example" : "100.0 km"
+          },
+          "maxDriveTimeLastNode" : {
+            "type" : "string",
+            "description" : "The maxDriveTimeLastNode",
+            "example" : "PT1H"
+          },
+          "maxDriveDistanceLastNode" : {
+            "type" : "string",
+            "description" : "The maxDriveDistanceLastNode",
+            "example" : "100.0 km"
+          },
+          "kilometerCost" : {
+            "type" : "number",
+            "description" : "The kilometerCost defines how much arbitrary cost arises per kilometer driven.",
+            "format" : "double"
+          },
+          "hourCost" : {
+            "type" : "number",
+            "description" : "The hourCost defines how much arbitrary cost arises per hour scheduled (idling, working, driving).",
+            "format" : "double"
+          },
+          "fixCost" : {
+            "type" : "number",
+            "description" : "The fixCost defines an abstract cost that arrises when this node is visited.",
+            "format" : "double"
+          },
+          "preWorkDrivingTime" : {
+            "type" : "string",
+            "description" : "The preWorkDrivingTime.  Use startReductionTimeDefinition instead.",
+            "example" : "PT1H"
+          },
+          "skillEfficiencyFactor" : {
+            "type" : "number",
+            "description" : "The skillEfficiencyFactor",
+            "format" : "double"
+          },
+          "acceptableOvertime" : {
+            "type" : "string",
+            "description" : "The acceptableOvertime. By default if nodes are constantly leading to overtime for a resource, at some point they might get unassigned (if AutoFilter is activated). The acceptable overtime assigns a margin to avoid filtering nodes if they lead to overtime below this margin. By defaul the property  'JoptAutoFilterWorkingHoursExceedMargin' can be used to globally define this value.",
+            "example" : "PT1H"
+          },
+          "strictOvertime" : {
+            "type" : "string",
+            "description" : "The strictOvertime. By default if nodes are constantly leading to overtime for a resource, at some point they might get unassigned (if AutoFilter is activated). The strictOvertime overtime assigns a margin to avoid filtering nodes if they lead to overtime below this margin. By defaul the property  'JoptAutoFilterWorkingHoursStrictExceedMargin' can be used to globally define this value. In contrast to acceptable  overtime, the strict overtime is used during the last fitlering step of the AutoFilter (if strict mode is enabled).",
+            "example" : "PT2H"
+          },
+          "acceptableOverdistance" : {
+            "type" : "string",
+            "description" : "The acceptableOverdistance. Like acceptableOvertime for distance.",
+            "example" : "100.0 km"
+          },
+          "strictOverdistance" : {
+            "type" : "string",
+            "description" : "The strictOverdistance. Like strictOvertime for distance.",
+            "example" : "100.0 km"
+          },
+          "averageSpeed" : {
+            "type" : "number",
+            "description" : "The averageSpeed of the Resource. By default this value is set to be 22[m/s] (79.2[km/h]). This value is mainly used, in case no external node connections are provided.",
+            "format" : "double"
+          },
+          "qualifications" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The qualifications of the Resource.",
+            "items" : {
+              "$ref" : "#/components/schemas/Qualification"
+            }
+          },
+          "constraints" : {
+            "type" : "array",
+            "description" : "The constraints  of the Resource",
+            "items" : {
+              "$ref" : "#/components/schemas/Constraint"
+            }
+          },
+          "connectionTimeEfficiencyFactor" : {
+            "type" : "number",
+            "description" : "The connectionTimeEfficiencyFactor. The default time for passing a connection is devided by this factor. For example, if a connections needs 30 minutes to be passed by default, a Resource with a connectionTimeEfficiencyFactor of 1.5 only needs 20 minutes. By default this factor is one.",
+            "format" : "double",
+            "example" : 1.5,
+            "default" : 1.0
+          },
+          "co2emissionFactor" : {
+            "type" : "number",
+            "description" : "The co2emissionFactor.",
+            "format" : "double",
+            "example" : 0.377
+          },
+          "resourceDepot" : {
+            "$ref" : "#/components/schemas/IResourceDepot"
+          },
+          "overallVisitDurationEfficiency" : {
+            "type" : "number",
+            "description" : "The overallVisitDurationEfficiency. The base duration a Resource spends at a node is devided by this factor. For example, if a node has 30 minutes of visit duration assigned, a Resource with a overallVisitDurationEfficiency of 1.5 only needs 20 minutes. By default this factor is one.",
+            "format" : "double",
+            "example" : 1.5,
+            "default" : 1.0
+          },
+          "isReductionTimeOnlyUsedForDriving" : {
+            "type" : "boolean",
+            "description" : "The isReductionTimeOnlyUsedForDriving. Use startReductionTimeDefinition instead."
+          },
+          "isReductionTimeIncludedInTotalWorkingTime" : {
+            "type" : "boolean",
+            "description" : "The isReductionTimeIncludedInTotalWorkingTime. Use StartReductionTimeIncludeDefinition instead"
+          }
+        },
+        "description" : "The list of resoruces"
+      },
+      "ResourceLocationConstraint" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "maxRadiusDistance" : {
+              "type" : "string",
+              "description" : "The maxRadiusDistance",
+              "example" : "100.0 km"
+            },
+            "maxRadiusTime" : {
+              "type" : "string",
+              "description" : "The maxRadiusTime",
+              "example" : "PT2H"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "ResourceLocationConstraint",
+              "default" : "ResourceLocationConstraint"
+            }
+          }
+        } ]
+      },
+      "ResourceType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The type of the Resource.",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "Capacity" : "#/components/schemas/CapacityResource"
+          }
+        }
+      },
+      "ResourceWithPriority" : {
+        "required" : [ "priority", "resourceId" ],
+        "type" : "object",
+        "properties" : {
+          "resourceId" : {
+            "type" : "string",
+            "description" : "The resourceId that will be part of a constraint. For example, Jack is a preffered Resource of a node. If multiple resources are preferred, the Optimizer tries to schedule the Resource with the highest priority.",
+            "example" : "Alex"
+          },
+          "priority" : {
+            "type" : "integer",
+            "description" : "The priority",
+            "format" : "int32",
+            "example" : 5
+          }
+        },
+        "description" : "The list of resources that should NOT visit a certain node."
+      },
+      "SimpleLoadCapacity" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ILoadCapacity"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "loadCapacityId" : {
+              "type" : "string"
+            },
+            "maxCapacityValue" : {
+              "type" : "integer",
+              "format" : "int32",
+              "writeOnly" : true
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "SimpleLoadCapacity",
+              "default" : "SimpleLoadCapacity"
+            }
+          }
+        } ]
+      },
+      "SmartMatrixRoutingRequest" : {
+        "required" : [ "attachRawResponse", "nodes", "requestId", "resources", "throwErrorOnFailure", "useCorrection" ],
         "type" : "object",
         "properties" : {
           "requestId" : {
@@ -1607,98 +2832,606 @@
           "autoCostingOptions" : {
             "$ref" : "#/components/schemas/AutoCostingOptions"
           },
-          "sourcePositions" : {
+          "resources" : {
+            "uniqueItems" : true,
             "type" : "array",
-            "description" : "A list of source positions.",
+            "description" : "A list of resoruces.",
             "example" : [ {
-              "latitude" : 50.942581,
-              "longitude" : 6.950962,
-              "locationId" : "Cologne Jack Home"
-            }, {
-              "latitude" : 50.948549,
-              "longitude" : 6.957331,
-              "locationId" : "Cologne Supermarket"
+              "id" : "Resource_TEST",
+              "type" : {
+                "typeName" : "Capacity"
+              },
+              "position" : {
+                "latitude" : -34.052015,
+                "longitude" : 150.999808,
+                "locationId" : "Resource_TEST"
+              },
+              "workingHours" : [ {
+                "begin" : "2100-01-01T07:00:00Z",
+                "end" : "2100-01-01T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-02T07:00:00Z",
+                "end" : "2100-01-02T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-03T07:00:00Z",
+                "end" : "2100-01-03T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-04T07:00:00Z",
+                "end" : "2100-01-04T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-05T07:00:00Z",
+                "end" : "2100-01-05T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              } ],
+              "maxTime" : "PT12H",
+              "maxDistance" : "1200.0 km",
+              "connectionTimeEfficiencyFactor" : 1.0,
+              "co2emissionFactor" : 0.377,
+              "overallVisitDurationEfficiency" : 1.0,
+              "capacity" : [ ],
+              "initialLoad" : [ ],
+              "minDegratedCapacity" : [ ],
+              "capacityDegPerStop" : [ ]
             } ],
             "items" : {
-              "$ref" : "#/components/schemas/Position"
+              "$ref" : "#/components/schemas/Resource"
             }
           },
-          "targetPositions" : {
+          "nodes" : {
+            "uniqueItems" : true,
             "type" : "array",
-            "description" : "A list of target positions. If empty or not provided, the sourcePositions will be also used as target positions.",
+            "description" : "A list of nodes.",
             "example" : [ {
-              "latitude" : 50.942581,
-              "longitude" : 6.950962,
-              "locationId" : "Cologne Jack Home"
-            }, {
-              "latitude" : 50.948549,
-              "longitude" : 6.957331,
-              "locationId" : "Cologne Supermarket"
+              "id" : "Node_Test",
+              "type" : {
+                "position" : {
+                  "latitude" : -34.051068,
+                  "longitude" : 150.976722,
+                  "locationId" : "Node_Test"
+                },
+                "typeName" : "Geo"
+              },
+              "openingHours" : [ {
+                "begin" : "2100-01-01T07:00:00Z",
+                "end" : "2100-01-01T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-02T07:00:00Z",
+                "end" : "2100-01-02T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-03T07:00:00Z",
+                "end" : "2100-01-03T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-04T07:00:00Z",
+                "end" : "2100-01-04T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              }, {
+                "begin" : "2100-01-05T07:00:00Z",
+                "end" : "2100-01-05T19:00:00Z",
+                "zoneId" : "Europe/Berlin"
+              } ],
+              "visitDuration" : "PT30M",
+              "priority" : 1,
+              "constraints" : [ ],
+              "load" : [ ],
+              "qualifications" : [ ]
             } ],
             "items" : {
-              "$ref" : "#/components/schemas/Position"
+              "$ref" : "#/components/schemas/Node"
             }
+          },
+          "useCorrection" : {
+            "type" : "boolean",
+            "description" : "The connections are corrected in time by using DNA's corrections service (if active and available). If not avilalble corretions will be ignored.",
+            "example" : false
           }
         }
       },
-      "MatrixResponseItem" : {
+      "StartReductionTimeDefinition" : {
+        "required" : [ "isReductionTimeOnlyUsedForDriving", "maxRouteStartReductionTime" ],
         "type" : "object",
         "properties" : {
-          "id" : {
-            "type" : "string"
+          "maxRouteStartReductionTime" : {
+            "type" : "string",
+            "description" : "The maximal Routes' Start Reduction Time for nodes the Optimizer is allowed to use.",
+            "example" : "PT30M"
           },
-          "units" : {
-            "type" : "string"
+          "isReductionTimeOnlyUsedForDriving" : {
+            "type" : "boolean",
+            "description" : "The boolean isReductionTimeOnlyUsedForDriving defines if a Resource is allowed to use reduction time only for driving to the first node but not for working on it."
+          }
+        },
+        "description" : "The settings/defintion for the reduction time at the start of the route for non-pillar nodes. A reduction times allows the Resource to start working/driving before the actual official workingHours start. For example, a customer node opens at 8 in the morning and the resource needs 25 minutes to drive to the node. The official workingHour of the Resource start at 8 as well. By giving a maximal reduction time of, for example, one hour and only allow the reduction time to be used for driving, the Resource will start 25 minutes to earlier to reach the node by 8."
+      },
+      "StartReductionTimeIncludeDefinition" : {
+        "required" : [ "isReductionTimeIncludedInWorkingTime" ],
+        "type" : "object",
+        "properties" : {
+          "isReductionTimeIncludedInWorkingTime" : {
+            "type" : "boolean",
+            "description" : "The boolean isReductionTimeIncludedInWorkingTime. If reduction time is used it can be either counted as part of the working time or not."
+          }
+        },
+        "description" : "The settings/defintion for how to handle working time in the context of reduction time."
+      },
+      "StartReductionTimePillarDefinition" : {
+        "required" : [ "isReductionTimeOnlyUsedForDrivingPillar", "maxRouteStartReductionTimePillar" ],
+        "type" : "object",
+        "properties" : {
+          "maxRouteStartReductionTimePillar" : {
+            "type" : "string",
+            "description" : "The maximal Routes' Start Reduction Time for pillars nodes the Optimizer is allowed to use.",
+            "example" : "PT30M"
           },
-          "sources_to_targets" : {
-            "type" : "array",
-            "items" : {
+          "isReductionTimeOnlyUsedForDrivingPillar" : {
+            "type" : "boolean",
+            "description" : "The boolean isReductionTimeOnlyUsedForDriving defines if a Resource is allowed to use reduction time only for driving to the first node (here a pillar) but not for working on it."
+          }
+        },
+        "description" : "The settings/defintion for the reduction time at the start of the route for pillar nodes. Please see startReductionTimeDefinition for details."
+      },
+      "StayOutCycleDefinition" : {
+        "required" : [ "cycleLenght", "cycleStart" ],
+        "type" : "object",
+        "properties" : {
+          "cycleLenght" : {
+            "type" : "string",
+            "description" : "The cycleLenght",
+            "example" : "PT7D"
+          },
+          "cycleStart" : {
+            "type" : "string",
+            "description" : "The cycleStart",
+            "format" : "date"
+          }
+        },
+        "description" : "The stayOutCycleDefinition"
+      },
+      "StayOutDefinition" : {
+        "required" : [ "maxStaysOutInRow", "maxTotalStaysOut", "minRecovery" ],
+        "type" : "object",
+        "properties" : {
+          "maxTotalStaysOut" : {
+            "type" : "integer",
+            "description" : "The maxTotalStaysOut",
+            "format" : "int32"
+          },
+          "maxStaysOutInRow" : {
+            "type" : "integer",
+            "description" : "The maxStaysOutInRow",
+            "format" : "int32"
+          },
+          "minRecovery" : {
+            "type" : "string",
+            "description" : "The minRecovery",
+            "example" : "PT1D"
+          }
+        },
+        "description" : "The stayOutDefinition"
+      },
+      "StringIntegerPair" : {
+        "required" : [ "left", "right" ],
+        "type" : "object",
+        "properties" : {
+          "left" : {
+            "type" : "string",
+            "description" : "The left"
+          },
+          "right" : {
+            "type" : "integer",
+            "description" : "The right",
+            "format" : "int32"
+          }
+        },
+        "description" : "The pairs"
+      },
+      "TypeConstraint" : {
+        "required" : [ "typeName", "typeNames" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typeNames" : {
               "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "A list of user-provided type-names. A Contraint type name must match to a Qualification type name to result in a violation free solution.",
               "items" : {
-                "$ref" : "#/components/schemas/RoutingConnectionItem"
+                "type" : "string",
+                "description" : "A list of user-provided type-names. A Contraint type name must match to a Qualification type name to result in a violation free solution."
               }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "Type",
+              "default" : "Type"
             }
           }
-        }
+        } ]
       },
-      "RoutingConnectionItem" : {
+      "TypeQualification" : {
+        "required" : [ "typeName", "typeNames" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/QualificationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typeNames" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "A list of user-provided type-names. A Contraint type name must match to a Qualification type name to result in a violation free solution.",
+              "items" : {
+                "type" : "string",
+                "description" : "A list of user-provided type-names. A Contraint type name must match to a Qualification type name to result in a violation free solution."
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "Type",
+              "default" : "Type"
+            }
+          }
+        } ]
+      },
+      "TypeWithExpertise" : {
+        "required" : [ "isMin", "level", "type" ],
         "type" : "object",
         "properties" : {
-          "fromId" : {
-            "type" : "string"
+          "type" : {
+            "type" : "string",
+            "description" : "The type name that in addition requires a certain expertise level."
           },
-          "toId" : {
-            "type" : "string"
-          },
-          "fromPosition" : {
-            "$ref" : "#/components/schemas/Position"
-          },
-          "toPosition" : {
-            "$ref" : "#/components/schemas/Position"
-          },
-          "distance" : {
+          "level" : {
             "type" : "number",
+            "description" : "The expertise level",
             "format" : "double"
           },
-          "time" : {
-            "type" : "number",
-            "format" : "double"
-          },
-          "to_index" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "from_index" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "location_index_to" : {
-            "type" : "string"
-          },
-          "location_index_from" : {
-            "type" : "string"
+          "isMin" : {
+            "type" : "boolean",
+            "description" : "The boolean isMin. If isMin==true, the level is a minimal level that needs to be fulfilled."
           }
-        }
+        },
+        "description" : "A list of user-provided type-names and expertise levels. A Contraint type-name with its required expertise must be fulfill by the type-with-expertise Qualification to result in a violation free solution."
+      },
+      "TypeWithExpertiseConstraint" : {
+        "required" : [ "typeName", "typesWithExpertise" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typesWithExpertise" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "The types with expertise",
+              "items" : {
+                "$ref" : "#/components/schemas/TypeWithExpertise"
+              }
+            },
+            "costModel" : {
+              "type" : "string",
+              "description" : "The cost model for matching the expertise.",
+              "enum" : [ "PENALIZE_MATCHING_SKILL_HIGH_DELTA", "PENALIZE_MATCHING_SKILL_LOW_DELTA", "NO_PENALIZE_MATCHING_SKILL" ]
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "TypeWithExpertise",
+              "default" : "TypeWithExpertise"
+            }
+          }
+        } ]
+      },
+      "TypeWithExpertiseQualification" : {
+        "required" : [ "typeName", "typesWithExpertise" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/QualificationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typesWithExpertise" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "A list of user-provided type-names and expertise levels. A Contraint type-name with its required expertise must be fulfill by the type-with-expertise Qualification to result in a violation free solution.",
+              "items" : {
+                "$ref" : "#/components/schemas/TypeWithExpertise"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "TypeWithExpertise",
+              "default" : "TypeWithExpertise"
+            }
+          }
+        } ]
+      },
+      "UKPostCode" : {
+        "required" : [ "areaIdent", "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "areaIdent" : {
+            "type" : "string",
+            "description" : "The areaIdent"
+          },
+          "districtIdentOpt" : {
+            "type" : "integer",
+            "description" : "The districtIdentOpt",
+            "format" : "int32"
+          },
+          "sectorIdentOpt" : {
+            "type" : "integer",
+            "description" : "The sectorIdentOpt",
+            "format" : "int32"
+          },
+          "unitIdentOpt" : {
+            "type" : "string",
+            "description" : "The unitIdentOpt"
+          },
+          "typeName" : {
+            "type" : "string",
+            "description" : "The typeName of the object",
+            "example" : "UKPostCode",
+            "default" : "UKPostCode"
+          }
+        },
+        "description" : "The myExtraCodes"
+      },
+      "UKPostCodeConstraint" : {
+        "required" : [ "typeName", "zoneCodes" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "zoneCodes" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "The zoneCodes",
+              "items" : {
+                "$ref" : "#/components/schemas/UKPostCode"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "UKPostCodeConstraint",
+              "default" : "UKPostCodeConstraint"
+            }
+          }
+        } ]
+      },
+      "UKPostCodeQualification" : {
+        "required" : [ "myCode", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/QualificationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "myCode" : {
+              "$ref" : "#/components/schemas/UKPostCode"
+            },
+            "myExtraCodes" : {
+              "type" : "array",
+              "description" : "The myExtraCodes",
+              "items" : {
+                "$ref" : "#/components/schemas/UKPostCode"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "UKPostCodeQualification",
+              "default" : "UKPostCodeQualification"
+            }
+          }
+        } ]
+      },
+      "WorkingHours" : {
+        "required" : [ "begin", "end", "zoneId" ],
+        "type" : "object",
+        "properties" : {
+          "begin" : {
+            "type" : "string",
+            "description" : "The begin of the Working hours.",
+            "format" : "date-time",
+            "example" : "2020-03-06T07:00:00Z"
+          },
+          "end" : {
+            "type" : "string",
+            "description" : "The end of the Working hours.",
+            "format" : "date-time",
+            "example" : "2020-03-06T17:00:00Z"
+          },
+          "zoneId" : {
+            "type" : "string",
+            "description" : "The zoneId of the Working hours.",
+            "example" : "UTC"
+          },
+          "maxTime" : {
+            "type" : "string",
+            "description" : "The maximal time a Resource should work within the WorkingHour.",
+            "example" : "PT480M"
+          },
+          "maxDistance" : {
+            "type" : "string",
+            "description" : "The maximla distance a resource should cover within the WorkingHour.",
+            "example" : "800.0 km"
+          },
+          "stayOutCycleDefinition" : {
+            "$ref" : "#/components/schemas/StayOutCycleDefinition"
+          },
+          "startReductionTimeDefinition" : {
+            "$ref" : "#/components/schemas/StartReductionTimeDefinition"
+          },
+          "startReductionTimePillarDefinition" : {
+            "$ref" : "#/components/schemas/StartReductionTimePillarDefinition"
+          },
+          "startReductionTimeIncludeDefinition" : {
+            "$ref" : "#/components/schemas/StartReductionTimeIncludeDefinition"
+          },
+          "localFlexTime" : {
+            "type" : "string",
+            "description" : "The local flexible time. In some cases a Resource should start working later compared to what is defined in the working hours. This way idle time can be reduced. The local flex time is the maximum a Resource is allowed to start working later, depending on the Optimization maybe flex time is not or only partially used.",
+            "example" : "PT30M"
+          },
+          "localPostFlexTime" : {
+            "type" : "string",
+            "description" : "The localPostFlexTime",
+            "example" : "PT30M"
+          },
+          "localPostFlexTimeOnlyOnOvertime" : {
+            "type" : "boolean",
+            "description" : "The post flextime is only applied to reduce overtime."
+          },
+          "maxLocalPillarAfterHoursTime" : {
+            "type" : "string",
+            "description" : "The maxLocalPillarAfterHoursTime",
+            "example" : "PT30M"
+          },
+          "nodeColorCapacities" : {
+            "type" : "array",
+            "description" : "The nodeColorCapacities",
+            "items" : {
+              "$ref" : "#/components/schemas/NodeColorCapacity"
+            }
+          },
+          "workingHoursConstraints" : {
+            "type" : "array",
+            "description" : "The constraints for this working hour.",
+            "items" : {
+              "$ref" : "#/components/schemas/Constraint"
+            }
+          },
+          "multiWorkingHoursConstraints" : {
+            "type" : "array",
+            "description" : "The multiWorkingHoursConstraints",
+            "items" : {
+              "$ref" : "#/components/schemas/Constraint"
+            }
+          },
+          "qualifications" : {
+            "type" : "array",
+            "description" : "The qualification of the Resource for this working hour. For example, the Resource is allowed to visit a node needing a skill (defined via a constraint) and the Resource is providing this skill.",
+            "items" : {
+              "$ref" : "#/components/schemas/Qualification"
+            }
+          },
+          "isClosedRoute" : {
+            "type" : "boolean",
+            "description" : "The isClosedRoute boolean describes if a Resource has to visit the termination element of the Route. By default, the start element and the termination element of a Route is the Resource itself. In case of a closed route, by default, the Resource returns to its original starting location."
+          },
+          "isAvailableForStay" : {
+            "type" : "boolean",
+            "description" : "The boolean isAvailableForStay defines if this working hour is allowed to end at an overnight stay."
+          }
+        },
+        "description" : "The list of non-overlapping workingHours."
+      },
+      "ZoneNumber" : {
+        "required" : [ "typeName", "zoneNumber" ],
+        "type" : "object",
+        "properties" : {
+          "zoneNumber" : {
+            "type" : "integer",
+            "description" : "The zoneNumber",
+            "format" : "int32"
+          },
+          "typeName" : {
+            "type" : "string",
+            "description" : "The typeName of the object",
+            "example" : "ZoneNumber",
+            "default" : "ZoneNumber"
+          }
+        },
+        "description" : "The myExtraCodes"
+      },
+      "ZoneNumberConstraint" : {
+        "required" : [ "typeName", "zoneCodes" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ConstraintType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "zoneCodes" : {
+              "type" : "array",
+              "properties" : {
+                "empty" : {
+                  "type" : "boolean"
+                }
+              },
+              "description" : "The zoneCodes",
+              "items" : {
+                "$ref" : "#/components/schemas/ZoneNumber"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "ZoneNumberConstraint",
+              "default" : "ZoneNumberConstraint"
+            }
+          }
+        } ]
+      },
+      "ZoneNumberQualification" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/QualificationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "myExtraCodes" : {
+              "type" : "array",
+              "description" : "The myExtraCodes",
+              "items" : {
+                "$ref" : "#/components/schemas/ZoneNumber"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "ZoneNumberQualification",
+              "default" : "ZoneNumberQualification"
+            }
+          }
+        } ]
       },
       "ConnectionByTime" : {
         "required" : [ "distanceMeters", "timeDefinitions", "timeMillis" ],
@@ -1820,6 +3553,403 @@
             "Edge" : "#/components/schemas/EdgeElementConnection"
           }
         }
+      },
+      "MatrixRoutingRequest" : {
+        "required" : [ "attachRawResponse", "requestId", "sourcePositions", "targetPositions", "throwErrorOnFailure", "useCorrection" ],
+        "type" : "object",
+        "properties" : {
+          "requestId" : {
+            "type" : "string",
+            "description" : "An id for identyfiying the request",
+            "example" : "myRequestId"
+          },
+          "attachRawResponse" : {
+            "type" : "boolean",
+            "description" : "The response will contain the raw response."
+          },
+          "throwErrorOnFailure" : {
+            "type" : "boolean",
+            "description" : "In case no trip is found, an error is thrown if true."
+          },
+          "costingModel" : {
+            "type" : "string",
+            "description" : "The costing model for the vehicle/item in use.",
+            "example" : "auto"
+          },
+          "directionsOptions" : {
+            "$ref" : "#/components/schemas/RequestDirectionsOptions"
+          },
+          "autoCostingOptions" : {
+            "$ref" : "#/components/schemas/AutoCostingOptions"
+          },
+          "sourcePositions" : {
+            "type" : "array",
+            "description" : "A list of source positions.",
+            "example" : [ {
+              "latitude" : 50.942581,
+              "longitude" : 6.950962,
+              "locationId" : "Cologne Jack Home"
+            }, {
+              "latitude" : 50.948549,
+              "longitude" : 6.957331,
+              "locationId" : "Cologne Supermarket"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/Position"
+            }
+          },
+          "targetPositions" : {
+            "type" : "array",
+            "description" : "A list of target positions. If empty or not provided, the sourcePositions will be also used as target positions.",
+            "example" : [ {
+              "latitude" : 50.942581,
+              "longitude" : 6.950962,
+              "locationId" : "Cologne Jack Home"
+            }, {
+              "latitude" : 50.948549,
+              "longitude" : 6.957331,
+              "locationId" : "Cologne Supermarket"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/Position"
+            }
+          },
+          "useCorrection" : {
+            "type" : "boolean",
+            "description" : "The connections are corrected in time by using DNA's corrections service (if active and available). If not avilalble corretions will be ignored.",
+            "example" : false
+          }
+        }
+      },
+      "MatrixResponseItem" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "units" : {
+            "type" : "string"
+          },
+          "sources_to_targets" : {
+            "type" : "array",
+            "items" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RoutingConnectionItem"
+              }
+            }
+          }
+        }
+      },
+      "RoutingConnectionItem" : {
+        "type" : "object",
+        "properties" : {
+          "fromId" : {
+            "type" : "string"
+          },
+          "toId" : {
+            "type" : "string"
+          },
+          "fromPosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "toPosition" : {
+            "$ref" : "#/components/schemas/Position"
+          },
+          "distance" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "time" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "to_index" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "from_index" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "location_index_to" : {
+            "type" : "string"
+          },
+          "location_index_from" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CoreBuildOptions" : {
+        "required" : [ "buildCoreProperties" ],
+        "type" : "object",
+        "properties" : {
+          "buildCoreProperties" : {
+            "type" : "object",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "additionalProperties" : {
+              "type" : "string",
+              "description" : "The buildCoreProperties give information about the library and its version that was used for the optimization run."
+            },
+            "description" : "The buildCoreProperties give information about the library and its version that was used for the optimization run."
+          }
+        },
+        "description" : "The coreBuildOptions provided by the library"
+      },
+      "DifferentVisitorNodeRelation" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NodeRelationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "DifferentVisitor",
+              "default" : "DifferentVisitor"
+            }
+          }
+        } ]
+      },
+      "JSONConfig" : {
+        "required" : [ "keySetting" ],
+        "type" : "object",
+        "properties" : {
+          "keySetting" : {
+            "$ref" : "#/components/schemas/OptimizationKeySetting"
+          },
+          "textSolution" : {
+            "$ref" : "#/components/schemas/TextSolution"
+          },
+          "timeOut" : {
+            "type" : "string",
+            "description" : "The timeout for the optimization run.",
+            "example" : "PT2H"
+          }
+        },
+        "description" : "The extension of the configuration. For example, to provide a license."
+      },
+      "NodeRelation" : {
+        "required" : [ "masterNodeId", "relatedNodeId", "type" ],
+        "type" : "object",
+        "properties" : {
+          "masterNodeId" : {
+            "type" : "string",
+            "description" : "The masterNodeId"
+          },
+          "relatedNodeId" : {
+            "type" : "string",
+            "description" : "The relatedNodeId"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/NodeRelationType"
+          },
+          "relationMode" : {
+            "type" : "string",
+            "description" : "The relationMode",
+            "enum" : [ "STRONG", "WEAK", "WEAK_TO_MATER", "WEAK_TO_RELATED" ]
+          }
+        },
+        "description" : "The list of relations"
+      },
+      "NodeRelationType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The type",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "TimeWindow" : "#/components/schemas/TimeWindowNodeRelation",
+            "DifferentVisitor" : "#/components/schemas/DifferentVisitorNodeRelation",
+            "SameVisitor" : "#/components/schemas/SameVisitorNodeRelation"
+          }
+        }
+      },
+      "OptimizationKeySetting" : {
+        "required" : [ "jsonLicense" ],
+        "type" : "object",
+        "properties" : {
+          "jsonLicense" : {
+            "type" : "string",
+            "description" : "The jsonLicense"
+          }
+        },
+        "description" : "The keySetting"
+      },
+      "OptimizationOptions" : {
+        "required" : [ "properties" ],
+        "type" : "object",
+        "properties" : {
+          "properties" : {
+            "type" : "object",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "additionalProperties" : {
+              "type" : "string",
+              "description" : "The properties of the Optimization run. For example, the number of iterations for the Optimization run or the weight for certain Optimization goals can be defined."
+            },
+            "description" : "The properties of the Optimization run. For example, the number of iterations for the Optimization run or the weight for certain Optimization goals can be defined."
+          }
+        },
+        "description" : "The list of optimizationOptions"
+      },
+      "RestOptimization" : {
+        "required" : [ "elementConnections", "nodeRelations", "nodes", "optimizationOptions", "resources" ],
+        "type" : "object",
+        "properties" : {
+          "ident" : {
+            "type" : "string",
+            "description" : "An optional title/ident for the run. If not provided, a generated ident will be used",
+            "example" : "JOpt-Run-603886271000"
+          },
+          "nodes" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The list of nodes",
+            "items" : {
+              "$ref" : "#/components/schemas/Node"
+            }
+          },
+          "resources" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The list of resoruces",
+            "items" : {
+              "$ref" : "#/components/schemas/Resource"
+            }
+          },
+          "nodeRelations" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The list of relations",
+            "items" : {
+              "$ref" : "#/components/schemas/NodeRelation"
+            }
+          },
+          "elementConnections" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The list of connections",
+            "items" : {
+              "$ref" : "#/components/schemas/ElementConnection"
+            }
+          },
+          "optimizationOptions" : {
+            "$ref" : "#/components/schemas/OptimizationOptions"
+          },
+          "coreBuildOptions" : {
+            "$ref" : "#/components/schemas/CoreBuildOptions"
+          },
+          "solution" : {
+            "$ref" : "#/components/schemas/Solution"
+          },
+          "extension" : {
+            "$ref" : "#/components/schemas/JSONConfig"
+          }
+        }
+      },
+      "SameVisitorNodeRelation" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NodeRelationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "SameVisitor",
+              "default" : "SameVisitor"
+            }
+          }
+        } ]
+      },
+      "TextSolution" : {
+        "required" : [ "textSolution" ],
+        "type" : "object",
+        "properties" : {
+          "textSolution" : {
+            "type" : "string",
+            "description" : "The textSolution"
+          }
+        },
+        "description" : "The textSolution"
+      },
+      "TimeComparisonJuncture" : {
+        "required" : [ "isMasterNodeWorkingStart", "isRelatedNodeWorkingStart" ],
+        "type" : "object",
+        "properties" : {
+          "isMasterNodeWorkingStart" : {
+            "type" : "boolean",
+            "description" : "Defines if the master nodes start is used as comparison point (true). If false, the end of the master node will be used."
+          },
+          "isRelatedNodeWorkingStart" : {
+            "type" : "boolean",
+            "description" : "Defines if the related nodes start is used as comparison point (true). If false, the end of the related node will be used."
+          }
+        },
+        "description" : "The timeComparisonJuncture of the relation."
+      },
+      "TimeWindowNodeRelation" : {
+        "required" : [ "maxTimeDeviation", "minTimeDeviation", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NodeRelationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "minTimeDeviation" : {
+              "type" : "string",
+              "description" : "The minTimeDeviation defines the minimal time of the relation.",
+              "example" : "PT10M"
+            },
+            "maxTimeDeviation" : {
+              "type" : "string",
+              "description" : "The maxTimeDeviation defines the minimal time of the relation.",
+              "example" : "PT1H"
+            },
+            "timeComparisonJuncture" : {
+              "$ref" : "#/components/schemas/TimeComparisonJuncture"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "TimeWindow",
+              "default" : "TimeWindow"
+            }
+          }
+        } ]
       },
       "Status" : {
         "type" : "object",
