@@ -1,5 +1,18 @@
 package com.dna.jopt.rest.client.util.testinputcreation;
 
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -27,17 +40,6 @@ public class TestRestOptimizationCreator {
 	    + "			\"creation\": \"2021-05-25\",\r\n" + "			\"due\": \"2027-05-25\"\r\n"
 	    + "		}\r\n" + "	],\r\n"
 	    + "	\"key\": \"PUBLIC-bc799ef350fe9841c1354736d8f863cb85bac88cefd19960c1\"\r\n" + "}";
-    
-    
-    public static final String NON_VALID_JSON_LICENSE = "{\r\n" + "	\"version\": \"1.1\",\r\n"
-	    + "	\"identifier\": \"PUBLIC-\",\r\n"
-	    + "	\"description\": \"Key provided to for evaluation purpose from DNA evolutions GmbH.\",\r\n"
-	    + "	\"contact\": \"www.dna-evolutions.com\",\r\n" + "	\"modules\": [{\r\n"
-	    + "			\"Module:\": \"Elements\",\r\n" + "			\"max\": 15\r\n"
-	    + "		}, {\r\n" + "			\"Module:\": \"Date\",\r\n"
-	    + "			\"creation\": \"2021-05-25\",\r\n" + "			\"due\": \"2027-05-25\"\r\n"
-	    + "		}\r\n" + "	],\r\n"
-	    + "	\"key\": \"NON_VALID\"\r\n" + "}";
     
     /*
      *

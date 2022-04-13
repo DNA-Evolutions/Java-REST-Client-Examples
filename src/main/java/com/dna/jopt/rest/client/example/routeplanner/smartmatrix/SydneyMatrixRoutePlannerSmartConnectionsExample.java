@@ -1,4 +1,17 @@
-package com.dna.jopt.rest.client.example.routeplanner;
+package com.dna.jopt.rest.client.example.routeplanner.smartmatrix;
+
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +29,29 @@ import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestElementsCreator;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
+/**
+ * The Class SydneyMatrixRoutePlannerSmartConnectionsExample. Transform a list
+ * of resources and a list of nodes into a list of most likely connections. This
+ * can reduce the number of elements by up to 90% by utilising information like
+ * opening hours of nodes, working hours of Resources, and constraints.
+ */
 public class SydneyMatrixRoutePlannerSmartConnectionsExample {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method of SydneyMatrixRoutePlannerSmartConnectionsExample
+     *
+     * @param args the arguments
+     * @throws IOException                Signals that an I/O exception has
+     *                                    occurred.
+     * @throws NoSecretFileFoundException the no secret file found exception
+     * @throws SecretNotFoundException    the secret not found exception
+     */
+    public static void main(String[] args) throws IOException, NoSecretFileFoundException, SecretNotFoundException {
 
 	/*
 	 * 
@@ -52,10 +82,10 @@ public class SydneyMatrixRoutePlannerSmartConnectionsExample {
 	} else {
 	    routePlannerCaller = new RoutePlannerRestCaller(Endpoints.LOCAL_SWAGGER_GEOROUTER_URL);
 	}
-	
-	
+
 	/*
-	 * Map nodePoss and ressPoss to real elements with different opening hours and working hours to use smart routing feature
+	 * Map nodePoss and ressPoss to real elements with different opening hours and
+	 * working hours to use smart routing feature
 	 */
 	Set<Node> nodes = new HashSet<>();
 	for (int ii = 0; ii < nodePoss.size(); ii++) {
@@ -67,8 +97,9 @@ public class SydneyMatrixRoutePlannerSmartConnectionsExample {
 		    TestElementsCreator.defaultTestOpeninghours(curOpeninghoursIndex)));
 
 	}
-	
-	Set<Resource> ress = ressPoss.stream().map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
+
+	Set<Resource> ress = ressPoss.stream()
+		.map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
 		.collect(Collectors.toSet());
 
 	/*
@@ -79,8 +110,7 @@ public class SydneyMatrixRoutePlannerSmartConnectionsExample {
 	System.out.println("Creating matrix connection data");
 	List<ElementConnection> connections;
 
-	connections = routePlannerCaller.geoRouteSmartMatrix(nodes, ress,useConnectionCorretion);
-	
+	connections = routePlannerCaller.geoRouteSmartMatrix(nodes, ress, useConnectionCorretion);
 
 	/*
 	 * Print out connections as JSON
@@ -89,19 +119,20 @@ public class SydneyMatrixRoutePlannerSmartConnectionsExample {
 	String jsonConnections = RestJSONParser.toJSONString(connections, routePlannerCaller.getMapper());
 
 	System.out.println(jsonConnections);
-	
+
 	System.out.println("====================================");
 	System.out.println("REPORT");
 	System.out.println("====================================");
-	System.out.println("Number of nodes: "+nodePoss.size());
-	System.out.println("Number of resources: "+ressPoss.size());
-	
-	System.out.println("Number of real extracted connections: "+connections.size());
-	
-	double orginalConnections = Math.pow(nodePoss.size()+ressPoss.size(),2);
-	
-	System.out.println("Full connection request would be: "+orginalConnections + " connections");
-	System.out.println("Smart feature saved: "+(1.0-(connections.size()/orginalConnections))*100 + " % of connections");
+	System.out.println("Number of nodes: " + nodePoss.size());
+	System.out.println("Number of resources: " + ressPoss.size());
+
+	System.out.println("Number of real extracted connections: " + connections.size());
+
+	double orginalConnections = Math.pow(nodePoss.size() + ressPoss.size(), 2);
+
+	System.out.println("Full connection request would be: " + orginalConnections + " connections");
+	System.out.println("Smart feature saved: " + (1.0 - (connections.size() / orginalConnections)) * 100
+		+ " % of connections");
 
 	/*
 	 * Save to JSON

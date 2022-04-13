@@ -1,4 +1,17 @@
-package com.dna.jopt.rest.client.example.touroptimizer;
+package com.dna.jopt.rest.client.example.touroptimizer.optimize;
+
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
 
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +27,27 @@ import com.dna.jopt.rest.client.model.TextSolution;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
+/**
+ * The Class TourOptimizerExample. Optimize a list of Nodes and Resources.
+ * Connections are not provided; moreover, they will be created using haversine
+ * calculations on the server-side.
+ */
 public class TourOptimizerExample {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method of TourOptimizerExample
+     *
+     * @param args the arguments
+     * @throws IOException                Signals that an I/O exception has
+     *                                    occurred.
+     * @throws NoSecretFileFoundException the no secret file found exception
+     * @throws SecretNotFoundException    the secret not found exception
+     */
+    public static void main(String[] args) throws IOException, NoSecretFileFoundException, SecretNotFoundException {
 
 	/*
 	 * 
@@ -71,8 +100,7 @@ public class TourOptimizerExample {
 	    System.out.println("Printing text solution");
 	    System.out.println(ts);
 	});
-	
-	
+
 	/*
 	 * Save to JSON snapshot
 	 */
@@ -82,9 +110,7 @@ public class TourOptimizerExample {
 
 	    RestJSONParser.toJsonFile(result, new File(jsonFile), tourOptimizerCaller.getMapper());
 	}
-	
 
-	
     }
 
 }

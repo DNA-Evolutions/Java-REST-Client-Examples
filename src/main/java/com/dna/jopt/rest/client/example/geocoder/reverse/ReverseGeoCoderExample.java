@@ -1,4 +1,17 @@
-package com.dna.jopt.rest.client.example.geocoder;
+package com.dna.jopt.rest.client.example.geocoder.reverse;
+
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
 
 import java.io.File;
 import java.io.IOException;
@@ -14,27 +27,51 @@ import com.dna.jopt.rest.client.model.Status;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
+/**
+ * The Class ReverseGeoCoderExample. Shows how to transform positions (with latitude and longitude) into addresses.
+ */
 public class ReverseGeoCoderExample {
 
-    private static final LocationParameters DEFAULT_LOCATION_PARAM = new LocationParameters().layers("address")
+    /**
+     * The Constant DEFAULT_LOCATION_PARAM is used to create default location
+     * parameters for reverse geo coding.
+     */
+    public static final LocationParameters DEFAULT_LOCATION_PARAM = new LocationParameters().layers("address")
 	    .radius(200.0).size(1).sources("all");
 
-    private static final UnaryOperator<Position> LOCATION_PARAMETER_ATTACHER = p -> {
+    /**
+     * 
+     * The Constant LOCATION_PARAMETER_ATTACHER defines how to attach location
+     * parameters to positions before reverse geo coding
+     * 
+     */
+    public static final UnaryOperator<Position> LOCATION_PARAMETER_ATTACHER = p -> {
 	p.setLocationParameters(DEFAULT_LOCATION_PARAM);
 
 	return p;
     };
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method of ReverseGeoCoderExample
+     *
+     * @param args the arguments
+     * @throws IOException                Signals that an I/O exception has
+     *                                    occurred.
+     * @throws NoSecretFileFoundException the no secret file found exception
+     * @throws SecretNotFoundException    the secret not found exception
+     */
+    public static void main(String[] args) throws IOException, NoSecretFileFoundException, SecretNotFoundException {
 
 	/*
 	 * 
 	 * Modify me
 	 * 
 	 */
-	boolean isAzureCall = !true;
+	boolean isAzureCall = true;
 	boolean isSave2JSON = true;
 
 	List<Position> positions = TestPositionsInput.defaultSydneyNodePositions();
@@ -43,10 +80,9 @@ public class ReverseGeoCoderExample {
 	 * Run
 	 * 
 	 */
+	SecretsManager m = new SecretsManager();
 
 	GeoCoderRestCaller geoCoderCaller;
-
-	SecretsManager m = new SecretsManager();
 
 	if (isAzureCall) {
 
@@ -99,16 +135,6 @@ public class ReverseGeoCoderExample {
 
 	    RestJSONParser.toJsonFile(reverseCodedPoss, new File(jsonFile), geoCoderCaller.getMapper());
 	}
-
-	// XXX
-	// Find missing positions
-
-	List<String> differences = positionsWithLocationParams.stream().map(Position::getLocationId)
-		.collect(Collectors.toList()).stream().filter(element -> !reverseCodedPoss.stream()
-			.map(Position::getLocationId).collect(Collectors.toList()).contains(element))
-		.collect(Collectors.toList());
-
-	System.out.println(differences);
 
     }
 }

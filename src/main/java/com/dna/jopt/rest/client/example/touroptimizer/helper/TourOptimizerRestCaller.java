@@ -1,9 +1,23 @@
 package com.dna.jopt.rest.client.example.touroptimizer.helper;
 
-import java.io.PrintStream;
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
+
+
 import java.text.DateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,9 +44,21 @@ public class TourOptimizerRestCaller {
     private OptimizationServiceControllerApi geoOptimizerApi = createOptimizationControllerApi();
 
     public final ObjectMapper tourOptimizerObjectMapper;
-    private PrintStream printOutStream;
+
+    private BiConsumer<OptimizationServiceControllerApi, Boolean> biConsumer;
 
     public static final int MAX_TOUROPIMIZER_RESPONSESIZE_MB = 16;
+
+    public static final BiConsumer<OptimizationServiceControllerApi, Boolean> DEFAULT_STREAM_CONSUMER = (api, b) -> {
+
+	api.progress().subscribe(pr -> System.out.println("  " + pr.getCallerId() + ", " + pr.getCurProgress()));
+
+	api.status().subscribe(s -> System.out.println("  " + s.getMessage()));
+
+	api.error().subscribe(e -> System.out.println("  " + e.getMessage()));
+
+	api.warning().subscribe(w -> System.out.println(" " + w.getMessage()));
+    };
 
     /*
      *
@@ -59,21 +85,13 @@ public class TourOptimizerRestCaller {
 
 	}
     }
-    
+
     public ObjectMapper getMapper() {
 	return this.tourOptimizerObjectMapper;
     }
-
-    public void setPrintOutStream(PrintStream outstream) {
-	this.printOutStream = outstream;
-    }
-
-    private PrintStream getPrintOutStream() {
-	if (this.printOutStream != null) {
-	    return this.printOutStream;
-	} else {
-	    return System.out;
-	}
+    
+    public void setStreamConsumer(BiConsumer<OptimizationServiceControllerApi, Boolean> biConsumer) {
+	this.biConsumer = biConsumer;
     }
 
     private static OptimizationServiceControllerApi createOptimizationControllerApi() {
@@ -105,29 +123,17 @@ public class TourOptimizerRestCaller {
 	// Map to elements
 	List<Node> nodes = nodePoss.stream().map(p -> TestElementsCreator.defaultGeoNode(p, p.getLocationId()))
 		.collect(Collectors.toList());
-	List<Resource> ress = ressPoss.stream().map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
+	List<Resource> ress = ressPoss.stream()
+		.map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
 		.collect(Collectors.toList());
 
-	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(nodes, ress, jsonLicenseOpt);
+	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(nodes, ress,
+		jsonLicenseOpt);
 
 	optimization.setElementConnections(connections);
 
 	// This will keep the example alive. Otherwise just subscribe
 	return optimize(optimization);
-    }
-    
-    
-    public RestOptimization optimize(RestOptimization optimization) {
-
-	// Let us attach to streams - Internally the subscription is done on "real"
-	// optimization start
-	attachToStreams(this.getPrintOutStream());
-
-	// Trigger the Optimization
-	Mono<RestOptimization> resultMono = geoOptimizerApi.run(optimization);
-
-	// This will keep the example alive. Otherwise just subscribe
-	return resultMono.onErrorResume(RestErrorHandler.restOptimizationErrorResumer(tourOptimizerObjectMapper)).block();
     }
 
     public Solution optimizeOnlyResult(List<Position> nodePoss, List<Position> ressPoss,
@@ -135,16 +141,18 @@ public class TourOptimizerRestCaller {
 	// Map to elements
 	List<Node> nodes = nodePoss.stream().map(p -> TestElementsCreator.defaultGeoNode(p, p.getLocationId()))
 		.collect(Collectors.toList());
-	List<Resource> ress = ressPoss.stream().map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
+	List<Resource> ress = ressPoss.stream()
+		.map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
 		.collect(Collectors.toList());
 
-	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(nodes, ress, jsonLicenseOpt);
+	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(nodes, ress,
+		jsonLicenseOpt);
 
 	optimization.setElementConnections(connections);
 
 	// Let us attach to streams - Internally the subscription is done on "real"
 	// optimization start
-	attachToStreams(this.getPrintOutStream());
+	attachToStreams();
 
 	// Trigger the Optimization
 	Mono<Solution> resultMono = geoOptimizerApi.runOnlyResult(optimization);
@@ -153,19 +161,29 @@ public class TourOptimizerRestCaller {
 	return resultMono.onErrorResume(RestErrorHandler.solutionErrorResumer(tourOptimizerObjectMapper)).block();
     }
 
-    public void attachToStreams(PrintStream outstream) {
+    public RestOptimization optimize(RestOptimization optimization) {
 
-	geoOptimizerApi.runStartedSginal().subscribe(b -> {
+	// Let us attach to streams - Internally the subscription is done on "real"
+	// optimization start
+	attachToStreams();
 
-	    geoOptimizerApi.progress()
-		    .subscribe(pr -> outstream.println("  " + pr.getCallerId() + ", " + pr.getCurProgress()));
+	// Trigger the Optimization
+	Mono<RestOptimization> resultMono = geoOptimizerApi.run(optimization);
 
-	    geoOptimizerApi.status().subscribe(s -> outstream.println("  " + s.getMessage()));
+	// This will keep the example alive. Otherwise just subscribe
+	return resultMono.onErrorResume(RestErrorHandler.restOptimizationErrorResumer(tourOptimizerObjectMapper))
+		.block();
+    }
 
-	    geoOptimizerApi.error().subscribe(e -> outstream.println("  " + e.getMessage()));
+    public void attachToStreams() {
 
-	    geoOptimizerApi.warning().subscribe(w -> outstream.println(" " + w.getMessage()));
-	});
+	if(biConsumer!=null) {
+	    geoOptimizerApi.runStartedSginal().subscribe(b -> biConsumer.accept(geoOptimizerApi, b));
+	}else {
+	    geoOptimizerApi.runStartedSginal().subscribe(b -> DEFAULT_STREAM_CONSUMER.accept(geoOptimizerApi, b)); 
+	}
+	
+
     }
 
 }

@@ -8,7 +8,7 @@
       "url" : "https://dna-evolutions.com",
       "email" : "info@dna-evolutions.com"
     },
-    "version" : "unknown"
+    "version" : "1.0.8-SNAPSHOT"
   },
   "servers" : [ {
     "url" : "/"

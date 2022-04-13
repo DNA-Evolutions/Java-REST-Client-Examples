@@ -1,4 +1,17 @@
-package com.dna.jopt.rest.client.example.fullstack;
+package com.dna.jopt.rest.client.example.fullstack.coderouteoptimize;
+
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,11 +29,27 @@ import com.dna.jopt.rest.client.model.TextSolution;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.export.kml.RestSolutionKMLExporter;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestAddressInput;
 
+/**
+ * The Class SydneyFullstackExample. The first step: Take addresses and geocode
+ * them to positions with longitude and latitude. Second step: Create a
+ * connections matrix. Third step: Optimize the data and print out result.
+ */
 public class SydneyFullstackExample {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method of SydneyFullstackExample
+     *
+     * @param args the arguments
+     * @throws IOException                Signals that an I/O exception has
+     *                                    occurred.
+     * @throws NoSecretFileFoundException the no secret file found exception
+     * @throws SecretNotFoundException    the secret not found exception
+     */
+    public static void main(String[] args) throws IOException, NoSecretFileFoundException, SecretNotFoundException {
 
 	/*
 	 * 
@@ -31,10 +60,9 @@ public class SydneyFullstackExample {
 	boolean useConnectionCorretion = true;
 	boolean onlyReturnResultAfterOptimization = !true;
 
+	// Define the data to be used
 	List<GeoAddress> nodeAddresses = TestAddressInput.defaultSydneyNodeAddresses();
 	List<GeoAddress> resourceAddresses = TestAddressInput.defaultSydneyResourceAddresses();
-
-	// Define the data to be used
 
 	/*
 	 * 
@@ -87,8 +115,7 @@ public class SydneyFullstackExample {
 	System.out.println("2) Creating matrix connection data");
 	List<ElementConnection> connections;
 
-	connections = fullStackCaller.geoRouteMatrix(nodePoss, ressPoss,useConnectionCorretion);
-	
+	connections = fullStackCaller.geoRouteMatrix(nodePoss, ressPoss, useConnectionCorretion);
 
 	/*
 	 *
@@ -136,7 +163,6 @@ public class SydneyFullstackExample {
 	    System.out.println("6) Printing text solution");
 	    System.out.println(ts);
 	});
-	
 
     }
 

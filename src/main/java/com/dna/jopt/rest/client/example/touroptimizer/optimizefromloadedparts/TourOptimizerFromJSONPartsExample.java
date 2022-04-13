@@ -1,4 +1,17 @@
-package com.dna.jopt.rest.client.example.touroptimizer;
+package com.dna.jopt.rest.client.example.touroptimizer.optimizefromloadedparts;
+
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
 
 import java.io.IOException;
 import java.util.List;
@@ -13,14 +26,31 @@ import com.dna.jopt.rest.client.model.TextSolution;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONLoader;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestConnectionInput;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator;
 import com.dna.jopt.rest.client.util.testinputcreation.TestSnapshotInput;
 
+/**
+ * The Class TourOptimizerFromJSONPartsExample.
+ * 
+ * Optimize a list of Nodes and Resources. The Resource positons, Node positions
+ * and the connections are loaded from predefined JSON definitions.
+ */
 public class TourOptimizerFromJSONPartsExample {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method of TourOptimizerFromJSONPartsExample
+     *
+     * @param args the arguments
+     * @throws IOException                Signals that an I/O exception has
+     *                                    occurred.
+     * @throws NoSecretFileFoundException the no secret file found exception
+     * @throws SecretNotFoundException    the secret not found exception
+     */
+    public static void main(String[] args) throws IOException, NoSecretFileFoundException, SecretNotFoundException {
 
 	/*
 	 * 
@@ -55,10 +85,10 @@ public class TourOptimizerFromJSONPartsExample {
 
 	List<ElementConnection> connections = RestJSONLoader.readConnections(
 		TestConnectionInput.SYDNEY_CONNECTION_JSON_TEST_INPUT, tourOptimizerCaller.getMapper());
-	
+
 	List<Position> nodePoss = RestJSONLoader.readPositions(TestPositionsInput.SYDNEY_NODE_POSITIONS__JSON,
 		tourOptimizerCaller.getMapper());
-	
+
 	List<Position> ressPoss = RestJSONLoader.readPositions(TestPositionsInput.SYDNEY_RESOURCE_POSITIONS__JSON,
 		tourOptimizerCaller.getMapper());
 

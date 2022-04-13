@@ -1,18 +1,35 @@
 package com.dna.jopt.rest.client.example.fullstack.helper;
 
-import java.io.PrintStream;
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
+
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import com.dna.jopt.rest.client.example.geocoder.helper.GeoCoderRestCaller;
 import com.dna.jopt.rest.client.example.routeplanner.helper.RoutePlannerRestCaller;
 import com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller;
 import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.GeoAddress;
 import com.dna.jopt.rest.client.model.MatrixRoutingRequest;
+import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.Position;
+import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.model.Status;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FullStackRestCaller {
 
@@ -34,6 +51,18 @@ public class FullStackRestCaller {
 	this.tourOptimizer = new TourOptimizerRestCaller(tourOptimizerUrl, azureApiKeyOpt);
 	this.routePlanner = new RoutePlannerRestCaller(georouterUrl, azureApiKeyOpt);
 	this.geoCoder = new GeoCoderRestCaller(geocoderUrl, azureApiKeyOpt);
+    }
+
+    public ObjectMapper getTourOptimizerMapper() {
+	return this.tourOptimizer.getMapper();
+    }
+
+    public ObjectMapper getGeoRoutingMapper() {
+	return this.routePlanner.getMapper();
+    }
+
+    public ObjectMapper getGeoCodingMapper() {
+	return this.geoCoder.getMapper();
     }
 
     /*
@@ -65,9 +94,15 @@ public class FullStackRestCaller {
      * Step 2) - GeoRouteMatrix
      *
      */
-    public List<ElementConnection> geoRouteMatrix(List<Position> nodeSrcPoss, List<Position> ressSrcPoss, boolean isUseCorrection) {
+    public List<ElementConnection> geoRouteMatrix(List<Position> nodeSrcPoss, List<Position> ressSrcPoss,
+	    boolean isUseCorrection) {
 
-	return this.routePlanner.geoRouteMatrix(nodeSrcPoss, ressSrcPoss,isUseCorrection);
+	return this.routePlanner.geoRouteMatrix(nodeSrcPoss, ressSrcPoss, isUseCorrection);
+    }
+
+    public List<ElementConnection> geoRouteSmartMatrix(Set<Node> nodes, Set<Resource> ress, boolean isUseCorrection) {
+
+	return this.routePlanner.geoRouteSmartMatrix(nodes, ress, isUseCorrection);
     }
 
     public static MatrixRoutingRequest createMatrixRequest(RestOptimization input) {
@@ -95,9 +130,9 @@ public class FullStackRestCaller {
 	return this.tourOptimizer.optimizeOnlyResult(nodePoss, ressPoss, connections, jsonLicenseOpt);
     }
 
-    public void attachToStreams(PrintStream outstream) {
+    public void attachToStreams() {
 
-	this.tourOptimizer.attachToStreams(outstream);
+	this.tourOptimizer.attachToStreams();
     }
 
     /*

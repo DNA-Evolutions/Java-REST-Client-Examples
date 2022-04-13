@@ -1,4 +1,17 @@
-package com.dna.jopt.rest.client.example.geocoder;
+package com.dna.jopt.rest.client.example.geocoder.forward;
+
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
 
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +25,25 @@ import com.dna.jopt.rest.client.model.Status;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestAddressInput;
 
-public class GeoCoderExample {
+/**
+ * The Class ForwardGeoCoderExample. Shows how to transform addresses into positions (with latitude and longitude)
+ */
+public class ForwardGeoCoderExample {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method of ForwardGeoCoderExample
+     *
+     * @param args the arguments
+     * @throws IOException                Signals that an I/O exception has
+     *                                    occurred.
+     * @throws NoSecretFileFoundException the no secret file found exception
+     * @throws SecretNotFoundException    the secret not found exception
+     */
+    public static void main(String[] args) throws IOException, NoSecretFileFoundException, SecretNotFoundException {
 
 	/*
 	 * 
@@ -34,9 +61,9 @@ public class GeoCoderExample {
 	 * 
 	 */
 
-	GeoCoderRestCaller geoCoderCaller;
-
 	SecretsManager m = new SecretsManager();
+
+	GeoCoderRestCaller geoCoderCaller;
 
 	if (isAzureCall) {
 
@@ -70,12 +97,11 @@ public class GeoCoderExample {
 	List<Position> nodePoss = geoCoderCaller.geoCodeNodePositions(nodeAddresses);
 	List<Position> ressPoss = geoCoderCaller.geoCodeResourcePositions(resourceAddresses);
 
-	// Print out as json
+	// Print out as JSON
 
 	System.out.println(geoCoderCaller.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(nodePoss));
 	System.out.println(geoCoderCaller.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(ressPoss));
-	
-	
+
 	/*
 	 * Save to JSON
 	 */
@@ -87,25 +113,6 @@ public class GeoCoderExample {
 	    RestJSONParser.toJsonFile(nodePoss, new File(jsonNodeFile), geoCoderCaller.getMapper());
 	    RestJSONParser.toJsonFile(ressPoss, new File(jsonResFile), geoCoderCaller.getMapper());
 	}
-	
-	
-	
-	
-
-	// XXX temp
-	List<Position> joined = nodePoss;
-	joined.addAll(ressPoss);
-
-	for (int ii = 0; ii < joined.size(); ii++) {
-	    
-	    Position p = joined.get(ii);
-	    
-	    System.out.println("poss.add(new Position().latitude(" + p.getLatitude() + ").longitude(" + p.getLongitude()
-	    + ").locationId(\"Position_" + ii + "\"));");
-
-	}
-
-
 
     }
 }

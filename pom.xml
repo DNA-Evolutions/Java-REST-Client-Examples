@@ -17,10 +17,6 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 
-		<!-- This is an optional dependency. It is only used for creating a kml 
-			file from the results 
-		<jopt.core.pg.version.number>7.4.9-SNAPSHOT</jopt.core.pg.version.number>-->
-
 		<swagger-annotations-version>1.5.8</swagger-annotations-version>
 		<jersey-version>2.35</jersey-version>
 		<jackson-version>2.12.4</jackson-version>
@@ -36,14 +32,6 @@
 		<spring-webflux-version>5.3.9</spring-webflux-version>
 		<springboot-starter-webflux-version>2.5.4</springboot-starter-webflux-version>
 	</properties>
-
-	<developers>
-		<developer>
-			<id>jens@dnaevolutions</id>
-			<name>Jens Richter</name>
-			<email>jens.richter@dna-evolutions.com</email>
-		</developer>
-	</developers>
 
 
 	<organization>
@@ -75,14 +63,6 @@
 
 
 	<dependencies>
-	<!-- 
-		<dependency>
-			<groupId>jopt</groupId>
-			<artifactId>jopt.core</artifactId>
-			<version>${jopt.core.pg.version.number}</version>
-		</dependency>
-
-		-->
 		<dependency>
 			<groupId>org.threeten</groupId>
 			<artifactId>threetenbp</artifactId>
@@ -222,7 +202,7 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.5.13</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -252,7 +232,7 @@
 				<!-- RELEASE_VERSION -->
 				<version>5.2.1</version>
 				<!-- /RELEASE_VERSION -->
-				
+
 				<executions>
 
 
@@ -262,7 +242,6 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-
 							<verbose>false</verbose>
 							<typeMappings>
 								<typeMapping>OffsetDateTime=Instant</typeMapping>
@@ -271,21 +250,12 @@
 								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
 							</importMappings>
 
-							
 							<inputSpec>
 								${project.basedir}/src/main/resources/swagger/geocoder/spec/geocoder_spec.json</inputSpec>
 							<configurationFile>${project.basedir}/src/main/resources/swagger/geocoder/config/geocoder_openapi_config.json</configurationFile>
-
-							
 							<generatorName>java</generatorName>
-
-							
 							<library>webclient</library>
-							
-
 							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
-
-
 						</configuration>
 					</execution>
 					<execution>
@@ -319,21 +289,18 @@
 
 						</configuration>
 					</execution>
-									
+
 					<execution>
 						<id>touroptimizer</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-						
+
 							<inputSpec>
 								${project.basedir}/src/main/resources/swagger/touroptimizer/spec/touroptimizer_spec.json</inputSpec>
 							<configurationFile>${project.basedir}/src/main/resources/swagger/touroptimizer/config/touroptimizer_openapi_config.json</configurationFile>
-
-							
 							<generatorName>java</generatorName>
-
 							<verbose>false</verbose>
 							<typeMappings>
 								<typeMapping>OffsetDateTime=Instant</typeMapping>
@@ -341,13 +308,8 @@
 							<importMappings>
 								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
 							</importMappings>
-
-							
 							<library>webclient</library>
-							
-
 							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
-
 						</configuration>
 					</execution>
 				</executions>

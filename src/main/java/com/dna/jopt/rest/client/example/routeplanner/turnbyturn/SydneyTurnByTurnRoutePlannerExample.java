@@ -1,4 +1,17 @@
-package com.dna.jopt.rest.client.example.routeplanner;
+package com.dna.jopt.rest.client.example.routeplanner.turnbyturn;
+
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,12 +27,25 @@ import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.export.kml.KMLPolyLineExporter;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.tbtextraction.TBTTripExtraction;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
+/**
+ * The Class SydneyTurnByTurnRoutePlannerExample.  Creates a turn-by-turn request and saved the shape of the routing as a kml file.
+ */
 public class SydneyTurnByTurnRoutePlannerExample {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * The main method of SydneyTurnByTurnRoutePlannerExample
+     *
+     * @param args the arguments
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws NoSecretFileFoundException the no secret file found exception
+     * @throws SecretNotFoundException the secret not found exception
+     */
+    public static void main(String[] args) throws IOException , NoSecretFileFoundException, SecretNotFoundException{
 
 	/*
 	 * 

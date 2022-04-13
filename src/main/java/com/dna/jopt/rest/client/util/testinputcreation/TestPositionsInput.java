@@ -1,5 +1,18 @@
 package com.dna.jopt.rest.client.util.testinputcreation;
 
+/*-
+ * #%L
+ * JOpt Java REST Client Examples
+ * %%
+ * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * %%
+ * This file is subject to the terms and conditions defined in file 'LICENSE.md',
+ * which is part of this repository.
+ * 
+ * If not, see <https://www.dna-evolutions.com/agb-conditions-and-terms/>.
+ * #L%
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,6 +151,36 @@ public class TestPositionsInput {
 	poss.add(new Position().latitude(-34.052518).longitude(150.709943).locationId("Resource_1"));
 	poss.add(new Position().latitude(-34.051988).longitude(150.71981).locationId("Resource_2"));
 	poss.add(new Position().latitude(-34.052015).longitude(150.999808).locationId("Resource_3"));
+
+	return poss;
+
+    }
+
+    /*
+     * 
+     * 
+     */
+
+    public static List<Position> defaultSmallSydneyNodePositions() {
+
+	List<Position> poss = new ArrayList<>();
+
+	poss.add(new Position().latitude(-34.052052).longitude(150.668724).locationId("Node_0"));
+	poss.add(new Position().latitude(-34.052518).longitude(150.709943).locationId("Node_1"));
+	poss.add(new Position().latitude(-34.051988).longitude(150.71981).locationId("Node_2"));
+	poss.add(new Position().latitude(-34.04213).longitude(150.729568).locationId("Node_3"));
+	poss.add(new Position().latitude(-34.042063).longitude(150.739632).locationId("Node_4"));
+	poss.add(new Position().latitude(-34.041006).longitude(150.779042).locationId("Node_5"));
+
+	return poss;
+
+    }
+
+    public static List<Position> defaultSmallSydneyResourcePositions() {
+
+	List<Position> poss = new ArrayList<>();
+
+	poss.add(new Position().latitude(-34.052052).longitude(150.668724).locationId("Resource_0"));
 
 	return poss;
 
