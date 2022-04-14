@@ -22,5 +22,5 @@ Optimize a problem consisting of Nodes, Resources, and optionally externally pro
 ## Fullstack Examples - Overview
 
 - Package `coderoute`: The first step: Take addresses and geocode them to positions with longitude and latitude. Second step: Create a connections matrix.
-- Package `coderouteoptimize`: Like `coderoute`, but with additional optimisation.
+- Package `coderouteoptimize`: Like `coderoute`, but with additional optimization.
 - Package `helper`: Contains the Rest-Caller used by the examples.
