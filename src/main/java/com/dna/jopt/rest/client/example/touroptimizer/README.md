@@ -32,6 +32,8 @@ Activating the profile "cors" will allow doing REST calls from the same local ho
 
 (Please refer to <a href="https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer" target="_blank">Docker-Rest-TourOptimzer-Repository</a> for more information)
 
+**Note: In the future, we will only allow using Docker-REST-TourOptimizer if you have purchased an XL-License. For testing purposes, however, you can still use the public license.**
+
 
 ## TourOptimizer Examples - Overview
 
