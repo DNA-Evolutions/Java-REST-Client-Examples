@@ -22,30 +22,60 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class TBTTripExtraction {
 
-    @Setter
-    @Getter
+
     private Position fromPos;
+    
+    public void setFromPos(Position pos) {
+	this.fromPos = pos;
+    }
+    
+    public Position getFromPos() {
+	return this.fromPos;
+    }
 
-    @Setter
-    @Getter
+    //@Setter
+   // @Getter
     private Position toPos;
+    
+    public void setToPos(Position pos) {
+	this.toPos = pos;
+    }
+    
+    public Position getToPos() {
+	return this.toPos;
+    }
 
-    @Setter
-    @Getter
     Duration time;
+    
+    public void setTime(Duration time) {
+	this.time = time;
+    }
+    
+    public Duration getTime() {
+	return this.time;
+    }
 
-    @Setter
-    @Getter
     Double distance;
+    
+    public void setDistance(Double distance) {
+	this.distance = distance;
+    }
+    
+    public Double getDistance() {
+	return this.distance;
+    }
 
-    @Setter
-    @Getter
     String shape;
+    
+    public void setShape(String shape) {
+	this.shape = shape;
+    }
+    
+    public String getShape() {
+	return this.shape;
+    }
 
     @Override
     public String toString() {
