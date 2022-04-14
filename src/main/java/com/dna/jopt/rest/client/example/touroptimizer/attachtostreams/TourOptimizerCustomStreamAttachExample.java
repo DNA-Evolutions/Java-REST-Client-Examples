@@ -27,9 +27,9 @@ import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.TextSolution;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
-import com.dna.jopt.rest.client.util.secrets.SecretsManager;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 import com.dna.jopt.rest.touroptimizer.client.api.OptimizationServiceControllerApi;
 

@@ -30,9 +30,9 @@ import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.Status;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
-import com.dna.jopt.rest.client.util.secrets.SecretsManager;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestAddressInput;
 import com.dna.jopt.rest.client.util.testinputcreation.TestElementsCreator;
 

@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dna.jopt.rest.client.util.secrets.SecretsManager;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretFileAlreadyPresentException;
+import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretFileAlreadyPresentException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator;
 
 /**

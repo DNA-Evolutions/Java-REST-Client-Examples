@@ -1,4 +1,4 @@
-package com.dna.jopt.rest.client.util.secrets.caughtexception;
+package com.dna.jopt.rest.client.util.secretsmanager.caughtexception;
 
 /*-
  * #%L
@@ -13,14 +13,14 @@ package com.dna.jopt.rest.client.util.secrets.caughtexception;
  * #L%
  */
 
-public class SecretNotFoundException extends Exception {
+public class SecretFileAlreadyPresentException extends Exception {
 
     /**
      * 
      */
-    private static final long serialVersionUID = -6236693422386995927L;
+    private static final long serialVersionUID = -1224911761218402885L;
 
-    public SecretNotFoundException(String errorMessage) {
+    public SecretFileAlreadyPresentException(String errorMessage) {
 	super(errorMessage);
     }
 }

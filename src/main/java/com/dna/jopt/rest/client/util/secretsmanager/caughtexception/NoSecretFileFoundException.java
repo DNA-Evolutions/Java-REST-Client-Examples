@@ -1,4 +1,4 @@
-package com.dna.jopt.rest.client.util.secrets.caughtexception;
+package com.dna.jopt.rest.client.util.secretsmanager.caughtexception;
 
 /*-
  * #%L

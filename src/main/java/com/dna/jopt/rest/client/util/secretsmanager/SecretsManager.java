@@ -1,4 +1,4 @@
-package com.dna.jopt.rest.client.util.secrets;
+package com.dna.jopt.rest.client.util.secretsmanager;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,9 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretFileAlreadyPresentException;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretFileAlreadyPresentException;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

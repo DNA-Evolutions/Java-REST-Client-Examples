@@ -26,9 +26,9 @@ import com.dna.jopt.rest.client.model.TurnByTurnRoutingRequest;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.export.kml.KMLPolyLineExporter;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
-import com.dna.jopt.rest.client.util.secrets.SecretsManager;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.NoSecretFileFoundException;
-import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretNotFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
+import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.tbtextraction.TBTTripExtraction;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
