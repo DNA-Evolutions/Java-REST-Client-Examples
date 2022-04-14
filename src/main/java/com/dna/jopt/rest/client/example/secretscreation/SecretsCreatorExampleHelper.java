@@ -1,5 +1,7 @@
 package com.dna.jopt.rest.client.example.secretscreation;
 
+
+
 /*-
  * #%L
  * JOpt Java REST Client Examples
@@ -13,12 +15,12 @@ package com.dna.jopt.rest.client.example.secretscreation;
  * #L%
  */
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.dna.jopt.rest.client.util.secrets.SecretsManager;
+import com.dna.jopt.rest.client.util.secrets.caughtexception.SecretFileAlreadyPresentException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator;
 
 /**
@@ -31,8 +33,9 @@ public class SecretsCreatorExampleHelper {
      *
      * @param args the arguments
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws SecretFileAlreadyPresentException 
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SecretFileAlreadyPresentException {
 
 	/*
 	 *  Fill me out
@@ -51,8 +54,6 @@ public class SecretsCreatorExampleHelper {
 	 * 
 	 */
 
-	String targetFile = SecretsManager.DEFAULT_SECRETS_PATH;
-
 	// Create a json file and save to target directory
 	Map<String, String> secretsmap = new HashMap<>();
 
@@ -65,7 +66,7 @@ public class SecretsCreatorExampleHelper {
 	}
 
 	if (!secretsmap.isEmpty()) {
-	    SecretsManager.saveSecretsMap(new File(targetFile), secretsmap);
+	    SecretsManager.saveSecretsMap(secretsmap);
 	} else {
 	    System.out.println("Nothing was saved");
 	}

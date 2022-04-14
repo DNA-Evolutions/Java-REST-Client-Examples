@@ -4,7 +4,7 @@ For running an example, it is usually necessary to provide a key. Either your AP
 
 ## Creating a secrets file
 
-Most examples are using a  ` SecretManager ` instance loading a predefined JSON secrets file. This file is **not** part of this repository. You can open  `SecretCreatorExampleHelper.java`  (within this package) and fill out the required information. Running this example will create a file called  `secrets.json`  in the folder `src/main/resources/secrets/`  that looks like this:
+Most examples are using a  ` SecretManager ` instance loading a predefined JSON secrets file. This file is **not** part of this repository. You can open  `SecretCreatorExampleHelper.java`  (within this package) and fill out the required information. Running this example will create a file called  `secrets.json`  in the folder `/secrets/`  that looks like this:
 
 ```xml
 { 
@@ -13,33 +13,25 @@ Most examples are using a  ` SecretManager ` instance loading a predefined JSON 
 }
 ```
 
+Of course you can also manually place a `secrets.json` file inside the `/secrets/` folder.
+
 The file contains a `Map<String, String>` in `JSON` format.
 
 ## Public TourOptimizer License
 We do not provide any public API-Keys for using our Azure-Endpoints. However, hosting a local Rest-TourOptimizer instance is possible. You can use the limited (max 15 elements) public TourOptimizer License that can be found as a variable in `com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator` named `PUBLIC_JSON_LICENSE`. For more information please refer to the TourOptimizer Examples.
 
-## Modifying the secrets path
+## Creating an instance of SecretsManager with a Map<String,String>
 
-Please open `com.dna.jopt.rest.client.util.secrets.SecretsManager.java` and modify the `DEFAULT_SECRETS_PATH` variable. Or use a different constructor for the `SecretsManager` instance when exploring the examples.
-
-For example:
-
-```xml
-	SecretsManager m = new SecretsManager(); 
-```
- will create an instance of `SecretsManager` expecting the secrets file to be stored in `DEFAULT_SECRETS_PATH`.
- 
- Whereas:
+You can directly pass a `Map<String, String>` where the key is the title of your provider and the value is the secret password.
  
  ```xml
-	String secretFilePath = "/anyFolder/mySecrets.json";
-	SecretsManager m = new SecretsManager(secretFilePath); 
+Map<String, String> secretsmap = new HashMap<>();
+secretsmap.put("azure", "YOUR_DNA_PROVIDED_API_KEY");
+secretsmap.put("joptlic", "YOUR_DNA_PROVIDED_TOUROPTIMIZER_KEY");
+	
+SecretsManager smanager = new SecretsManager(secretsmap);
 ```
 
- will create an instance of `SecretsManager` expecting the secrets file to be stored in `/anyFolder/mySecrets.json`.
- 
- (Please also check out the other constructors of the `SecretsManager.java`.)
- 
  
 ## Recommendation - Keep your secrets secret
 Please be careful not to share your API Key or your JOpt-TourOptimizer Key. By default, a snapshot always strips any of your keys, and therefore, sharing snapshots is possible.
