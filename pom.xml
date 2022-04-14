@@ -19,7 +19,8 @@
 
 		<swagger-annotations-version>1.6.6</swagger-annotations-version>
 		<jersey-version>2.35</jersey-version>
-		<jackson-version>2.13.0</jackson-version>
+		<jackson-version>2.13.2.2</jackson-version>
+		<jackson-version-misc>2.13.2</jackson-version-misc>
 		<jackson-version-jsr310>2.12.5</jackson-version-jsr310>
 		<jackson-version-threeten>2.12.2</jackson-version-threeten>
 		<jackson-databind-nullable-version>0.2.0</jackson-databind-nullable-version>
@@ -30,7 +31,7 @@
 		<threetenbp-version>1.3.5</threetenbp-version>
 		<spring-web-version>5.3.19</spring-web-version>
 		<spring-webflux-version>5.3.19</spring-webflux-version>
-		<springboot-starter-webflux-version>2.6.4</springboot-starter-webflux-version>
+		<springboot-starter-webflux-version>2.6.6</springboot-starter-webflux-version>
 	</properties>
 
 
@@ -112,27 +113,27 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-base</artifactId>
-			<version>${jackson-version}</version>
+			<version>${jackson-version-misc}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>${jackson-version}</version>
+			<version>${jackson-version-misc}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson-version}</version>
+			<version>${jackson-version-misc}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>${jackson-version}</version>
+			<version>${jackson-version-misc}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
-			<version>${jackson-version}</version>
+			<version>${jackson-version-misc}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openapitools</groupId>
@@ -149,7 +150,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-joda</artifactId>
-			<version>${jackson-version}</version>
+			<version>${jackson-version-misc}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
