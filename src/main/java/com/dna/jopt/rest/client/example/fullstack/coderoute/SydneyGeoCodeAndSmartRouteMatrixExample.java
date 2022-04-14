@@ -44,7 +44,7 @@ import com.dna.jopt.rest.client.util.testinputcreation.TestElementsCreator;
 public class SydneyGeoCodeAndSmartRouteMatrixExample {
 
     /**
-     * The main method of SydneyGeoCodeAndSmarteRouteMatrixExample
+     * The main method of SydneyGeoCodeAndSmartRouteMatrixExample.
      *
      * @param args the arguments
      * @throws IOException                Signals that an I/O exception has
