@@ -17,9 +17,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 
-		<swagger-annotations-version>1.5.8</swagger-annotations-version>
+		<swagger-annotations-version>1.6.6</swagger-annotations-version>
 		<jersey-version>2.35</jersey-version>
-		<jackson-version>2.12.4</jackson-version>
+		<jackson-version>2.13.0</jackson-version>
 		<jackson-version-jsr310>2.12.5</jackson-version-jsr310>
 		<jackson-version-threeten>2.12.2</jackson-version-threeten>
 		<jackson-databind-nullable-version>0.2.0</jackson-databind-nullable-version>
@@ -28,9 +28,9 @@
 		<junit-version>4.8.1</junit-version>
 		<scribejava-apis-version>6.9.0</scribejava-apis-version>
 		<threetenbp-version>1.3.5</threetenbp-version>
-		<spring-web-version>5.3.9</spring-web-version>
-		<spring-webflux-version>5.3.9</spring-webflux-version>
-		<springboot-starter-webflux-version>2.5.4</springboot-starter-webflux-version>
+		<spring-web-version>5.3.19</spring-web-version>
+		<spring-webflux-version>5.3.19</spring-webflux-version>
+		<springboot-starter-webflux-version>2.6.4</springboot-starter-webflux-version>
 	</properties>
 
 
