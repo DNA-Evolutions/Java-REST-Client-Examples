@@ -4,3 +4,4 @@
 .settings/
 src/main/resources/secrets/secrets.json
 target/
+secrets/
