@@ -98,7 +98,7 @@ In any case, you need to provide a `secrets.json` file. Please follow the README
 
 ## Prerequisites
 
-* In your IDE as native Java dependency: Install at least Java 8, Maven and lombok
+* In your IDE as native Java dependency: Install at least Java 8, Maven
 * In our sandbox: Working Docker environment
 
 
@@ -149,7 +149,7 @@ If you need any help, please contact us via our company website <a href="https:/
 ---
 
 ## Why using JOpt products from DNA Evolutions?
-Orginally, JOpt is a flexible routing optimization-engine written in Java, allowing to solve tour-optimization problems that are highly restricted, for example, regarding time windows, skills, and even mandatory constraints can be applied.
+Originally, JOpt is a flexible routing optimization-engine written in Java, allowing to solve tour-optimization problems that are highly restricted, for example, regarding time windows, skills, and even mandatory constraints can be applied.
 
 Click, to open our video:
 
