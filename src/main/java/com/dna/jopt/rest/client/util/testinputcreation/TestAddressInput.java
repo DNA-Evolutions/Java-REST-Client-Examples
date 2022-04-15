@@ -62,9 +62,36 @@ public final class TestAddressInput {
 
 	return adds;
     }
+    
+    public static List<GeoAddress> defaultSydneyNodeAddressesLabelsOnly() {
+	List<GeoAddress> adds = new ArrayList<>();
+	
+	adds.add(new GeoAddress().label("81 Werombi Road, Grasmere, NSW, Australia")
+		.locationId("Pos_1"));
+	
+	adds.add(new GeoAddress().label("24 Camden Valley Way, Elderslie, NSW, Australia")
+		.locationId("Pos_2"));
+	
+	adds.add(new GeoAddress().label("16 Carpenter Street, Elderslie, NSW, Australia")
+		.locationId("Pos_3"));
+	
+	adds.add(new GeoAddress().label("259 Camden Valley Way, Narellan, NSW, Australia")
+		.locationId("Pos_4"));
+	
+	adds = adds.stream().map(a -> {
+
+	    a.setLocationId("NODE-" + a.getLocationId());
+
+	    return a;
+	}).collect(Collectors.toList());
+
+	return adds;
+    }
+	
 
     public static List<GeoAddress> defaultSydneyNodeAddresses() {
 	List<GeoAddress> adds = new ArrayList<>();
+	
 
 	adds.add(new GeoAddress().city("Grasmere").streetname("Werombi Road").housenumber("81").postalcode("2570")
 		.locationId("GrasmereWerombi Road81"));
