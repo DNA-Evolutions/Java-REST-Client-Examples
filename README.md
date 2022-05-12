@@ -113,7 +113,7 @@ If you want to get started without the hassle of installing Java, Maven and an I
 ### Starting the sandbox and persist your changes
 You must mount a volume to which the examples of this project are downloaded on the container's startup. After re-launching the container, the latest version of our examples is only cloned if the folder is not already existing, keeping your files safe from being overridden.
 
-Launching a sanbox and mount your current directory ('$PWD') or any other directory you want:
+Launching a sandbox and mount your current directory ('$PWD') or any other directory you want:
 
 ```
 docker run -it -d --name jopt-rest-examples -p 127.0.0.1:8043:8080 -v "$PWD/:/home/coder/project" dnaevolutions/jopt_rest_example_server:latest

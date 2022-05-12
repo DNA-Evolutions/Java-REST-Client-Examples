@@ -8,7 +8,7 @@
       "url" : "https://dna-evolutions.com",
       "email" : "info@dna-evolutions.com"
     },
-    "version" : "1.0.8-SNAPSHOT"
+    "version" : "1.0.9-SNAPSHOT"
   },
   "servers" : [ {
     "url" : "/"
@@ -19,8 +19,122 @@
   }, {
     "name" : "OptimizationHealthController",
     "description" : "Provides the basic functionality to check if Optimization endpoint is still healthy."
+  }, {
+    "name" : "ReadDatabaseServiceController",
+    "description" : "ReadDatabaseServiceController is a service controller that is used to read persisted data."
+  }, {
+    "name" : "OptimizationFAFServiceController",
+    "description" : "OptimizationFAFServiceController is a service controller that is used as entry-point for JOpt.TourOptimizer."
   } ],
   "paths" : {
+    "/api/optimizefaf/runOnlyResultFAF" : {
+      "post" : {
+        "tags" : [ "OptimizationFAFServiceController", "optimizationFAF" ],
+        "description" : "The entry point to access the JOpt.TourOptimization optimization service. Once you have set up an input, you can let JOpt find an optimal solution for your setup.",
+        "operationId" : "runOnlyResultFAF",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RestOptimization"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Once the optimizer has finished the optimization run, it will return a solution/result JSON.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Timeout / Optimization took too long",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/optimizefaf/runFAF" : {
+      "post" : {
+        "tags" : [ "OptimizationFAFServiceController", "optimizationFAF" ],
+        "description" : "Fire and forget run opti",
+        "operationId" : "runFAF",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RestOptimization"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Successfull operation.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "boolean"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/optimize/stop" : {
       "post" : {
         "tags" : [ "OptimizationServiceController", "optimization" ],
@@ -67,22 +181,22 @@
           "required" : true
         },
         "responses" : {
-          "401" : {
-            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Once the optimizer has finished the optimization run, it will return an OptimizationConfig JSON that contains the initial definition and the solution.",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/RestOptimization"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -169,6 +283,350 @@
         }
       }
     },
+    "/api/db/read/findsSolutionInfos" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find solution infos by creator. Only works, if connected to a database.",
+        "description" : "Find solution infos by creator.",
+        "operationId" : "findsSolutionInfos",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get solution infos triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/OptimizationSearchResult"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting solution infos",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findsOptimizationInfos" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find optimization infos by creator. Only works, if connected to a database.",
+        "description" : "Find optimization infos by creator.",
+        "operationId" : "findsOptimizationInfos",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get Optimization infos triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/OptimizationSearchResult"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimization infos",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findWarning" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find warning by creator. Only works, if connected to a database.",
+        "description" : "Find warning by creator.",
+        "operationId" : "findWarning",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get warning triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/JOptOptimizationWarning"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting warning",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findStatus" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find status by creator. Only works, if connected to a database.",
+        "description" : "Find status by creator.",
+        "operationId" : "findStatus",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get status triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/JOptOptimizationStatus"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting status",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findSolutions" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find solutions by creator. Only works, if connected to a database.",
+        "description" : "Find solutions by creator.",
+        "operationId" : "findSolutions",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting solutions",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get Solutions triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Solution"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findProgress" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find progress by creator. Only works, if connected to a database.",
+        "description" : "Find progress by creator.",
+        "operationId" : "findProgress",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting progress",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get progress triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/JOptOptimizationProgress"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findOptimizations" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find optimizations by creator. Only works, if connected to a database.",
+        "description" : "Find optimizations by creator.",
+        "operationId" : "findOptimizations",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/RestOptimization"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findError" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseServiceController" ],
+        "summary" : "Find error by creator. Only works, if connected to a database.",
+        "description" : "Find error by creator.",
+        "operationId" : "findError",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OptimizationSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get error triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/JOptOptimizationError"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/healthStatus" : {
       "get" : {
         "tags" : [ "healthStatus", "OptimizationHealthController" ],
@@ -176,8 +634,8 @@
         "description" : "Get the health status of this endpoint.",
         "operationId" : "healthStatus",
         "responses" : {
-          "200" : {
-            "description" : "The endpoint is up and running.",
+          "503" : {
+            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -186,8 +644,8 @@
               }
             }
           },
-          "503" : {
-            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
+          "200" : {
+            "description" : "The endpoint is up and running.",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -509,6 +967,16 @@
         },
         "description" : "The coreBuildOptions provided by the library"
       },
+      "CreatorSetting" : {
+        "type" : "object",
+        "properties" : {
+          "creator" : {
+            "type" : "string",
+            "description" : "The creator"
+          }
+        },
+        "description" : "The creatorSetting"
+      },
       "DateDef" : {
         "required" : [ "typeName" ],
         "type" : "object",
@@ -695,21 +1163,21 @@
             "type" : "boolean",
             "description" : "The isExtendableEnd"
           },
-          "isSchedulableBeforeWorkingHours" : {
-            "type" : "boolean",
-            "description" : "The isSchedulableBeforeWorkingHours"
-          },
-          "isTimeAdjustableAnchor" : {
-            "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
-          },
           "isSchedulableAfterWorkingHours" : {
             "type" : "boolean",
             "description" : "The isSchedulableAfterWorkingHours"
           },
+          "isSchedulableBeforeWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableBeforeWorkingHours"
+          },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
             "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
+          },
+          "isTimeAdjustableAnchor" : {
+            "type" : "boolean",
+            "description" : "The isTimeAdjustableAnchor"
           }
         },
         "description" : "The pillarNode"
@@ -864,29 +1332,29 @@
             "type" : "boolean",
             "description" : "The isForcedStayNode"
           },
-          "isSchedulableBeforeWorkingHours" : {
+          "isOverwritingRouteStart" : {
             "type" : "boolean",
-            "description" : "The isSchedulableBeforeWorkingHours"
-          },
-          "isTimeAdjustableAnchor" : {
-            "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
+            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
           },
           "isSchedulableAfterWorkingHours" : {
             "type" : "boolean",
             "description" : "The isSchedulableAfterWorkingHours"
           },
-          "isAutoTransformable2StartAnchor" : {
+          "isSchedulableBeforeWorkingHours" : {
             "type" : "boolean",
-            "description" : "The isAutoTransformable2StartAnchor"
+            "description" : "The isSchedulableBeforeWorkingHours"
           },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
             "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
           },
-          "isOverwritingRouteStart" : {
+          "isAutoTransformable2StartAnchor" : {
             "type" : "boolean",
-            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
+            "description" : "The isAutoTransformable2StartAnchor"
+          },
+          "isTimeAdjustableAnchor" : {
+            "type" : "boolean",
+            "description" : "The isTimeAdjustableAnchor"
           }
         },
         "description" : "The optional pillarNode. If a node has the pillarNode attibute attached, it becomes a pillar node itself. A pillar nodes openingHour cannot be violated. If a violation cannot be avoided, the pillar will be unassigned instead of being violated."
@@ -895,6 +1363,10 @@
         "required" : [ "typeName" ],
         "type" : "object",
         "properties" : {
+          "priority" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
           "fuzzyVisit" : {
             "type" : "boolean"
           },
@@ -904,10 +1376,6 @@
           "loadValue" : {
             "type" : "number",
             "format" : "double"
-          },
-          "priority" : {
-            "type" : "integer",
-            "format" : "int32"
           },
           "id" : {
             "type" : "string"
@@ -936,13 +1404,13 @@
             "type" : "number",
             "format" : "double"
           },
-          "loadPickupTime" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
           "maximalIndividualLoadCapacity" : {
             "type" : "number",
             "format" : "double"
+          },
+          "loadPickupTime" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "id" : {
             "type" : "string"
@@ -970,9 +1438,6 @@
               "$ref" : "#/components/schemas/ILoad"
             }
           },
-          "depotId" : {
-            "type" : "string"
-          },
           "hasFlexLoad" : {
             "type" : "boolean",
             "writeOnly" : true
@@ -980,6 +1445,9 @@
           "hasTimedLoads" : {
             "type" : "boolean",
             "writeOnly" : true
+          },
+          "depotId" : {
+            "type" : "string"
           },
           "typeName" : {
             "type" : "string"
@@ -1006,6 +1474,10 @@
           "depotId" : {
             "type" : "string"
           },
+          "maximalTotalCapacity" : {
+            "type" : "number",
+            "format" : "double"
+          },
           "capacityUnitMap" : {
             "type" : "object",
             "additionalProperties" : {
@@ -1014,17 +1486,16 @@
             },
             "writeOnly" : true
           },
-          "maximalTotalCapacity" : {
-            "type" : "number",
-            "format" : "double"
-          },
           "typeName" : {
             "type" : "string"
           }
         },
-        "description" : "The resourceDepot",
+        "description" : "The ResourceDepot type",
         "discriminator" : {
-          "propertyName" : "typeName"
+          "propertyName" : "typeName",
+          "mapping" : {
+            "SimpleResourceDepot" : "#/components/schemas/SimpleResourceDepot"
+          }
         }
       },
       "IdleEventNode" : {
@@ -1083,11 +1554,17 @@
         "required" : [ "keySetting" ],
         "type" : "object",
         "properties" : {
-          "keySetting" : {
-            "$ref" : "#/components/schemas/OptimizationKeySetting"
+          "creatorSetting" : {
+            "$ref" : "#/components/schemas/CreatorSetting"
           },
           "textSolution" : {
             "$ref" : "#/components/schemas/TextSolution"
+          },
+          "keySetting" : {
+            "$ref" : "#/components/schemas/OptimizationKeySetting"
+          },
+          "persistenceSetting" : {
+            "$ref" : "#/components/schemas/OptimizationPersistenceSetting"
           },
           "timeOut" : {
             "type" : "string",
@@ -1192,6 +1669,28 @@
             }
           }
         } ]
+      },
+      "MongoOptimizationPersistenceSetting" : {
+        "required" : [ "enablePersistence", "optimizationPersistenceStratgySetting", "streamPersistenceStratgySetting" ],
+        "type" : "object",
+        "properties" : {
+          "enablePersistence" : {
+            "type" : "boolean",
+            "description" : "The enablePersistence"
+          },
+          "expiry" : {
+            "type" : "string",
+            "description" : "The document will be automatically deleted after this duration. The default value is 48 hours.",
+            "example" : "PT48H"
+          },
+          "optimizationPersistenceStratgySetting" : {
+            "$ref" : "#/components/schemas/OptimizationPersistenceStratgySetting"
+          },
+          "streamPersistenceStratgySetting" : {
+            "$ref" : "#/components/schemas/StreamPersistenceStratgySetting"
+          }
+        },
+        "description" : "The mongoSettings"
       },
       "Node" : {
         "required" : [ "constraints", "id", "load", "openingHours", "qualifications", "type", "visitDuration" ],
@@ -1337,6 +1836,18 @@
             "type" : "boolean",
             "description" : "The boolean isUnassigned. Defines if a node was unassigned by the Optimizer."
           },
+          "isWorkNode" : {
+            "type" : "boolean",
+            "description" : "The isWorkNode"
+          },
+          "isStayNode" : {
+            "type" : "boolean",
+            "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'."
+          },
+          "isWaitOnEarlyArrivalFirstNode" : {
+            "type" : "boolean",
+            "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true."
+          },
           "isCausingIdleTimeCost" : {
             "type" : "boolean",
             "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created."
@@ -1348,18 +1859,6 @@
           "isOpeningHoursIncludesDuration" : {
             "type" : "boolean",
             "description" : "The boolean isOpeningHoursIncludesDuration. By default a node's openingHour defines the time-window  in which a task has to be fulfilled, meaning a Visitor has to arrive, work, and leave within that time-window. If isOpeningHoursIncludesDuration is set to false, the time-window only counts as arrival-window for the Resource."
-          },
-          "isWaitOnEarlyArrivalFirstNode" : {
-            "type" : "boolean",
-            "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true."
-          },
-          "isStayNode" : {
-            "type" : "boolean",
-            "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'."
-          },
-          "isWorkNode" : {
-            "type" : "boolean",
-            "description" : "The isWorkNode"
           }
         },
         "description" : "The list of nodes"
@@ -1538,7 +2037,6 @@
         "description" : "The list of non-overlapping openingHours of the nodes."
       },
       "OptimizationKeySetting" : {
-        "required" : [ "jsonLicense" ],
         "type" : "object",
         "properties" : {
           "jsonLicense" : {
@@ -1567,6 +2065,52 @@
           }
         },
         "description" : "The list of optimizationOptions"
+      },
+      "OptimizationPersistenceSetting" : {
+        "type" : "object",
+        "properties" : {
+          "mongoSettings" : {
+            "$ref" : "#/components/schemas/MongoOptimizationPersistenceSetting"
+          }
+        },
+        "description" : "The persistenceSetting"
+      },
+      "OptimizationPersistenceStratgySetting" : {
+        "required" : [ "saveOnlyResult" ],
+        "type" : "object",
+        "properties" : {
+          "saveOnlyResult" : {
+            "type" : "boolean",
+            "description" : "The saveOnlyResult",
+            "example" : false
+          },
+          "saveConnections" : {
+            "type" : "boolean",
+            "description" : "The saveConnections. Only takes action if saveOnlyResult is false.",
+            "example" : false
+          }
+        },
+        "description" : "The optimizationPersistenceStratgySetting"
+      },
+      "OptimizationStatus" : {
+        "required" : [ "error", "status", "statusDescription" ],
+        "type" : "object",
+        "properties" : {
+          "statusDescription" : {
+            "type" : "string",
+            "description" : "The description of status of the optimization"
+          },
+          "error" : {
+            "type" : "string",
+            "description" : "An  error code/desciption"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "The status of the optimization",
+            "enum" : [ "UNKNOWN", "ERROR", "SUCCESS_WITH_SOLUTION", "SUCCESS_WITHOUT_SOLUTION" ]
+          }
+        },
+        "description" : "The status of the optimization"
       },
       "Position" : {
         "required" : [ "latitude", "longitude" ],
@@ -2007,6 +2551,24 @@
         "required" : [ "elementConnections", "nodeRelations", "nodes", "optimizationOptions", "resources" ],
         "type" : "object",
         "properties" : {
+          "optimizationStatus" : {
+            "$ref" : "#/components/schemas/OptimizationStatus"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "An id created by the system that can be used for unique identification",
+            "example" : "626ba175a9d4fa6d6beec158"
+          },
+          "createdTimeStamp" : {
+            "type" : "integer",
+            "description" : "A timestamp when snapshot was created that will automatically filled out, if neccessary",
+            "format" : "int64"
+          },
+          "creator" : {
+            "type" : "string",
+            "description" : "An id related to the creator that is filled out autmatically",
+            "example" : "11aa65b13c2a6d34f8727e82e403ce869e3bba1d35c45c595e8cc5ce5e74e57a"
+          },
           "ident" : {
             "type" : "string",
             "description" : "An optional title/ident for the run. If not provided, a generated ident will be used",
@@ -2074,7 +2636,7 @@
           }
         },
         "example" : {
-          "ident" : "JOpt-Run-1649317134107",
+          "ident" : "JOpt-Run-1652344946523",
           "nodes" : [ {
             "id" : "Koeln",
             "type" : {
@@ -2088,10 +2650,6 @@
             "openingHours" : [ {
               "begin" : "2020-03-06T07:00:00Z",
               "end" : "2020-03-06T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T16:00:00Z",
               "zoneId" : "Europe/Berlin"
             } ],
             "visitDuration" : "PT20M",
@@ -2110,10 +2668,6 @@
               "begin" : "2020-03-06T07:00:00Z",
               "end" : "2020-03-06T16:00:00Z",
               "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
             } ],
             "visitDuration" : "PT20M",
             "priority" : 1
@@ -2130,94 +2684,6 @@
             "openingHours" : [ {
               "begin" : "2020-03-06T07:00:00Z",
               "end" : "2020-03-06T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            } ],
-            "visitDuration" : "PT20M",
-            "priority" : 1
-          }, {
-            "id" : "Heilbronn",
-            "type" : {
-              "position" : {
-                "latitude" : 49.1403,
-                "longitude" : 9.22,
-                "locationId" : "Heilbronn"
-              },
-              "typeName" : "Geo"
-            },
-            "openingHours" : [ {
-              "begin" : "2020-03-06T07:00:00Z",
-              "end" : "2020-03-06T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            } ],
-            "visitDuration" : "PT20M",
-            "priority" : 1
-          }, {
-            "id" : "Stuttgart",
-            "type" : {
-              "position" : {
-                "latitude" : 48.7667,
-                "longitude" : 9.18333,
-                "locationId" : "Stuttgart"
-              },
-              "typeName" : "Geo"
-            },
-            "openingHours" : [ {
-              "begin" : "2020-03-06T07:00:00Z",
-              "end" : "2020-03-06T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            } ],
-            "visitDuration" : "PT20M",
-            "priority" : 1
-          }, {
-            "id" : "Wuppertal",
-            "type" : {
-              "position" : {
-                "latitude" : 51.2667,
-                "longitude" : 7.18333,
-                "locationId" : "Wuppertal"
-              },
-              "typeName" : "Geo"
-            },
-            "openingHours" : [ {
-              "begin" : "2020-03-06T07:00:00Z",
-              "end" : "2020-03-06T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            } ],
-            "visitDuration" : "PT20M",
-            "priority" : 1
-          }, {
-            "id" : "Aachen",
-            "type" : {
-              "position" : {
-                "latitude" : 50.775346,
-                "longitude" : 6.083887,
-                "locationId" : "Aachen"
-              },
-              "typeName" : "Geo"
-            },
-            "openingHours" : [ {
-              "begin" : "2020-03-06T07:00:00Z",
-              "end" : "2020-03-06T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T16:00:00Z",
               "zoneId" : "Europe/Berlin"
             } ],
             "visitDuration" : "PT20M",
@@ -2243,28 +2709,6 @@
               "zoneId" : "Europe/Berlin"
             } ],
             "maxTime" : "PT8H",
-            "maxDistance" : "1200.0 km",
-            "co2emissionFactor" : 0.377
-          }, {
-            "id" : "John",
-            "type" : {
-              "typeName" : "Capacity"
-            },
-            "position" : {
-              "latitude" : 50.775346,
-              "longitude" : 6.083887,
-              "locationId" : "John"
-            },
-            "workingHours" : [ {
-              "begin" : "2020-03-06T07:00:00Z",
-              "end" : "2020-03-06T16:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            }, {
-              "begin" : "2020-03-07T07:00:00Z",
-              "end" : "2020-03-07T19:00:00Z",
-              "zoneId" : "Europe/Berlin"
-            } ],
-            "maxTime" : "PT14H",
             "maxDistance" : "1200.0 km",
             "co2emissionFactor" : 0.377
           } ],
@@ -2329,7 +2773,7 @@
               "JOpt.UnlocatedIdleTime" : "FALSE",
               "JOpt.plausibility.doInputCheck" : "TRUE",
               "JOpt.plausibility.doInputCheck.doCapacityCheck" : "TRUE",
-              "JOptExitCondition.JOptGenerationCount" : "1000",
+              "JOptExitCondition.JOptGenerationCount" : "10000",
               "JOptWeight.CO2Emission" : "0.0",
               "JOptWeight.Capacity" : "50.0",
               "JOptWeight.ColorCapacity" : "10.0",
@@ -2367,32 +2811,53 @@
           },
           "coreBuildOptions" : {
             "buildCoreProperties" : {
-              "jopt.core.git.closest.tag.commit.count" : "23",
+              "jopt.core.git.closest.tag.commit.count" : "26",
               "jopt.core.jopt.version.number" : "7.4.9",
               "jopt.core.git.build.version" : "7.4.9-SNAPSHOT",
-              "jopt.core.build.time.utc" : "2022-04-05T15:21:03Z",
-              "jopt.core.git.commit.id.describe" : "v7.4.8-23-g1a77893",
-              "jopt.core.git.commit.id.abbrev" : "1a77893",
+              "jopt.core.build.time.utc" : "2022-05-12T08:12:38Z",
+              "jopt.core.git.commit.id.describe" : "v7.4.8-26-g6be7f31-dirty",
+              "jopt.core.git.commit.id.abbrev" : "6be7f31",
               "jopt.core.git.dirty" : "true",
               "jopt.core.maven.compiler.target" : "1.8",
               "jopt.core.project.build.sourceEncoding" : "cp1252",
               "jopt.core.jopt.version.postfix" : "-SNAPSHOT",
               "jopt.core.git.branch" : "master",
               "jopt.core.git.closest.tag.name" : "v7.4.8",
-              "jopt.core.git.commit.time" : "20220405-144927",
-              "jopt.core.git.build.time" : "20220405-152106",
-              "jopt.core.git.build.host" : "8f0fa8df-b3c8-4069-ba52-00b46b5033d0-bp7kw",
+              "jopt.core.git.commit.time" : "20220411-153735",
+              "jopt.core.git.build.time" : "20220512-084132",
+              "jopt.core.git.build.host" : "DESKTOP-Q9BKOAA",
               "jopt.core.git.tags" : "",
-              "jopt.core.git.commit.id" : "1a77893dde52e082db1b0ed12cf7235f75a9e00e",
-              "jopt.core.git.commit.id.describe-short" : "v7.4.8-23",
+              "jopt.core.git.commit.id" : "6be7f3156648dc837b1bc1378bbf485bfcf44d3c",
+              "jopt.core.git.commit.id.describe-short" : "v7.4.8-26-dirty",
               "jopt.core.maven.test.skip" : "false",
               "jopt.core.git.commit.user.name" : "Jens Richter",
               "jopt.core.maven.compiler.source" : "1.8"
             }
           },
           "extension" : {
+            "creatorSetting" : {
+              "creator" : "PUBLIC_CREATOR"
+            },
             "keySetting" : {
-              "jsonLicense" : "{\r\n\t\"version\": \"1.1\",\r\n\t\"identifier\": \"PUBLIC-\",\r\n\t\"description\": \"Key provided to for evaluation purpose from DNA evolutions GmbH.\",\r\n\t\"contact\": \"www.dna-evolutions.com\",\r\n\t\"modules\": [{\r\n\t\t\t\"Module:\": \"Elements\",\r\n\t\t\t\"max\": 15\r\n\t\t}, {\r\n\t\t\t\"Module:\": \"Date\",\r\n\t\t\t\"creation\": \"2021-05-25\",\r\n\t\t\t\"due\": \"2027-05-25\"\r\n\t\t}\r\n\t],\r\n\t\"key\": \"PUBLIC-bc799ef350fe9841c1354736d8f863cb85bac88cefd19960c1\"\r\n}"
+              "jsonLicense" : "{\r\n  \"version\" : \"1.0\",\r\n  \"extra\" : \"TEST\",\r\n  \"identifier\" : \"COM-\",\r\n  \"description\" : \"Key provided to *** from DNA evolutions GmbH\",\r\n  \"contact\" : \"customer@company.com\",\r\n  \"modules\" : [ {\r\n    \"Module:\" : \"Date\",\r\n    \"creation\" : \"2022-04-30\",\r\n    \"due\" : \"2023-04-30\"\r\n  } ],\r\n  \"key\" : \"COM-2e99da83848981ba0cd8a080a3eb676561a95528aeea2a4ac1\"\r\n}"
+            },
+            "persistenceSetting" : {
+              "mongoSettings" : {
+                "enablePersistence" : true,
+                "expiry" : "PT48H",
+                "optimizationPersistenceStratgySetting" : {
+                  "saveOnlyResult" : false,
+                  "saveConnections" : false
+                },
+                "streamPersistenceStratgySetting" : {
+                  "saveProgress" : true,
+                  "cycleProgress" : true,
+                  "saveStatus" : true,
+                  "cycleStatus" : true,
+                  "saveWarning" : true,
+                  "saveError" : true
+                }
+              }
             },
             "timeOut" : "PT5M"
           }
@@ -2833,10 +3298,70 @@
           }
         } ]
       },
+      "SimpleResourceDepot" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/IResourceDepot"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "maximalUnitMatchedCapacity" : {
+              "type" : "number",
+              "format" : "double"
+            },
+            "capacityUnitMap" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "number",
+                "format" : "double"
+              }
+            },
+            "getPerKilometerCostFactorMap" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "integer",
+                "format" : "int32"
+              }
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "SimpleResourceDepot",
+              "default" : "SimpleResourceDepot"
+            },
+            "emptyAtEndOfRouteFactorMap" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "integer",
+                "format" : "int32"
+              }
+            }
+          }
+        } ]
+      },
       "Solution" : {
         "required" : [ "routes" ],
         "type" : "object",
         "properties" : {
+          "optimizationStatus" : {
+            "$ref" : "#/components/schemas/OptimizationStatus"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "An id created by the system that can be used for unique identification",
+            "example" : "626ba175a9d4fa6d6beec158"
+          },
+          "createdTimeStamp" : {
+            "type" : "integer",
+            "description" : "A timestamp the Snapshot was created that will automatically filled out, if neccessary",
+            "format" : "int64"
+          },
+          "creator" : {
+            "type" : "string",
+            "description" : "An id related to the creator that is filled out autmatically",
+            "example" : "11aa65b13c2a6d34f8727e82e403ce869e3bba1d35c45c595e8cc5ce5e74e57a"
+          },
           "ident" : {
             "type" : "string",
             "description" : "An optional title/ident inhertited from the OptimizationCondig.",
@@ -2857,7 +3382,8 @@
               "$ref" : "#/components/schemas/Route"
             }
           }
-        }
+        },
+        "description" : "The solution. Either provided by the library or by the user and used as starting solution for the optimization run"
       },
       "SolutionHeader" : {
         "required" : [ "jobViolations", "numRoutes", "numScheduledRoutes", "totCost", "totDistance", "totElements", "totIdleTime", "totProdTime", "totTermiDistance", "totTermiTime", "totTime", "totTranTime", "unassignedElementIds" ],
@@ -3031,6 +3557,37 @@
           }
         },
         "description" : "The stayOutDefinition"
+      },
+      "StreamPersistenceStratgySetting" : {
+        "required" : [ "saveProgress", "saveStatus", "saveWarning" ],
+        "type" : "object",
+        "properties" : {
+          "saveProgress" : {
+            "type" : "boolean",
+            "description" : "The saveProgress"
+          },
+          "cycleProgress" : {
+            "type" : "boolean",
+            "description" : "Cycle progress. Only takes action if saveProgress is true.",
+            "example" : true
+          },
+          "saveStatus" : {
+            "type" : "boolean",
+            "description" : "The saveError",
+            "example" : true
+          },
+          "cycleStatus" : {
+            "type" : "boolean",
+            "description" : "Cycle status. Only takes action if saveStatus is true.",
+            "example" : true
+          },
+          "saveWarning" : {
+            "type" : "boolean",
+            "description" : "The saveWarning",
+            "example" : true
+          }
+        },
+        "description" : "The streamPersistenceStratgySetting"
       },
       "StringIntegerPair" : {
         "required" : [ "left", "right" ],
@@ -3596,21 +4153,151 @@
           }
         } ]
       },
-      "Status" : {
+      "OptimizationSearch" : {
         "type" : "object",
         "properties" : {
-          "description" : {
-            "type" : "string"
+          "creator" : {
+            "type" : "string",
+            "description" : "A related creator.",
+            "example" : "DEFAULT_DNA_CREATOR"
           },
-          "status" : {
-            "type" : "string"
+          "ident" : {
+            "type" : "string",
+            "description" : "The ident of the optimization to serach for. Leave blank if not required",
+            "example" : "My-JOpt-Run"
+          },
+          "limit" : {
+            "type" : "integer",
+            "description" : "The max number of results. Results are sorted by creation. Newest first by default",
+            "format" : "int32",
+            "example" : 10
+          },
+          "sortDirection" : {
+            "type" : "string",
+            "description" : "The sort direction of the createdDate. By default descending (DESC) newest first. For oldest first, use ASC (ascending)",
+            "example" : "DESC"
+          },
+          "createdDateStart" : {
+            "type" : "string",
+            "description" : "The snapshot was created AFTER this time. Leave blank if not required.",
+            "format" : "date-time"
+          },
+          "createdDateEnd" : {
+            "type" : "string",
+            "description" : "The snapshot was created BEFORE this time. Leave blank if not required.",
+            "format" : "date-time"
+          },
+          "timeOut" : {
+            "type" : "object",
+            "properties" : {
+              "seconds" : {
+                "type" : "integer",
+                "format" : "int64"
+              },
+              "zero" : {
+                "type" : "boolean"
+              },
+              "negative" : {
+                "type" : "boolean"
+              },
+              "units" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "durationEstimated" : {
+                      "type" : "boolean"
+                    },
+                    "duration" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "format" : "int64"
+                        },
+                        "zero" : {
+                          "type" : "boolean"
+                        },
+                        "negative" : {
+                          "type" : "boolean"
+                        },
+                        "nano" : {
+                          "type" : "integer",
+                          "format" : "int32"
+                        }
+                      }
+                    },
+                    "dateBased" : {
+                      "type" : "boolean"
+                    },
+                    "timeBased" : {
+                      "type" : "boolean"
+                    }
+                  }
+                }
+              },
+              "nano" : {
+                "type" : "integer",
+                "format" : "int32"
+              }
+            },
+            "description" : "The timeOut for the request. By default one minute",
+            "example" : "PT1M"
           }
-        }
+        },
+        "description" : "OptimizationSearch model for a databse serach"
+      },
+      "OptimizationSearchResult" : {
+        "type" : "object",
+        "properties" : {
+          "creator" : {
+            "type" : "string",
+            "description" : "An id related to the creator that is filled out autmatically",
+            "example" : "11aa65b13c2a6d34f8727e82e403ce869e3bba1d35c45c595e8cc5ce5e74e57a"
+          },
+          "ident" : {
+            "type" : "string",
+            "description" : "The ident of the optimization",
+            "example" : "My-JOpt-Run"
+          },
+          "createdDate" : {
+            "type" : "integer",
+            "description" : "The timestamp the snapshot was created",
+            "format" : "int64",
+            "example" : 1651587635927
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "The orignal type of the search result",
+            "example" : "Solution"
+          },
+          "contentType" : {
+            "type" : "string",
+            "description" : "The content type of the search result",
+            "example" : "application/x-bzip2"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "The unique id",
+            "example" : "6274e36cc36712358912bf35"
+          }
+        },
+        "description" : "OptimizationIdentSearchResult model for a serach result"
       },
       "JOptOptimizationWarning" : {
-        "required" : [ "code", "desc", "message" ],
+        "required" : [ "code", "desc", "ident", "message" ],
         "type" : "object",
         "properties" : {
+          "creator" : {
+            "type" : "string",
+            "description" : "An id related to the creator that is filled out autmatically",
+            "example" : "11aa65b13c2a6d34f8727e82e403ce869e3bba1d35c45c595e8cc5ce5e74e57a"
+          },
+          "ident" : {
+            "type" : "string",
+            "description" : "The ident of the currently running optimization",
+            "example" : "My-JOpt-Run"
+          },
           "message" : {
             "type" : "string",
             "description" : "The info message",
@@ -3624,16 +4311,31 @@
           },
           "desc" : {
             "type" : "string",
-            "description" : "The description of the warning",
-            "example" : "Warning desc"
+            "description" : "The description of the info",
+            "example" : "Info desc"
+          },
+          "expireAt" : {
+            "type" : "string",
+            "description" : "Optional value that will be used for database cleanup purposes.",
+            "format" : "date-time"
           }
         },
         "description" : "JOptOptimizationWarning model for the documentation"
       },
       "JOptOptimizationStatus" : {
-        "required" : [ "code", "desc", "message" ],
+        "required" : [ "code", "desc", "ident", "message" ],
         "type" : "object",
         "properties" : {
+          "creator" : {
+            "type" : "string",
+            "description" : "An id related to the creator that is filled out autmatically",
+            "example" : "11aa65b13c2a6d34f8727e82e403ce869e3bba1d35c45c595e8cc5ce5e74e57a"
+          },
+          "ident" : {
+            "type" : "string",
+            "description" : "The ident of the currently running optimization",
+            "example" : "My-JOpt-Run"
+          },
           "message" : {
             "type" : "string",
             "description" : "The info message",
@@ -3647,16 +4349,41 @@
           },
           "desc" : {
             "type" : "string",
-            "description" : "The description of the status",
-            "example" : "Status desc"
+            "description" : "The description of the info",
+            "example" : "Info desc"
+          },
+          "expireAt" : {
+            "type" : "string",
+            "description" : "Optional value that will be used for database cleanup purposes.",
+            "format" : "date-time"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "The obejct id. Will be filled out by the optimizer, if necessary",
+            "example" : " 626d49ae5cf422297561c458"
           }
         },
         "description" : "JOptOptimizationStatus model for the documentation"
       },
       "JOptOptimizationProgress" : {
-        "required" : [ "callerId", "curCost", "curProgress", "desc", "stage" ],
+        "required" : [ "callerId", "curCost", "curProgress", "desc", "ident", "stage" ],
         "type" : "object",
         "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "The obejct id. Will be filled out by the optimizer, if necessary",
+            "example" : " 626d49ae5cf422297561c458"
+          },
+          "creator" : {
+            "type" : "string",
+            "description" : "An id related to the creator that is filled out autmatically",
+            "example" : "11aa65b13c2a6d34f8727e82e403ce869e3bba1d35c45c595e8cc5ce5e74e57a"
+          },
+          "ident" : {
+            "type" : "string",
+            "description" : "The ident of the currently running optimization",
+            "example" : "My-JOpt-Run"
+          },
           "callerId" : {
             "type" : "string",
             "description" : "The id of the currently running optimization algorithm",
@@ -3682,16 +4409,31 @@
           },
           "desc" : {
             "type" : "string",
-            "description" : "The progress as humand readable description",
+            "description" : "The progress as human readable description",
             "example" : "PC 89.0, RE 1, AL GeneticEvolution, JC 4258.106994896875, RC 4, EC 10, TC 14, TT[h] 24, TU[%] 13, TD[km] 1647.29"
+          },
+          "expireAt" : {
+            "type" : "string",
+            "description" : "Optional value that will be used for database cleanup purposes.",
+            "format" : "date-time"
           }
         },
         "description" : "JOptOptimizationProgress model for the documentation"
       },
       "JOptOptimizationError" : {
-        "required" : [ "code", "desc", "message" ],
+        "required" : [ "code", "desc", "ident", "message" ],
         "type" : "object",
         "properties" : {
+          "creator" : {
+            "type" : "string",
+            "description" : "An id related to the creator that is filled out autmatically",
+            "example" : "11aa65b13c2a6d34f8727e82e403ce869e3bba1d35c45c595e8cc5ce5e74e57a"
+          },
+          "ident" : {
+            "type" : "string",
+            "description" : "The ident of the currently running optimization",
+            "example" : "My-JOpt-Run"
+          },
           "message" : {
             "type" : "string",
             "description" : "The info message",
@@ -3705,11 +4447,27 @@
           },
           "desc" : {
             "type" : "string",
-            "description" : "The description of the error",
-            "example" : "Warning desc"
+            "description" : "The description of the info",
+            "example" : "Info desc"
+          },
+          "expireAt" : {
+            "type" : "string",
+            "description" : "Optional value that will be used for database cleanup purposes.",
+            "format" : "date-time"
           }
         },
         "description" : "JOptOptimizationError model for the documentation"
+      },
+      "Status" : {
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        }
       }
     }
   }

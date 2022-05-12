@@ -38,8 +38,10 @@ Activating the profile "cors" will allow doing REST calls from the same local ho
 ## TourOptimizer Examples - Overview
 
 - Package `attachtostreams`: Optimize a list of Nodes and Resources. Connections are **not** provided; moreover, they will be created using haversine calculations on the server-side. Further, we attach a custom stream-subscription via a BiConsumer function for receiving information like current optimization progress.
+- Package `fireandforget`: Optimize and only receive a started signal. The result will be saved to a mongo database.
 - Package `optimize`: Optimize a list of Nodes and Resources. Connections are **not** provided; moreover, they will be created using haversine calculations on the server-side.
 - Package `optimizefromloadedparts`: Optimize a list of Nodes and Resources. The Resource positons, Node positions and the connections are loaded from predefined JSON definitions.
 - Package `optimizefromsnapshot`: Optimize a list of Nodes and Resources. The complete optimization definition is loaded from a single snapshot. This snapshot is compatible with our core Java and core .NET JOpt version.
 - Package `optimizelocal`:  Optimize a list of Nodes and Resources on your local machine. A docker environment is required.
+- Package `scenarios`: Collection of scenario examples motivated by <a href="https://github.com/DNA-Evolutions/Java-TourOptimizer-Examples" target="_blank">Java-TourOptimizer-Examples</a>
 - Package `helper`: Contains the Rest-Caller used by the examples.

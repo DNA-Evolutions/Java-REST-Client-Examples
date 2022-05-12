@@ -13,7 +13,7 @@ package com.dna.jopt.rest.client.util.endpoints;
  * #L%
  */
 
-public class Endpoints {
+public final class Endpoints {
 
     private Endpoints() {
 	// Nothing to do

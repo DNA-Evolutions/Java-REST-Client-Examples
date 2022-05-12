@@ -25,8 +25,7 @@ import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
 
 public class TestRestOptimizationCreator {
-    
-    
+
     private TestRestOptimizationCreator() {
 	// Nothing to do
     }
@@ -40,7 +39,7 @@ public class TestRestOptimizationCreator {
 	    + "			\"creation\": \"2021-05-25\",\r\n" + "			\"due\": \"2027-05-25\"\r\n"
 	    + "		}\r\n" + "	],\r\n"
 	    + "	\"key\": \"PUBLIC-bc799ef350fe9841c1354736d8f863cb85bac88cefd19960c1\"\r\n" + "}";
-    
+
     /*
      *
      * Rest Optimization
@@ -48,11 +47,11 @@ public class TestRestOptimizationCreator {
      */
 
     public static RestOptimization defaultTouroptimizerTestInput(List<Node> nodes, List<Resource> ress) {
-	return defaultTouroptimizerTestInput(nodes, ress, Optional.empty());
+	return defaultTouroptimizerTestInput(nodes, ress, Optional.empty(), Optional.empty());
     }
 
     public static RestOptimization defaultTouroptimizerTestInput(List<Node> nodes, List<Resource> ress,
-	    Optional<String> jsonLicenseOpt) {
+	    Optional<String> jsonLicenseOpt, Optional<OptimizationOptions> optimizationOptionsOpt) {
 
 	RestOptimization myOpti = new RestOptimization();
 
@@ -65,10 +64,16 @@ public class TestRestOptimizationCreator {
 	ress.forEach(myOpti::addResourcesItem);
 
 	// Options
-	OptimizationOptions optimizationOptions = new OptimizationOptions();
-	optimizationOptions.setProperties(new HashMap<>());
-	optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "1000000");
-	optimizationOptions.putPropertiesItem("JOptExitCondition.JOptGenerationCount", "10000");
+	OptimizationOptions optimizationOptions;
+
+	if (optimizationOptionsOpt.isPresent()) {
+	    optimizationOptions = optimizationOptionsOpt.get();
+	} else {
+	    optimizationOptions = new OptimizationOptions();
+	    optimizationOptions.setProperties(new HashMap<>());
+	    optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "1000000");
+	    optimizationOptions.putPropertiesItem("JOptExitCondition.JOptGenerationCount", "10000");
+	}
 
 	myOpti.setOptimizationOptions(optimizationOptions);
 
