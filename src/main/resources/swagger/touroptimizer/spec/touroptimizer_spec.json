@@ -8,7 +8,7 @@
       "url" : "https://dna-evolutions.com",
       "email" : "info@dna-evolutions.com"
     },
-    "version" : "1.0.9-SNAPSHOT"
+    "version" : "1.0.10-SNAPSHOT"
   },
   "servers" : [ {
     "url" : "/"
@@ -20,17 +20,26 @@
     "name" : "OptimizationHealthController",
     "description" : "Provides the basic functionality to check if Optimization endpoint is still healthy."
   }, {
+    "name" : "ReadDatabaseDownloadEncryptedServiceController",
+    "description" : "ReadDatabaseDownloadEncryptedServiceController is a service controller that is used to read and download encrypted persisted data."
+  }, {
+    "name" : "ReadDatabaseDownloadServiceController",
+    "description" : "ReadDatabaseDownloadServiceController is a service controller that is used to read persisted data."
+  }, {
+    "name" : "OptimizationFAFServiceController",
+    "description" : "OptimizationFAFServiceController is a service controller that is used as entry-point for JOpt.TourOptimizer. It runs an optimization in FAF (Fire and Forget) mode. After the optimization is done, the result is persited via an externally provided database."
+  }, {
     "name" : "ReadDatabaseServiceController",
     "description" : "ReadDatabaseServiceController is a service controller that is used to read persisted data."
   }, {
-    "name" : "OptimizationFAFServiceController",
-    "description" : "OptimizationFAFServiceController is a service controller that is used as entry-point for JOpt.TourOptimizer."
+    "name" : "ReadDatabaseEncryptedServiceController",
+    "description" : "ReadDatabaseEncryptedServiceController is a service controller that is used to read encrypted persisted data."
   } ],
   "paths" : {
     "/api/optimizefaf/runOnlyResultFAF" : {
       "post" : {
         "tags" : [ "OptimizationFAFServiceController", "optimizationFAF" ],
-        "description" : "The entry point to access the JOpt.TourOptimization optimization service. Once you have set up an input, you can let JOpt find an optimal solution for your setup.",
+        "description" : "The entry point to access the JOpt.TourOptimization optimization service in fire and forget mode. Once you have set up an input, you can let JOpt find an optimal solution for your setup.",
         "operationId" : "runOnlyResultFAF",
         "requestBody" : {
           "content" : {
@@ -43,8 +52,8 @@
           "required" : true
         },
         "responses" : {
-          "401" : {
-            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -54,7 +63,7 @@
             }
           },
           "200" : {
-            "description" : "Once the optimizer has finished the optimization run, it will return a solution/result JSON.",
+            "description" : "Once the optimizer has started, it will return a started signal.",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -63,18 +72,8 @@
               }
             }
           },
-          "504" : {
-            "description" : "Timeout / Optimization took too long",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -89,7 +88,8 @@
     "/api/optimizefaf/runFAF" : {
       "post" : {
         "tags" : [ "OptimizationFAFServiceController", "optimizationFAF" ],
-        "description" : "Fire and forget run opti",
+        "summary" : "Provide an optimization and let JOpt solve it.",
+        "description" : "The entry point to access the JOpt.TourOptimization optimization service in fire and forget mode. Once you have set up an input, you can let JOpt find an optimal solution for your setup.",
         "operationId" : "runFAF",
         "requestBody" : {
           "content" : {
@@ -102,6 +102,16 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization start",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "401" : {
             "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
@@ -113,21 +123,11 @@
             }
           },
           "200" : {
-            "description" : "Successfull operation.",
+            "description" : "Once the optimizer has started, it will return a started signal.",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "boolean"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -142,22 +142,22 @@
         "description" : "Stopping the optimization gracefully (if optimization was already started) and returning the latestknown result.",
         "operationId" : "stopOptimizationRun",
         "responses" : {
-          "200" : {
-            "description" : "Once the optimizer was stopped it will return a boolean indicating it was stopped. The previously called start method will emit soon.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "boolean"
-                }
-              }
-            }
-          },
           "400" : {
             "description" : "Bad Request / Optimization was not started yet or already stopped.",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Once the optimizer was stopped it will return a boolean indicating it was stopped. The previously called start method will emit soon.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "boolean"
                 }
               }
             }
@@ -168,6 +168,7 @@
     "/api/optimize/run" : {
       "post" : {
         "tags" : [ "OptimizationServiceController", "optimization" ],
+        "summary" : "Provide an optimization and let JOpt solve it.",
         "description" : "The entry point to access the JOpt.TourOptimization optimization service. Once you have set up an input, you can let JOpt find an optimal solution for your setup.",
         "operationId" : "run",
         "requestBody" : {
@@ -191,6 +192,16 @@
               }
             }
           },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "401" : {
             "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
@@ -203,16 +214,6 @@
           },
           "504" : {
             "description" : "Timeout / Optimization took too long",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -227,6 +228,7 @@
     "/api/optimize/runOnlyResult" : {
       "post" : {
         "tags" : [ "OptimizationServiceController", "optimization" ],
+        "summary" : "Provide an optimization and let JOpt solve it. You only get back the result",
         "description" : "The entry point to access the JOpt.TourOptimization optimization service. Once you have set up an input, you can let JOpt find an optimal solution for your setup.",
         "operationId" : "runOnlyResult",
         "requestBody" : {
@@ -240,16 +242,6 @@
           "required" : true
         },
         "responses" : {
-          "401" : {
-            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Once the optimizer has finished the optimization run, it will return a solution/result JSON.",
             "content" : {
@@ -260,8 +252,8 @@
               }
             }
           },
-          "504" : {
-            "description" : "Timeout / Optimization took too long",
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -270,8 +262,18 @@
               }
             }
           },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Timeout / Optimization took too long",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -286,39 +288,39 @@
     "/api/db/read/findsSolutionInfos" : {
       "post" : {
         "tags" : [ "ReadDatabaseServiceController" ],
-        "summary" : "Find solution infos by creator. Only works, if connected to a database.",
-        "description" : "Find solution infos by creator.",
+        "summary" : "Find solution-infos by creator. Only works, if connected to a database.",
+        "description" : "Find solution-infos by creator.",
         "operationId" : "findsSolutionInfos",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseInfoSearch"
               }
             }
           },
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Get solution infos triggered by the creator in fire and forget mode.",
-            "content" : {
-              "text/event-stream" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/OptimizationSearchResult"
-                  }
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting solution infos",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get solution-infos triggered by the creator in fire and forget mode.",
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/DatabaseInfoSearchResult"
+                  }
                 }
               }
             }
@@ -329,14 +331,14 @@
     "/api/db/read/findsOptimizationInfos" : {
       "post" : {
         "tags" : [ "ReadDatabaseServiceController" ],
-        "summary" : "Find optimization infos by creator. Only works, if connected to a database.",
-        "description" : "Find optimization infos by creator.",
+        "summary" : "Find optimization-infos by creator. Only works, if connected to a database.",
+        "description" : "Find optimization-infos by creator.",
         "operationId" : "findsOptimizationInfos",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseInfoSearch"
               }
             }
           },
@@ -344,13 +346,13 @@
         },
         "responses" : {
           "200" : {
-            "description" : "Get Optimization infos triggered by the creator in fire and forget mode.",
+            "description" : "Get optimization-infos triggered by the creator in fire and forget mode.",
             "content" : {
               "text/event-stream" : {
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "$ref" : "#/components/schemas/OptimizationSearchResult"
+                    "$ref" : "#/components/schemas/DatabaseInfoSearchResult"
                   }
                 }
               }
@@ -379,7 +381,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseInfoSearch"
               }
             }
           },
@@ -422,13 +424,23 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseInfoSearch"
               }
             }
           },
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting status",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "Get status triggered by the creator in fire and forget mode.",
             "content" : {
@@ -441,56 +453,43 @@
                 }
               }
             }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting status",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
           }
         }
       }
     },
-    "/api/db/read/findSolutions" : {
+    "/api/db/read/findSolution" : {
       "post" : {
         "tags" : [ "ReadDatabaseServiceController" ],
-        "summary" : "Find solutions by creator. Only works, if connected to a database.",
-        "description" : "Find solutions by creator.",
-        "operationId" : "findSolutions",
+        "summary" : "Find solutions by creator and id. Only works, if connected to a database.",
+        "description" : "Find solutions by creator and id.",
+        "operationId" : "findSolution",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseItemSearch"
               }
             }
           },
           "required" : true
         },
         "responses" : {
+          "200" : {
+            "description" : "Get Solutions triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
+                }
+              }
+            }
+          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting solutions",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
-                }
-              }
-            }
-          },
-          "200" : {
-            "description" : "Get Solutions triggered by the creator in fire and forget mode.",
-            "content" : {
-              "text/event-stream" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/Solution"
-                  }
                 }
               }
             }
@@ -508,7 +507,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseInfoSearch"
               }
             }
           },
@@ -541,42 +540,39 @@
         }
       }
     },
-    "/api/db/read/findOptimizations" : {
+    "/api/db/read/findOptimization" : {
       "post" : {
         "tags" : [ "ReadDatabaseServiceController" ],
-        "summary" : "Find optimizations by creator. Only works, if connected to a database.",
-        "description" : "Find optimizations by creator.",
-        "operationId" : "findOptimizations",
+        "summary" : "Find optimizations by creator and id. Only works, if connected to a database.",
+        "description" : "Find optimizations by creator and id.",
+        "operationId" : "findOptimization",
         "requestBody" : {
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseItemSearch"
               }
             }
           },
           "required" : true
         },
         "responses" : {
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RestOptimization"
+                }
+              }
+            }
+          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting optimizations",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
-                }
-              }
-            }
-          },
-          "200" : {
-            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
-            "content" : {
-              "text/event-stream" : {
-                "schema" : {
-                  "type" : "array",
-                  "items" : {
-                    "$ref" : "#/components/schemas/RestOptimization"
-                  }
                 }
               }
             }
@@ -594,7 +590,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/OptimizationSearch"
+                "$ref" : "#/components/schemas/DatabaseInfoSearch"
               }
             }
           },
@@ -616,6 +612,250 @@
           },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findEncryptedSolution" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseEncryptedServiceController" ],
+        "summary" : "Find encrypted solutions by id and creator. Only works, if connected to a database.",
+        "description" : "Find encrypted solutions by id and creator.",
+        "operationId" : "findEncryptedSolution",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DatabaseEncryptedItemSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get encrypted Solutions triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting solutions",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/read/findEncryptedOptimization" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseEncryptedServiceController" ],
+        "summary" : "Find encrypted optimizations by id and creator. Only works, if connected to a database.",
+        "description" : "Find encrypted optimizations by creator.",
+        "operationId" : "findEncryptedOptimization",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DatabaseEncryptedItemSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RestOptimization"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/download/downloadZippedSolution" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseDownloadServiceController" ],
+        "summary" : "Download decrypted solution by id and creator. Only works, if connected to a database.",
+        "description" : "Download encrypted solution by creator.",
+        "operationId" : "downloadZippedSolution",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DatabaseItemSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/x-bzip2" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/download/downloadZippedOptimization" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseDownloadServiceController" ],
+        "summary" : "Download optimization by id and creator. Only works, if connected to a database.",
+        "description" : "Download optimizations by creator.",
+        "operationId" : "downloadZippedOptimization",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DatabaseItemSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/x-bzip2" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/download/downloadEncryptedZippedSolution" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseDownloadEncryptedServiceController" ],
+        "summary" : "Download decrypted solution by id and creator. Only works, if connected to a database.",
+        "description" : "Download encrypted solution by creator.",
+        "operationId" : "downloadEncryptedZippedSolution",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DatabaseEncryptedItemSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/x-bzip2" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db/download/downloadEncryptedZippedOptimization" : {
+      "post" : {
+        "tags" : [ "ReadDatabaseDownloadEncryptedServiceController" ],
+        "summary" : "Download decrypted optimization by id and creator. Only works, if connected to a database.",
+        "description" : "Download encrypted optimizations by creator.",
+        "operationId" : "downloadEncryptedZippedOptimization",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DatabaseEncryptedItemSearch"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/x-bzip2" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1167,17 +1407,17 @@
             "type" : "boolean",
             "description" : "The isSchedulableAfterWorkingHours"
           },
-          "isSchedulableBeforeWorkingHours" : {
+          "isTimeAdjustableAnchor" : {
             "type" : "boolean",
-            "description" : "The isSchedulableBeforeWorkingHours"
+            "description" : "The isTimeAdjustableAnchor"
           },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
             "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
           },
-          "isTimeAdjustableAnchor" : {
+          "isSchedulableBeforeWorkingHours" : {
             "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
+            "description" : "The isSchedulableBeforeWorkingHours"
           }
         },
         "description" : "The pillarNode"
@@ -1340,21 +1580,21 @@
             "type" : "boolean",
             "description" : "The isSchedulableAfterWorkingHours"
           },
-          "isSchedulableBeforeWorkingHours" : {
+          "isTimeAdjustableAnchor" : {
             "type" : "boolean",
-            "description" : "The isSchedulableBeforeWorkingHours"
+            "description" : "The isTimeAdjustableAnchor"
           },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
             "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
           },
+          "isSchedulableBeforeWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableBeforeWorkingHours"
+          },
           "isAutoTransformable2StartAnchor" : {
             "type" : "boolean",
             "description" : "The isAutoTransformable2StartAnchor"
-          },
-          "isTimeAdjustableAnchor" : {
-            "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
           }
         },
         "description" : "The optional pillarNode. If a node has the pillarNode attibute attached, it becomes a pillar node itself. A pillar nodes openingHour cannot be violated. If a violation cannot be avoided, the pillar will be unassigned instead of being violated."
@@ -1367,15 +1607,15 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "fuzzyVisit" : {
-            "type" : "boolean"
-          },
           "request" : {
             "type" : "boolean"
           },
           "loadValue" : {
             "type" : "number",
             "format" : "double"
+          },
+          "fuzzyVisit" : {
+            "type" : "boolean"
           },
           "id" : {
             "type" : "string"
@@ -1400,17 +1640,17 @@
         "required" : [ "typeName" ],
         "type" : "object",
         "properties" : {
-          "currentLoad" : {
-            "type" : "number",
-            "format" : "double"
+          "loadPickupTime" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "maximalIndividualLoadCapacity" : {
             "type" : "number",
             "format" : "double"
           },
-          "loadPickupTime" : {
-            "type" : "integer",
-            "format" : "int64"
+          "currentLoad" : {
+            "type" : "number",
+            "format" : "double"
           },
           "id" : {
             "type" : "string"
@@ -1438,6 +1678,9 @@
               "$ref" : "#/components/schemas/ILoad"
             }
           },
+          "depotId" : {
+            "type" : "string"
+          },
           "hasFlexLoad" : {
             "type" : "boolean",
             "writeOnly" : true
@@ -1445,9 +1688,6 @@
           "hasTimedLoads" : {
             "type" : "boolean",
             "writeOnly" : true
-          },
-          "depotId" : {
-            "type" : "string"
           },
           "typeName" : {
             "type" : "string"
@@ -1671,12 +1911,16 @@
         } ]
       },
       "MongoOptimizationPersistenceSetting" : {
-        "required" : [ "enablePersistence", "optimizationPersistenceStratgySetting", "streamPersistenceStratgySetting" ],
+        "required" : [ "enablePersistence", "optimizationPersistenceStratgySetting", "secret", "streamPersistenceStratgySetting" ],
         "type" : "object",
         "properties" : {
           "enablePersistence" : {
             "type" : "boolean",
             "description" : "The enablePersistence"
+          },
+          "secret" : {
+            "type" : "string",
+            "description" : "The secret that encrypts the result. If empty, no encryption is assigned. Important: Metadata and stream information like progress is always saved as decrypted clear text. Attention: The secret is not saved by DNA evolutions. If you loose the secret, the file CAN NOT be restored."
           },
           "expiry" : {
             "type" : "string",
@@ -1844,21 +2088,21 @@
             "type" : "boolean",
             "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'."
           },
+          "isOpeningHoursIncludesDuration" : {
+            "type" : "boolean",
+            "description" : "The boolean isOpeningHoursIncludesDuration. By default a node's openingHour defines the time-window  in which a task has to be fulfilled, meaning a Visitor has to arrive, work, and leave within that time-window. If isOpeningHoursIncludesDuration is set to false, the time-window only counts as arrival-window for the Resource."
+          },
           "isWaitOnEarlyArrivalFirstNode" : {
             "type" : "boolean",
             "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true."
-          },
-          "isCausingIdleTimeCost" : {
-            "type" : "boolean",
-            "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created."
           },
           "isWaitOnEarlyArrival" : {
             "type" : "boolean",
             "description" : "The boolean isWaitOnEarlyArrival. In case a Resources reaches a node too early (before the start of the node's OpeningHours), the Resource can either start working direclty (false) or wait for the node to open (true, default)."
           },
-          "isOpeningHoursIncludesDuration" : {
+          "isCausingIdleTimeCost" : {
             "type" : "boolean",
-            "description" : "The boolean isOpeningHoursIncludesDuration. By default a node's openingHour defines the time-window  in which a task has to be fulfilled, meaning a Visitor has to arrive, work, and leave within that time-window. If isOpeningHoursIncludesDuration is set to false, the time-window only counts as arrival-window for the Resource."
+            "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created."
           }
         },
         "description" : "The list of nodes"
@@ -2636,7 +2880,7 @@
           }
         },
         "example" : {
-          "ident" : "JOpt-Run-1652344946523",
+          "ident" : "JOpt-Run-1653398783114",
           "nodes" : [ {
             "id" : "Koeln",
             "type" : {
@@ -2811,24 +3055,24 @@
           },
           "coreBuildOptions" : {
             "buildCoreProperties" : {
-              "jopt.core.git.closest.tag.commit.count" : "26",
+              "jopt.core.git.closest.tag.commit.count" : "10",
               "jopt.core.jopt.version.number" : "7.4.9",
               "jopt.core.git.build.version" : "7.4.9-SNAPSHOT",
-              "jopt.core.build.time.utc" : "2022-05-12T08:12:38Z",
-              "jopt.core.git.commit.id.describe" : "v7.4.8-26-g6be7f31-dirty",
-              "jopt.core.git.commit.id.abbrev" : "6be7f31",
-              "jopt.core.git.dirty" : "true",
+              "jopt.core.build.time.utc" : "2022-05-24T10:19:20Z",
+              "jopt.core.git.commit.id.describe" : "v7.4.9-rc2-10-g40bc54a",
+              "jopt.core.git.commit.id.abbrev" : "40bc54a",
+              "jopt.core.git.dirty" : "false",
               "jopt.core.maven.compiler.target" : "1.8",
               "jopt.core.project.build.sourceEncoding" : "cp1252",
               "jopt.core.jopt.version.postfix" : "-SNAPSHOT",
               "jopt.core.git.branch" : "master",
-              "jopt.core.git.closest.tag.name" : "v7.4.8",
-              "jopt.core.git.commit.time" : "20220411-153735",
-              "jopt.core.git.build.time" : "20220512-084132",
+              "jopt.core.git.closest.tag.name" : "v7.4.9-rc2",
+              "jopt.core.git.commit.time" : "20220523-165550",
+              "jopt.core.git.build.time" : "20220524-111717",
               "jopt.core.git.build.host" : "DESKTOP-Q9BKOAA",
               "jopt.core.git.tags" : "",
-              "jopt.core.git.commit.id" : "6be7f3156648dc837b1bc1378bbf485bfcf44d3c",
-              "jopt.core.git.commit.id.describe-short" : "v7.4.8-26-dirty",
+              "jopt.core.git.commit.id" : "40bc54a8138f341339162f7554d4bf207e8c6e52",
+              "jopt.core.git.commit.id.describe-short" : "v7.4.9-rc2-10",
               "jopt.core.maven.test.skip" : "false",
               "jopt.core.git.commit.user.name" : "Jens Richter",
               "jopt.core.maven.compiler.source" : "1.8"
@@ -2839,11 +3083,12 @@
               "creator" : "PUBLIC_CREATOR"
             },
             "keySetting" : {
-              "jsonLicense" : "{\r\n  \"version\" : \"1.0\",\r\n  \"extra\" : \"TEST\",\r\n  \"identifier\" : \"COM-\",\r\n  \"description\" : \"Key provided to *** from DNA evolutions GmbH\",\r\n  \"contact\" : \"customer@company.com\",\r\n  \"modules\" : [ {\r\n    \"Module:\" : \"Date\",\r\n    \"creation\" : \"2022-04-30\",\r\n    \"due\" : \"2023-04-30\"\r\n  } ],\r\n  \"key\" : \"COM-2e99da83848981ba0cd8a080a3eb676561a95528aeea2a4ac1\"\r\n}"
+              "jsonLicense" : "{\r\n\t\"version\": \"1.1\",\r\n\t\"identifier\": \"PUBLIC-\",\r\n\t\"description\": \"Key provided to for evaluation purpose from DNA evolutions GmbH.\",\r\n\t\"contact\": \"www.dna-evolutions.com\",\r\n\t\"modules\": [{\r\n\t\t\t\"Module:\": \"Elements\",\r\n\t\t\t\"max\": 15\r\n\t\t}, {\r\n\t\t\t\"Module:\": \"Date\",\r\n\t\t\t\"creation\": \"2021-05-25\",\r\n\t\t\t\"due\": \"2027-05-25\"\r\n\t\t}\r\n\t],\r\n\t\"key\": \"PUBLIC-bc799ef350fe9841c1354736d8f863cb85bac88cefd19960c1\"\r\n}"
             },
             "persistenceSetting" : {
               "mongoSettings" : {
                 "enablePersistence" : true,
+                "secret" : "",
                 "expiry" : "PT48H",
                 "optimizationPersistenceStratgySetting" : {
                   "saveOnlyResult" : false,
@@ -2988,9 +3233,9 @@
               "enum" : [ "FINALIZED_PILLARFORCEARRANGER", "INACTIVE_PILLARFORCEARRANGER", "FINALIZED_ROUTE_FINALIZER", "INACTIVE_ROUTE_FINALIZER" ]
             }
           },
-          "isInactive" : {
+          "isFinalized" : {
             "type" : "boolean",
-            "description" : "The isInactive boolean describes if a route is deactivated.",
+            "description" : "The isFinalized. Describes if a route was undergoing finalization.",
             "example" : false
           },
           "isLockedDown" : {
@@ -2998,9 +3243,9 @@
             "description" : "The isLockedDown. Describes if a route was undergoing lockdown.",
             "example" : false
           },
-          "isFinalized" : {
+          "isInactive" : {
             "type" : "boolean",
-            "description" : "The isFinalized. Describes if a route was undergoing finalization.",
+            "description" : "The isInactive boolean describes if a route is deactivated.",
             "example" : false
           }
         },
@@ -4071,13 +4316,13 @@
               "$ref" : "#/components/schemas/Qualification"
             }
           },
-          "isClosedRoute" : {
-            "type" : "boolean",
-            "description" : "The isClosedRoute boolean describes if a Resource has to visit the termination element of the Route. By default, the start element and the termination element of a Route is the Resource itself. In case of a closed route, by default, the Resource returns to its original starting location."
-          },
           "isAvailableForStay" : {
             "type" : "boolean",
             "description" : "The boolean isAvailableForStay defines if this working hour is allowed to end at an overnight stay."
+          },
+          "isClosedRoute" : {
+            "type" : "boolean",
+            "description" : "The isClosedRoute boolean describes if a Resource has to visit the termination element of the Route. By default, the start element and the termination element of a Route is the Resource itself. In case of a closed route, by default, the Resource returns to its original starting location."
           }
         },
         "description" : "The list of non-overlapping workingHours."
@@ -4153,7 +4398,7 @@
           }
         } ]
       },
-      "OptimizationSearch" : {
+      "DatabaseInfoSearch" : {
         "type" : "object",
         "properties" : {
           "creator" : {
@@ -4194,9 +4439,6 @@
                 "type" : "integer",
                 "format" : "int64"
               },
-              "zero" : {
-                "type" : "boolean"
-              },
               "negative" : {
                 "type" : "boolean"
               },
@@ -4205,9 +4447,6 @@
                 "items" : {
                   "type" : "object",
                   "properties" : {
-                    "durationEstimated" : {
-                      "type" : "boolean"
-                    },
                     "duration" : {
                       "type" : "object",
                       "properties" : {
@@ -4215,17 +4454,20 @@
                           "type" : "integer",
                           "format" : "int64"
                         },
-                        "zero" : {
-                          "type" : "boolean"
-                        },
                         "negative" : {
                           "type" : "boolean"
                         },
                         "nano" : {
                           "type" : "integer",
                           "format" : "int32"
+                        },
+                        "zero" : {
+                          "type" : "boolean"
                         }
                       }
+                    },
+                    "durationEstimated" : {
+                      "type" : "boolean"
                     },
                     "dateBased" : {
                       "type" : "boolean"
@@ -4239,15 +4481,18 @@
               "nano" : {
                 "type" : "integer",
                 "format" : "int32"
+              },
+              "zero" : {
+                "type" : "boolean"
               }
             },
             "description" : "The timeOut for the request. By default one minute",
             "example" : "PT1M"
           }
         },
-        "description" : "OptimizationSearch model for a databse serach"
+        "description" : "DatabaseInfoSearch model for a databse search"
       },
-      "OptimizationSearchResult" : {
+      "DatabaseInfoSearchResult" : {
         "type" : "object",
         "properties" : {
           "creator" : {
@@ -4282,7 +4527,7 @@
             "example" : "6274e36cc36712358912bf35"
           }
         },
-        "description" : "OptimizationIdentSearchResult model for a serach result"
+        "description" : "DatabaseInfoSearchResult model for a serach result"
       },
       "JOptOptimizationWarning" : {
         "required" : [ "code", "desc", "ident", "message" ],
@@ -4364,6 +4609,79 @@
           }
         },
         "description" : "JOptOptimizationStatus model for the documentation"
+      },
+      "DatabaseItemSearch" : {
+        "type" : "object",
+        "properties" : {
+          "creator" : {
+            "type" : "string",
+            "description" : "A related creator.",
+            "example" : "DEFAULT_DNA_CREATOR"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "The unique id.Can not be empty.",
+            "example" : "6274e36cc36712358912bf35"
+          },
+          "timeOut" : {
+            "type" : "object",
+            "properties" : {
+              "seconds" : {
+                "type" : "integer",
+                "format" : "int64"
+              },
+              "negative" : {
+                "type" : "boolean"
+              },
+              "units" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "duration" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "format" : "int64"
+                        },
+                        "negative" : {
+                          "type" : "boolean"
+                        },
+                        "nano" : {
+                          "type" : "integer",
+                          "format" : "int32"
+                        },
+                        "zero" : {
+                          "type" : "boolean"
+                        }
+                      }
+                    },
+                    "durationEstimated" : {
+                      "type" : "boolean"
+                    },
+                    "dateBased" : {
+                      "type" : "boolean"
+                    },
+                    "timeBased" : {
+                      "type" : "boolean"
+                    }
+                  }
+                }
+              },
+              "nano" : {
+                "type" : "integer",
+                "format" : "int32"
+              },
+              "zero" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The timeOut for the request. By default one minute",
+            "example" : "PT1M"
+          }
+        },
+        "description" : "DatabaseItemSearch model for a databse serach of items"
       },
       "JOptOptimizationProgress" : {
         "required" : [ "callerId", "curCost", "curProgress", "desc", "ident", "stage" ],
@@ -4457,6 +4775,84 @@
           }
         },
         "description" : "JOptOptimizationError model for the documentation"
+      },
+      "DatabaseEncryptedItemSearch" : {
+        "type" : "object",
+        "properties" : {
+          "creator" : {
+            "type" : "string",
+            "description" : "A related creator.",
+            "example" : "DEFAULT_DNA_CREATOR"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "The unique id.Can not be empty.",
+            "example" : "6274e36cc36712358912bf35"
+          },
+          "timeOut" : {
+            "type" : "object",
+            "properties" : {
+              "seconds" : {
+                "type" : "integer",
+                "format" : "int64"
+              },
+              "negative" : {
+                "type" : "boolean"
+              },
+              "units" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "duration" : {
+                      "type" : "object",
+                      "properties" : {
+                        "seconds" : {
+                          "type" : "integer",
+                          "format" : "int64"
+                        },
+                        "negative" : {
+                          "type" : "boolean"
+                        },
+                        "nano" : {
+                          "type" : "integer",
+                          "format" : "int32"
+                        },
+                        "zero" : {
+                          "type" : "boolean"
+                        }
+                      }
+                    },
+                    "durationEstimated" : {
+                      "type" : "boolean"
+                    },
+                    "dateBased" : {
+                      "type" : "boolean"
+                    },
+                    "timeBased" : {
+                      "type" : "boolean"
+                    }
+                  }
+                }
+              },
+              "nano" : {
+                "type" : "integer",
+                "format" : "int32"
+              },
+              "zero" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The timeOut for the request. By default one minute",
+            "example" : "PT1M"
+          },
+          "secret" : {
+            "type" : "string",
+            "description" : "An optional password for encryption. Can not be empty.",
+            "example" : "MySecretPassword"
+          }
+        },
+        "description" : "DatabaseEncryptedItemSearch model for a databse serach of encypted items"
       },
       "Status" : {
         "type" : "object",
