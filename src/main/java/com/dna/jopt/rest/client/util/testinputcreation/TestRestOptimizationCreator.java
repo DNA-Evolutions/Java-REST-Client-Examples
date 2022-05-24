@@ -71,7 +71,7 @@ public class TestRestOptimizationCreator {
 	} else {
 	    optimizationOptions = new OptimizationOptions();
 	    optimizationOptions.setProperties(new HashMap<>());
-	    optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "1000000");
+	    optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "100000");
 	    optimizationOptions.putPropertiesItem("JOptExitCondition.JOptGenerationCount", "10000");
 	}
 
