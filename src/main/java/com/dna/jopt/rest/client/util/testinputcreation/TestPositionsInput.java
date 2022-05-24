@@ -109,49 +109,74 @@ public class TestPositionsInput {
     }
 
     public static List<Position> defaultSydneyNodePositions() {
+	return defaultSydneyNodePositions(1);
+    }
+
+    public static List<Position> defaultSydneyNodePositions(int numRounds) {
 
 	List<Position> poss = new ArrayList<>();
 
-	poss.add(new Position().latitude(-34.052052).longitude(150.668724).locationId("Node_0"));
-	poss.add(new Position().latitude(-34.052518).longitude(150.709943).locationId("Node_1"));
-	poss.add(new Position().latitude(-34.051988).longitude(150.71981).locationId("Node_2"));
-	poss.add(new Position().latitude(-34.04213).longitude(150.729568).locationId("Node_3"));
-	poss.add(new Position().latitude(-34.042063).longitude(150.739632).locationId("Node_4"));
-	poss.add(new Position().latitude(-34.041006).longitude(150.779042).locationId("Node_5"));
-	poss.add(new Position().latitude(-34.042611).longitude(150.800852).locationId("Node_6"));
-	poss.add(new Position().latitude(-34.042334).longitude(150.830416).locationId("Node_7"));
-	poss.add(new Position().latitude(-34.041776).longitude(150.839277).locationId("Node_8"));
-	poss.add(new Position().latitude(-34.032093).longitude(150.849402).locationId("Node_9"));
-	poss.add(new Position().latitude(-34.032283).longitude(150.860021).locationId("Node_10"));
-	poss.add(new Position().latitude(-34.033504).longitude(150.885173).locationId("Node_11"));
-	poss.add(new Position().latitude(-34.016844).longitude(150.901184).locationId("Node_12"));
-	poss.add(new Position().latitude(-34.032085).longitude(151.009819).locationId("Node_13"));
-	poss.add(new Position().latitude(-34.03345).longitude(151.019328).locationId("Node_14"));
-	poss.add(new Position().latitude(-34.032983).longitude(151.050504).locationId("Node_15"));
-	poss.add(new Position().latitude(-34.031779).longitude(151.059578).locationId("Node_16"));
-	poss.add(new Position().latitude(-34.021961).longitude(151.019686).locationId("Node_17"));
-	poss.add(new Position().latitude(-34.02273).longitude(151.030557).locationId("Node_18"));
-	poss.add(new Position().latitude(-34.08002).longitude(150.999438).locationId("Node_19"));
-	poss.add(new Position().latitude(-34.022009).longitude(151.069768).locationId("Node_20"));
-	poss.add(new Position().latitude(-34.02241).longitude(151.098778).locationId("Node_21"));
-	poss.add(new Position().latitude(-34.022038).longitude(151.109346).locationId("Node_22"));
-	poss.add(new Position().latitude(-34.052077).longitude(150.69951).locationId("Node_23"));
-	poss.add(new Position().latitude(-34.051068).longitude(150.976722).locationId("Node_24"));
-	poss.add(new Position().latitude(-34.052015).longitude(150.999808).locationId("Node_25"));
+	for (int ii = 0; ii < numRounds; ii++) {
 
+	    String postFix = "_r_" + ii;
+
+	    if (numRounds == 1) {
+		postFix = "";
+	    }
+
+	    poss.add(new Position().latitude(-34.052052).longitude(150.668724).locationId("Node_0" + postFix));
+	    poss.add(new Position().latitude(-34.052518).longitude(150.709943).locationId("Node_1" + postFix));
+	    poss.add(new Position().latitude(-34.051988).longitude(150.71981).locationId("Node_2" + postFix));
+	    poss.add(new Position().latitude(-34.04213).longitude(150.729568).locationId("Node_3" + postFix));
+	    poss.add(new Position().latitude(-34.042063).longitude(150.739632).locationId("Node_4" + postFix));
+	    poss.add(new Position().latitude(-34.041006).longitude(150.779042).locationId("Node_5" + postFix));
+	    poss.add(new Position().latitude(-34.042611).longitude(150.800852).locationId("Node_6" + postFix));
+	    poss.add(new Position().latitude(-34.042334).longitude(150.830416).locationId("Node_7" + postFix));
+	    poss.add(new Position().latitude(-34.041776).longitude(150.839277).locationId("Node_8" + postFix));
+	    poss.add(new Position().latitude(-34.032093).longitude(150.849402).locationId("Node_9" + postFix));
+	    poss.add(new Position().latitude(-34.032283).longitude(150.860021).locationId("Node_10" + postFix));
+	    poss.add(new Position().latitude(-34.033504).longitude(150.885173).locationId("Node_11" + postFix));
+	    poss.add(new Position().latitude(-34.016844).longitude(150.901184).locationId("Node_12" + postFix));
+	    poss.add(new Position().latitude(-34.032085).longitude(151.009819).locationId("Node_13" + postFix));
+	    poss.add(new Position().latitude(-34.03345).longitude(151.019328).locationId("Node_14" + postFix));
+	    poss.add(new Position().latitude(-34.032983).longitude(151.050504).locationId("Node_15" + postFix));
+	    poss.add(new Position().latitude(-34.031779).longitude(151.059578).locationId("Node_16" + postFix));
+	    poss.add(new Position().latitude(-34.021961).longitude(151.019686).locationId("Node_17" + postFix));
+	    poss.add(new Position().latitude(-34.02273).longitude(151.030557).locationId("Node_18" + postFix));
+	    poss.add(new Position().latitude(-34.08002).longitude(150.999438).locationId("Node_19" + postFix));
+	    poss.add(new Position().latitude(-34.022009).longitude(151.069768).locationId("Node_20" + postFix));
+	    poss.add(new Position().latitude(-34.02241).longitude(151.098778).locationId("Node_21" + postFix));
+	    poss.add(new Position().latitude(-34.022038).longitude(151.109346).locationId("Node_22" + postFix));
+	    poss.add(new Position().latitude(-34.052077).longitude(150.69951).locationId("Node_23" + postFix));
+	    poss.add(new Position().latitude(-34.051068).longitude(150.976722).locationId("Node_24" + postFix));
+	    poss.add(new Position().latitude(-34.052015).longitude(150.999808).locationId("Node_25" + postFix));
+
+	}
 	return poss;
 
     }
 
     public static List<Position> defaultSydneyResourcePositions() {
+	return defaultSydneyResourcePositions(1);
+    }
+
+    public static List<Position> defaultSydneyResourcePositions(int numRounds) {
 
 	List<Position> poss = new ArrayList<>();
 
-	poss.add(new Position().latitude(-34.052052).longitude(150.668724).locationId("Resource_0"));
-	poss.add(new Position().latitude(-34.052518).longitude(150.709943).locationId("Resource_1"));
-	poss.add(new Position().latitude(-34.051988).longitude(150.71981).locationId("Resource_2"));
-	poss.add(new Position().latitude(-34.052015).longitude(150.999808).locationId("Resource_3"));
+	for (int ii = 0; ii < numRounds; ii++) {
 
+	    String postFix = "_r_" + ii;
+
+	    if (numRounds == 1) {
+		postFix = "";
+	    }
+
+	    poss.add(new Position().latitude(-34.052052).longitude(150.668724).locationId("Resource_0" + postFix));
+	    poss.add(new Position().latitude(-34.052518).longitude(150.709943).locationId("Resource_1" + postFix));
+	    poss.add(new Position().latitude(-34.051988).longitude(150.71981).locationId("Resource_2" + postFix));
+	    poss.add(new Position().latitude(-34.052015).longitude(150.999808).locationId("Resource_3" + postFix));
+	}
 	return poss;
 
     }
