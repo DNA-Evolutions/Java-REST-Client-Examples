@@ -103,7 +103,7 @@ In any case, you need to provide a `secrets.json` file. Please follow the README
 
 
 ## Clone this repository
-Clone this repository, import it as Maven project in your IDE, create a `screts.json` and start any example.
+Clone this repository, import it as Maven project in your IDE, create a `secrets.json` and start any example.
 
 
 ## Use our sandbox in your browser (Docker required)
@@ -157,3 +157,11 @@ Click, to open our video:
 title="Introduction Video for DNA's JOpt" alt="Introduction Video for DNA's JOpt"></a>
 
 ---
+
+## Agreement
+For reading our license agreement and for further information about license plans, please visit <a href="https://www.dna-evolutions.com" target="_blank">www.dna-evolutions.com</a>.
+
+--- 
+
+## Authors
+A product by [dna-evolutions ](https://www.dna-evolutions.com)&copy;
