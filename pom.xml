@@ -20,8 +20,8 @@
 		<swagger-annotations-version>1.6.6</swagger-annotations-version>
 		<jersey-version>2.35</jersey-version>
 		
-		<jackson-version-databind>2.13.2.2</jackson-version-databind>
-		<jackson-version-misc>2.13.2</jackson-version-misc>
+		<jackson-version-databind>2.13.4.2</jackson-version-databind>
+		<jackson-version-misc>2.13.4</jackson-version-misc>
 		<jackson-version-jsr310>2.12.5</jackson-version-jsr310>
 		<jackson-version-threeten>2.12.2</jackson-version-threeten>
 		<jackson-databind-nullable-version>0.2.0</jackson-databind-nullable-version>
