@@ -1,9 +1,9 @@
-FROM codercom/code-server:4.1.0
+FROM codercom/code-server:latest
 
 ARG DEBIAN_FRONTEND=noninteractive 
 
 # Latest Java version, change, if desired, to other version including hotspot 
-ARG ADOPT_OPENJDK=adoptopenjdk-16-hotspot
+ARG ADOPT_OPENJDK=temurin-17-jdk
 
 # We need to be root for installing all tools :-(
 USER root
@@ -13,11 +13,12 @@ RUN apt-get update && \
     # Basic tools
     apt-get upgrade -y && \
     apt-get install -y wget && \
+    apt-get install -y apt-transport-https && \
     apt-get install -y gnupg && \
     apt-get install -y software-properties-common && \
-    # Adoptopenjdk-16-hotspot
-    wget -q -O - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
-    add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
+    # temurin-17-jdk
+    wget -q -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add - && \
+    add-apt-repository --yes https://packages.adoptium.net/artifactory/deb/ && \
     apt-get update && \
     apt-get install -y  ${ADOPT_OPENJDK} && \
     # Maven
