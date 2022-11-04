@@ -78,7 +78,7 @@ public class TourOptimizerSimpleLocalDockerExample {
 
         // Resources are the workers, who do the jobs at the Nodes
         List<Position> resourcePoss = new ArrayList<>();
-        resourcePoss.add(new Position().latitude(50.8031684).longitude(6.4820806).locationId("Resource_0_Düren"));
+        resourcePoss.add(new Position().latitude(50.8031684).longitude(6.4820806).locationId("Resource_0_Dueren"));
         resourcePoss.add(new Position().latitude(51.8666527).longitude(12.646761).locationId("Resource_1_Wittenberg"));
 
 
