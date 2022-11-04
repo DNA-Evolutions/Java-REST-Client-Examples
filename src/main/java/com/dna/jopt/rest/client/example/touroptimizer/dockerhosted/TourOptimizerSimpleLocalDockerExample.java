@@ -6,7 +6,6 @@ import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.TextSolution;
-import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
@@ -88,16 +87,17 @@ public class TourOptimizerSimpleLocalDockerExample {
          */
 
         // This example assumes you are hosting the RestTourOptimizer on your local machine at
-        // port 8081. Of course you can use any port you want, but you need to modify
-        // the endpoint url
+        // port 8081. Of course you can use any port you want, but you need to modify the endpoint url.
         //
         // BY default we use:
-        // LOCAL_SWAGGER_TOUROPTIMIZER_URL = "http://localhost:8081", but in this example the endpoint has been
-        // modified to "http://host.docker.internal:8081" to allow the two Docker containers of the Rest-examples
+        // ==================
+        // Endpoints.LOCAL_SWAGGER_TOUROPTIMIZER_URL = "http://localhost:8081", but in this example the endpoint has been
+        // modified to "http://host.docker.internal:8081" to allow the two Docker containers of the sandboxed REST-examples
         // and the TourOptimizer to communicate on the same local machine.
+        
+        String tourOptimizerEndpoint = "http://host.docker.internal:8081";
 
-        TourOptimizerRestCaller tourOptimizerCaller = new TourOptimizerRestCaller(
-                Endpoints.LOCAL_INTERNAL_DOCKER_SWAGGER_TOUROPTIMIZER_URL);
+        TourOptimizerRestCaller tourOptimizerCaller = new TourOptimizerRestCaller(tourOptimizerEndpoint);
 
         /*
          *
