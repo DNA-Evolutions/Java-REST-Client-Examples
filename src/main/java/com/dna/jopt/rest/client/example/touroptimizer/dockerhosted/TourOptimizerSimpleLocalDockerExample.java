@@ -97,7 +97,7 @@ public class TourOptimizerSimpleLocalDockerExample {
         // and the TourOptimizer to communicate on the same local machine.
 
         TourOptimizerRestCaller tourOptimizerCaller = new TourOptimizerRestCaller(
-                Endpoints.LOCAL_Docker_SWAGGER_TOUROPTIMIZER_URL);
+                Endpoints.LOCAL_INTERNAL_DOCKER_SWAGGER_TOUROPTIMIZER_URL);
 
         /*
          *

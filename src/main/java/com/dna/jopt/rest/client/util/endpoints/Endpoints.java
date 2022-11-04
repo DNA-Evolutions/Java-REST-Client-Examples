@@ -22,7 +22,7 @@ public final class Endpoints {
     public static final String LOCAL_SWAGGER_GEOCODER_URL = "http://localhost:8082";
     public static final String LOCAL_SWAGGER_GEOROUTER_URL = "http://localhost:8099";
     public static final String LOCAL_SWAGGER_TOUROPTIMIZER_URL = "http://localhost:8081";
-    public static final String LOCAL_Docker_SWAGGER_TOUROPTIMIZER_URL = "http://host.docker" +
+    public static final String LOCAL_INTERNAL_DOCKER_SWAGGER_TOUROPTIMIZER_URL = "http://host.docker" +
             ".internal:8081";
 
     public static final String AZURE_SWAGGER_GEOCODER_URL = "https://joptaas.azure-api.net/geocoder/v2/";
