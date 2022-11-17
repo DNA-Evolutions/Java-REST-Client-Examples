@@ -91,10 +91,13 @@ public class TourOptimizerSimpleLocalDockerExample {
 	resourcePoss.add(new Position().latitude(51.8666527).longitude(12.646761).locationId("Resource_1_Wittenberg"));
 	
 
-	// Map to elements
+	// We're mapping the Node Positions to Nodes by applying default attributes like the visit duration and
+	// the OpeningHours
 	List<Node> nodes = nodePoss.stream().map(p -> defaultGeoNode(p, p.getLocationId()))
 		.collect(Collectors.toList());
 
+	// We're mapping the Resource Positions to Resources by applying default attributes like the maximum distance a
+	// Resource is allowed to drive and the WorkingHours
 	List<Resource> ress = resourcePoss.stream().map(p -> defaultCapacityResource(p, p.getLocationId()))
 		.collect(Collectors.toList());
 
@@ -173,6 +176,7 @@ public class TourOptimizerSimpleLocalDockerExample {
      *
      */
 
+	// Creates a CapacityResource at the provided Position applying default attributes
     public static Resource defaultCapacityResource(Position pos, String id) {
 
 	Resource res = new Resource();
@@ -192,6 +196,8 @@ public class TourOptimizerSimpleLocalDockerExample {
 	return res;
     }
 
+    // Creates default WorkingHours for the Resources where they can travel and  visit Nodes from 8:00 to 20:00
+	// for 5 consecutive days.
     public static List<WorkingHours> defaultTestWorkinghours() {
 
 	String zone = "Europe/Berlin";
@@ -199,9 +205,6 @@ public class TourOptimizerSimpleLocalDockerExample {
 
 	int numDays = 5;
 
-	/*
-	 *
-	 */
 	return IntStream.range(0, numDays).boxed().map(ii -> {
 	    ZonedDateTime start = ZonedDateTime.of(2100, 1, 1 + ii, 8, 0, 0, 0, zoneId);
 	    ZonedDateTime end = ZonedDateTime.of(2100, 1, 1 + ii, 20, 0, 0, 0, zoneId);
@@ -227,26 +230,8 @@ public class TourOptimizerSimpleLocalDockerExample {
      *
      */
 
-    public static Node defaultGeoNode(Position pos, String id, List<OpeningHours> openingHours) {
-
-	Node node = new Node();
-
-	node.setOpeningHours(openingHours);
-	node.setId(id);
-	node.setLocationId(pos.getLocationId());
-	node.setVisitDuration("PT30M");
-	node.setPriority(1);
-
-	GeoNode geoPart = new GeoNode();
-	geoPart.setPosition(pos);
-	geoPart.setTypeName("Geo");
-
-	node.setType(geoPart);
-
-	return node;
-    }
-
-    public static Node defaultGeoNode(Position pos, String id) {
+	// Creates GeoNodes at the provided Position applying default attributes
+	public static Node defaultGeoNode(Position pos, String id) {
 
 	Node node = new Node();
 
@@ -265,21 +250,8 @@ public class TourOptimizerSimpleLocalDockerExample {
 	return node;
     }
 
-    public static List<OpeningHours> defaultTestOpeninghours(int choosenSingleDayIndex) {
-
-	if (choosenSingleDayIndex < 0) {
-	    throw new IllegalStateException("Choosen day index cannot be negative");
-	}
-
-	List<OpeningHours> fullHours = defaultTestOpeninghours();
-
-	if (choosenSingleDayIndex > fullHours.size() - 1) {
-	    throw new IllegalStateException("Choosen day cannot be greater than " + (fullHours.size() - 1));
-	}
-
-	return Collections.singletonList(fullHours.get(choosenSingleDayIndex));
-    }
-
+    // Creates default OpeningHours for the Nodes where they can be visited by the Resources from 8:00 to 20:00 on
+	// 5 consecutive days.
     public static List<OpeningHours> defaultTestOpeninghours() {
 
 	String zone = "Europe/Berlin";
@@ -287,9 +259,6 @@ public class TourOptimizerSimpleLocalDockerExample {
 
 	int numDays = 5;
 
-	/*
-	 *
-	 */
 	return IntStream.range(0, numDays).boxed().map(ii -> {
 	    ZonedDateTime start = ZonedDateTime.of(2100, 1, 1 + ii, 8, 0, 0, 0, zoneId);
 	    ZonedDateTime end = ZonedDateTime.of(2100, 1, 1 + ii, 20, 0, 0, 0, zoneId);
