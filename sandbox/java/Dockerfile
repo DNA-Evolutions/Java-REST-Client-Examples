@@ -1,4 +1,4 @@
-FROM codercom/code-server:latest
+FROM codercom/code-server:4.7.1
 
 ARG DEBIAN_FRONTEND=noninteractive 
 
@@ -30,13 +30,13 @@ RUN apt-get update && \
 COPY ./jopt-rest-docker-entrypoint.sh /usr/bin/
 RUN ["chmod", "+x", "/usr/bin/jopt-rest-docker-entrypoint.sh"]
 
-
 # Set password for IDE
 ENV PASSWORD=joptrest
 
 USER coder
 
 # Install java pack extension
+# TODO versions >= code-server:4.8.0 are leading to infinite install loop
 RUN code-server --install-extension vscjava.vscode-java-pack
 
 WORKDIR /home/coder/project
