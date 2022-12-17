@@ -15,4 +15,9 @@ Explanation of keys:
 ## Changelog REST-Examples
 
 **v1.0.0**
+- Update: Update dependency versions
+- Update: Use JDK 17 in sandbox
+- Feature: Adding examples
+
+**v1.0.0**
 - Feature: Adding examples
