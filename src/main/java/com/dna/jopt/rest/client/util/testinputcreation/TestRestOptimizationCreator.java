@@ -13,7 +13,6 @@ package com.dna.jopt.rest.client.util.testinputcreation;
  * #L%
  */
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +20,7 @@ import com.dna.jopt.rest.client.model.JSONConfig;
 import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.OptimizationKeySetting;
 import com.dna.jopt.rest.client.model.OptimizationOptions;
+import com.dna.jopt.rest.client.model.OptimizationOptionsProperties;
 import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
 
@@ -70,9 +70,12 @@ public class TestRestOptimizationCreator {
 	    optimizationOptions = optimizationOptionsOpt.get();
 	} else {
 	    optimizationOptions = new OptimizationOptions();
-	    optimizationOptions.setProperties(new HashMap<>());
-	    optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "100000");
-	    optimizationOptions.putPropertiesItem("JOptExitCondition.JOptGenerationCount", "10000");
+
+	    OptimizationOptionsProperties props = new OptimizationOptionsProperties();
+	    props.put("JOpt.Algorithm.PreOptimization.SA.NumIterations", "100000");
+	    props.put("JOptExitCondition.JOptGenerationCount", "10000");
+
+	    optimizationOptions.setProperties(props);
 	}
 
 	myOpti.setOptimizationOptions(optimizationOptions);

@@ -8,7 +8,7 @@
       "url" : "https://dna-evolutions.com",
       "email" : "info@dna-evolutions.com"
     },
-    "version" : "1.0.10-SNAPSHOT"
+    "version" : "1.1.0-SNAPSHOT"
   },
   "servers" : [ {
     "url" : "/"
@@ -52,6 +52,16 @@
           "required" : true
         },
         "responses" : {
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
@@ -68,16 +78,6 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Solution"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -102,8 +102,8 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization start",
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -112,8 +112,8 @@
               }
             }
           },
-          "401" : {
-            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization start",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -142,22 +142,22 @@
         "description" : "Stopping the optimization gracefully (if optimization was already started) and returning the latestknown result.",
         "operationId" : "stopOptimizationRun",
         "responses" : {
-          "400" : {
-            "description" : "Bad Request / Optimization was not started yet or already stopped.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Once the optimizer was stopped it will return a boolean indicating it was stopped. The previously called start method will emit soon.",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "boolean"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request / Optimization was not started yet or already stopped.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -182,26 +182,6 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Once the optimizer has finished the optimization run, it will return an OptimizationConfig JSON that contains the initial definition and the solution.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/RestOptimization"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "401" : {
             "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
@@ -214,6 +194,26 @@
           },
           "504" : {
             "description" : "Timeout / Optimization took too long",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Once the optimizer has finished the optimization run, it will return an OptimizationConfig JSON that contains the initial definition and the solution.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RestOptimization"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -252,16 +252,6 @@
               }
             }
           },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "401" : {
             "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
@@ -274,6 +264,16 @@
           },
           "504" : {
             "description" : "Timeout / Optimization took too long",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -302,16 +302,6 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting solution infos",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get solution-infos triggered by the creator in fire and forget mode.",
             "content" : {
@@ -321,6 +311,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/DatabaseInfoSearchResult"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting solution infos",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -474,22 +474,22 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Get Solutions triggered by the creator in fire and forget mode.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Solution"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting solutions",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get Solutions triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
                 }
               }
             }
@@ -514,16 +514,6 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting progress",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get progress triggered by the creator in fire and forget mode.",
             "content" : {
@@ -533,6 +523,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/JOptOptimizationProgress"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting progress",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -557,22 +557,22 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/RestOptimization"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting optimizations",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RestOptimization"
                 }
               }
             }
@@ -640,22 +640,22 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Get encrypted Solutions triggered by the creator in fire and forget mode.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Solution"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting solutions",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get encrypted Solutions triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
                 }
               }
             }
@@ -680,22 +680,22 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/RestOptimization"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "Internal Server Error / A problem occured during requesting optimizations",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RestOptimization"
                 }
               }
             }
@@ -1384,6 +1384,12 @@
               "description" : "The typeName of the object",
               "example" : "Event",
               "default" : "Event"
+            },
+            "isPartialExchangeIdleForDrivingTime" : {
+              "type" : "boolean",
+              "description" : "An EventNode is allowed to be visited BEWTWEEN two Nodes and does not need to be positioned at a node.",
+              "nullable" : true,
+              "default" : true
             }
           }
         } ]
@@ -1399,17 +1405,9 @@
             "type" : "boolean",
             "description" : "The onlyScheduledInCompany"
           },
-          "isExtendableEnd" : {
-            "type" : "boolean",
-            "description" : "The isExtendableEnd"
-          },
           "isSchedulableAfterWorkingHours" : {
             "type" : "boolean",
             "description" : "The isSchedulableAfterWorkingHours"
-          },
-          "isTimeAdjustableAnchor" : {
-            "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
           },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
@@ -1418,6 +1416,14 @@
           "isSchedulableBeforeWorkingHours" : {
             "type" : "boolean",
             "description" : "The isSchedulableBeforeWorkingHours"
+          },
+          "isTimeAdjustableAnchor" : {
+            "type" : "boolean",
+            "description" : "The isTimeAdjustableAnchor"
+          },
+          "isExtendableEnd" : {
+            "type" : "boolean",
+            "description" : "The isExtendableEnd"
           }
         },
         "description" : "The pillarNode"
@@ -1532,7 +1538,7 @@
         "description" : "The geographical address of the Position in case geo-coding will be applied."
       },
       "GeoNode" : {
-        "required" : [ "pillarNode", "position", "typeName" ],
+        "required" : [ "position", "typeName" ],
         "type" : "object",
         "allOf" : [ {
           "$ref" : "#/components/schemas/NodeType"
@@ -1568,21 +1574,13 @@
           "connectionRelatedLateMargin" : {
             "$ref" : "#/components/schemas/ConnectionRelatedLateMargin"
           },
-          "isForcedStayNode" : {
-            "type" : "boolean",
-            "description" : "The isForcedStayNode"
-          },
-          "isOverwritingRouteStart" : {
-            "type" : "boolean",
-            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
-          },
           "isSchedulableAfterWorkingHours" : {
             "type" : "boolean",
             "description" : "The isSchedulableAfterWorkingHours"
           },
-          "isTimeAdjustableAnchor" : {
+          "isAutoTransformable2StartAnchor" : {
             "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
+            "description" : "The isAutoTransformable2StartAnchor"
           },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
@@ -1592,9 +1590,17 @@
             "type" : "boolean",
             "description" : "The isSchedulableBeforeWorkingHours"
           },
-          "isAutoTransformable2StartAnchor" : {
+          "isTimeAdjustableAnchor" : {
             "type" : "boolean",
-            "description" : "The isAutoTransformable2StartAnchor"
+            "description" : "The isTimeAdjustableAnchor"
+          },
+          "isOverwritingRouteStart" : {
+            "type" : "boolean",
+            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
+          },
+          "isForcedStayNode" : {
+            "type" : "boolean",
+            "description" : "The isForcedStayNode"
           }
         },
         "description" : "The optional pillarNode. If a node has the pillarNode attibute attached, it becomes a pillar node itself. A pillar nodes openingHour cannot be violated. If a violation cannot be avoided, the pillar will be unassigned instead of being violated."
@@ -1607,14 +1613,14 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "request" : {
+          "fuzzyVisit" : {
             "type" : "boolean"
           },
           "loadValue" : {
             "type" : "number",
             "format" : "double"
           },
-          "fuzzyVisit" : {
+          "request" : {
             "type" : "boolean"
           },
           "id" : {
@@ -1640,10 +1646,6 @@
         "required" : [ "typeName" ],
         "type" : "object",
         "properties" : {
-          "loadPickupTime" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
           "maximalIndividualLoadCapacity" : {
             "type" : "number",
             "format" : "double"
@@ -1651,6 +1653,10 @@
           "currentLoad" : {
             "type" : "number",
             "format" : "double"
+          },
+          "loadPickupTime" : {
+            "type" : "integer",
+            "format" : "int64"
           },
           "id" : {
             "type" : "string"
@@ -1678,14 +1684,14 @@
               "$ref" : "#/components/schemas/ILoad"
             }
           },
+          "hasTimedLoads" : {
+            "type" : "boolean",
+            "writeOnly" : true
+          },
           "depotId" : {
             "type" : "string"
           },
           "hasFlexLoad" : {
-            "type" : "boolean",
-            "writeOnly" : true
-          },
-          "hasTimedLoads" : {
             "type" : "boolean",
             "writeOnly" : true
           },
@@ -1711,12 +1717,12 @@
               "$ref" : "#/components/schemas/ILoadCapacity"
             }
           },
-          "depotId" : {
-            "type" : "string"
-          },
           "maximalTotalCapacity" : {
             "type" : "number",
             "format" : "double"
+          },
+          "depotId" : {
+            "type" : "string"
           },
           "capacityUnitMap" : {
             "type" : "object",
@@ -1791,7 +1797,6 @@
         "description" : "The mirrorItem"
       },
       "JSONConfig" : {
-        "required" : [ "keySetting" ],
         "type" : "object",
         "properties" : {
           "creatorSetting" : {
@@ -1937,7 +1942,7 @@
         "description" : "The mongoSettings"
       },
       "Node" : {
-        "required" : [ "constraints", "id", "load", "openingHours", "qualifications", "type", "visitDuration" ],
+        "required" : [ "id", "openingHours", "type", "visitDuration" ],
         "type" : "object",
         "properties" : {
           "id" : {
@@ -2052,7 +2057,9 @@
           },
           "routeDependentVisitDuration" : {
             "type" : "boolean",
-            "description" : "The routeDependentVisitDuration"
+            "description" : "The routeDependentVisitDuration",
+            "nullable" : true,
+            "default" : false
           },
           "minVisitDuration" : {
             "type" : "string",
@@ -2070,39 +2077,57 @@
           },
           "isOptimizable" : {
             "type" : "boolean",
-            "description" : "The boolean isOptimizable. Defines if a node is optimizable. This property will be auto-defined by the optimizer.."
+            "description" : "The boolean isOptimizable. Defines if a node is optimizable. This property will be auto-defined by the optimizer..",
+            "nullable" : true,
+            "default" : true
           },
           "isOptional" : {
             "type" : "boolean",
-            "description" : "The boolean isOptional. If a node is optional, the Optimizer can decide on its own, if the node is visited or not. Usually, this settings only makes sense in PND problems."
+            "description" : "The boolean isOptional. If a node is optional, the Optimizer can decide on its own, if the node is visited or not. Usually, this settings only makes sense in PND problems.",
+            "nullable" : true,
+            "default" : false
           },
           "isUnassigned" : {
             "type" : "boolean",
-            "description" : "The boolean isUnassigned. Defines if a node was unassigned by the Optimizer."
-          },
-          "isWorkNode" : {
-            "type" : "boolean",
-            "description" : "The isWorkNode"
-          },
-          "isStayNode" : {
-            "type" : "boolean",
-            "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'."
+            "description" : "The boolean isUnassigned. Defines if a node was unassigned by the Optimizer.",
+            "nullable" : true,
+            "default" : false
           },
           "isOpeningHoursIncludesDuration" : {
             "type" : "boolean",
-            "description" : "The boolean isOpeningHoursIncludesDuration. By default a node's openingHour defines the time-window  in which a task has to be fulfilled, meaning a Visitor has to arrive, work, and leave within that time-window. If isOpeningHoursIncludesDuration is set to false, the time-window only counts as arrival-window for the Resource."
-          },
-          "isWaitOnEarlyArrivalFirstNode" : {
-            "type" : "boolean",
-            "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true."
+            "description" : "The boolean isOpeningHoursIncludesDuration. By default a node's openingHour defines the time-window  in which a task has to be fulfilled, meaning a Visitor has to arrive, work, and leave within that time-window. If isOpeningHoursIncludesDuration is set to false, the time-window only counts as arrival-window for the Resource.",
+            "nullable" : true,
+            "default" : true
           },
           "isWaitOnEarlyArrival" : {
             "type" : "boolean",
-            "description" : "The boolean isWaitOnEarlyArrival. In case a Resources reaches a node too early (before the start of the node's OpeningHours), the Resource can either start working direclty (false) or wait for the node to open (true, default)."
+            "description" : "The boolean isWaitOnEarlyArrival. In case a Resources reaches a node too early (before the start of the node's OpeningHours), the Resource can either start working direclty (false) or wait for the node to open (true, default).",
+            "nullable" : true,
+            "default" : true
           },
           "isCausingIdleTimeCost" : {
             "type" : "boolean",
-            "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created."
+            "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created.",
+            "nullable" : true,
+            "default" : true
+          },
+          "isWaitOnEarlyArrivalFirstNode" : {
+            "type" : "boolean",
+            "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true.",
+            "nullable" : true,
+            "default" : false
+          },
+          "isStayNode" : {
+            "type" : "boolean",
+            "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'.",
+            "nullable" : true,
+            "default" : false
+          },
+          "isWorkNode" : {
+            "type" : "boolean",
+            "description" : "The isWorkNode",
+            "nullable" : true,
+            "default" : true
           }
         },
         "description" : "The list of nodes"
@@ -2271,11 +2296,15 @@
           "isPreffered" : {
             "type" : "boolean",
             "description" : "The isPreffered boolean. If an Opening Hour is preffered the Optimizer will try to visit the node inside this Opening Hour. By default, the first Openinghour of a node is the preffered opening hour.",
-            "example" : false
+            "nullable" : true,
+            "example" : false,
+            "default" : false
           },
           "isSoloAccessHours" : {
             "type" : "boolean",
-            "description" : "The isSoloAccessHours"
+            "description" : "The isSoloAccessHours",
+            "nullable" : true,
+            "default" : false
           }
         },
         "description" : "The list of non-overlapping openingHours of the nodes."
@@ -2442,7 +2471,7 @@
         } ]
       },
       "Resource" : {
-        "required" : [ "capacity", "capacityDegPerStop", "id", "initialLoad", "maxDistance", "maxTime", "minDegratedCapacity", "position", "qualifications", "type", "workingHours" ],
+        "required" : [ "id", "maxDistance", "maxTime", "position", "type", "workingHours" ],
         "type" : "object",
         "properties" : {
           "id" : {
@@ -2579,7 +2608,9 @@
           },
           "postFlexTimeOnlyOnOvertime" : {
             "type" : "boolean",
-            "description" : "The post flextime is only applied to reduce overtime."
+            "description" : "The post flextime is only applied to reduce overtime.",
+            "nullable" : true,
+            "default" : false
           },
           "maxPillarAfterHoursTime" : {
             "type" : "string",
@@ -2700,11 +2731,15 @@
           },
           "isReductionTimeIncludedInTotalWorkingTime" : {
             "type" : "boolean",
-            "description" : "The isReductionTimeIncludedInTotalWorkingTime. Use StartReductionTimeIncludeDefinition instead"
+            "description" : "The isReductionTimeIncludedInTotalWorkingTime. Use StartReductionTimeIncludeDefinition instead",
+            "nullable" : true,
+            "default" : false
           },
           "isReductionTimeOnlyUsedForDriving" : {
             "type" : "boolean",
-            "description" : "The isReductionTimeOnlyUsedForDriving. Use startReductionTimeDefinition instead."
+            "description" : "The isReductionTimeOnlyUsedForDriving. Use startReductionTimeDefinition instead.",
+            "nullable" : true,
+            "default" : false
           }
         },
         "description" : "The list of resoruces"
@@ -2792,7 +2827,7 @@
         "description" : "The list of resources that should NOT visit a certain node."
       },
       "RestOptimization" : {
-        "required" : [ "elementConnections", "nodeRelations", "nodes", "optimizationOptions", "resources" ],
+        "required" : [ "nodes", "resources" ],
         "type" : "object",
         "properties" : {
           "optimizationStatus" : {
@@ -2880,7 +2915,7 @@
           }
         },
         "example" : {
-          "ident" : "JOpt-Run-1653398783114",
+          "ident" : "JOpt-Run-1670923233059",
           "nodes" : [ {
             "id" : "Koeln",
             "type" : {
@@ -2960,8 +2995,9 @@
             "properties" : {
               "JOpt.Algorithm.GE.OnProgressOutPercentage" : "1.0",
               "JOpt.Algorithm.Operator.2Opt.Threshold" : "10",
+              "JOpt.Algorithm.Operator.RequireHoursOverlap" : "TRUE",
               "JOpt.Algorithm.PreOptimization.SA.CoolingRate" : "0.999985",
-              "JOpt.Algorithm.PreOptimization.SA.NumIterations" : "10000",
+              "JOpt.Algorithm.PreOptimization.SA.NumIterations" : "150000",
               "JOpt.Algorithm.PreOptimization.SA.NumRepetions" : "1",
               "JOpt.Algorithm.PreOptimization.SA.OnProgressOutPercentage" : "1.0",
               "JOpt.Algorithm.PreOptimization.SA.StartingTemperature" : "10.0",
@@ -2991,7 +3027,8 @@
               "JOpt.Clustering.ReassignOrphanedNodes" : "TRUE",
               "JOpt.Clustering.ResourceSplitValue" : "10",
               "JOpt.Clustering.ShowDebugOutput" : "FALSE",
-              "JOpt.CostAssessment.suppressInactiveFinalizedRouteCosts" : "FALSE",
+              "JOpt.CostAssessment.suppressInactiveFinalizedRouteCosts" : "TRUE",
+              "JOpt.CostAssessment.useAverageCost" : "TRUE",
               "JOpt.DebugMode.NodeChecking" : "TRUE",
               "JOpt.EntityValidation.Debug" : "FALSE",
               "JOpt.FuzzyDemand" : "0",
@@ -2999,6 +3036,11 @@
               "JOpt.JOptPopulationSize" : "100",
               "JOpt.JointVisitDuration.maxRadiusMeter" : "10.0",
               "JOpt.JointVisitDuration.routeTimeBonusFactor" : "0.0",
+              "JOpt.KeepZeroDriveForEventNodes" : "FALSE",
+              "JOpt.Lockdown.Blockpillar.endOffset" : "0",
+              "JOpt.Lockdown.Blockpillar.startOffset" : "0",
+              "JOpt.Lockdown.LockdownUnchangedRoutes" : "TRUE",
+              "JOpt.MovingEventNodes" : "TRUE",
               "JOpt.Multicore" : "1",
               "JOpt.NumCPUCores" : "4",
               "JOpt.PlausibilityGuard.PropertyChecker.Active" : "TRUE",
@@ -3017,7 +3059,7 @@
               "JOpt.UnlocatedIdleTime" : "FALSE",
               "JOpt.plausibility.doInputCheck" : "TRUE",
               "JOpt.plausibility.doInputCheck.doCapacityCheck" : "TRUE",
-              "JOptExitCondition.JOptGenerationCount" : "10000",
+              "JOptExitCondition.JOptGenerationCount" : "5000",
               "JOptWeight.CO2Emission" : "0.0",
               "JOptWeight.Capacity" : "50.0",
               "JOptWeight.ColorCapacity" : "10.0",
@@ -3055,27 +3097,68 @@
           },
           "coreBuildOptions" : {
             "buildCoreProperties" : {
-              "jopt.core.git.closest.tag.commit.count" : "10",
+              "jopt.core.maven-surefire-plugin.version" : "3.0.0-M7",
+              "jopt.core.git.commit.author.time" : "20221212-175329",
               "jopt.core.jopt.version.number" : "7.4.9",
-              "jopt.core.git.build.version" : "7.4.9-SNAPSHOT",
-              "jopt.core.build.time.utc" : "2022-05-24T10:19:20Z",
-              "jopt.core.git.commit.id.describe" : "v7.4.9-rc2-10-g40bc54a",
-              "jopt.core.git.commit.id.abbrev" : "40bc54a",
-              "jopt.core.git.dirty" : "false",
-              "jopt.core.maven.compiler.target" : "1.8",
-              "jopt.core.project.build.sourceEncoding" : "cp1252",
-              "jopt.core.jopt.version.postfix" : "-SNAPSHOT",
-              "jopt.core.git.branch" : "master",
-              "jopt.core.git.closest.tag.name" : "v7.4.9-rc2",
-              "jopt.core.git.commit.time" : "20220523-165550",
-              "jopt.core.git.build.time" : "20220524-111717",
-              "jopt.core.git.build.host" : "DESKTOP-Q9BKOAA",
-              "jopt.core.git.tags" : "",
-              "jopt.core.git.commit.id" : "40bc54a8138f341339162f7554d4bf207e8c6e52",
-              "jopt.core.git.commit.id.describe-short" : "v7.4.9-rc2-10",
-              "jopt.core.maven.test.skip" : "false",
+              "jopt.core.jackson-databind.version" : "2.14.1",
+              "jopt.core.git.dirty" : "true",
+              "jopt.core.testng.version" : "7.5",
+              "jopt.core.git.build.host" : "cac0ed70-8fcf-46bf-9ff9-6779728a8c50-nlnrx",
+              "jopt.core.git.build.time" : "20221212-182635",
+              "jopt.core.jackson-datatype-guava.version" : "2.14.1",
               "jopt.core.git.commit.user.name" : "Jens Richter",
-              "jopt.core.maven.compiler.source" : "1.8"
+              "jopt.core.jackson-datatype-jdk8.version" : "2.14.1",
+              "jopt.core.git.local.branch.ahead" : "0",
+              "jopt.core.maven-shade-plugin.version" : "3.4.1",
+              "jopt.core.bson.version" : "4.8.0",
+              "jopt.core.git.closest.tag.commit.count" : "2",
+              "jopt.core.wagon-maven-plugin.version" : "2.0.2",
+              "jopt.core.maven-deploy-plugin.version" : "3.0.0",
+              "jopt.core.commons-math3.version" : "3.6.1",
+              "jopt.core.jacoco-maven-plugin.version" : "0.8.8",
+              "jopt.core.maven.compiler.target" : "1.8",
+              "jopt.core.unit-api.version" : "2.1",
+              "jopt.core.jopt.version.postfix" : "-SNAPSHOT",
+              "jopt.core.project.build.sourceEncoding" : "cp1252",
+              "jopt.core.wagon-ssh.version" : "3.5.2",
+              "jopt.core.git.branch" : "master",
+              "jopt.core.git-commit-id-plugin.version" : "4.9.10",
+              "jopt.core.maven-javadoc-plugin.version" : "3.4.1",
+              "jopt.core.log4j-core.version" : "2.19.0",
+              "jopt.core.maven-source-plugin.version" : "3.2.1",
+              "jopt.core.spring-data-mongodb.version" : "3.4.6",
+              "jopt.core.datafactory.version" : "0.8",
+              "jopt.core.commons-compress.version" : "1.22",
+              "jopt.core.jackson-datatype-jsr310.version" : "2.14.1",
+              "jopt.core.build.time.utc" : "2022-12-12T18:26:32Z",
+              "jopt.core.git.commit.id.describe" : "v7.4.9-rc4_1-2-ge357e07-dirty",
+              "jopt.core.properties-maven-plugin.version" : "1.1.0",
+              "jopt.core.unit-ri.version" : "1.0.3",
+              "jopt.core.value.version" : "2.9.2",
+              "jopt.core.git.tags" : "",
+              "jopt.core.git.commit.id" : "e357e07d9c1758d954789fd53147bb1c6be7170f",
+              "jopt.core.git.commit.id.describe-short" : "v7.4.9-rc4_1-2-dirty",
+              "jopt.core.commons-lang3.version" : "3.12.0",
+              "jopt.core.maven.test.skip" : "false",
+              "jopt.core.jackson-module-parameter-names.version" : "2.14.1",
+              "jopt.core.maven.compiler.source" : "1.8",
+              "jopt.core.git.local.branch.behind" : "0",
+              "jopt.core.git.build.number" : "2323",
+              "jopt.core.git.commit.committer.time" : "20221212-175329",
+              "jopt.core.git.build.version" : "7.4.9-SNAPSHOT",
+              "jopt.core.git.commit.id.abbrev" : "e357e07",
+              "jopt.core.guava.version" : "31.1-jre",
+              "jopt.core.swagger-annotations.version" : "2.2.7",
+              "jopt.core.license-maven-plugin.version" : "2.0.0",
+              "jopt.core.javafaker.version" : "1.0.2",
+              "jopt.core.git.total.commit.count" : "2993",
+              "jopt.core.git.closest.tag.name" : "v7.4.9-rc4_1",
+              "jopt.core.git.commit.time" : "20221212-175329",
+              "jopt.core.hamcrest.version" : "2.2",
+              "jopt.core.maven-compiler-plugin.version" : "3.10.1",
+              "jopt.core.proguard-maven-plugin.version" : "2.6.0",
+              "jopt.core.rxjava.version" : "3.1.5",
+              "jopt.core.wagon-ftp.version" : "3.5.2"
             }
           },
           "extension" : {
@@ -3238,14 +3321,14 @@
             "description" : "The isFinalized. Describes if a route was undergoing finalization.",
             "example" : false
           },
-          "isLockedDown" : {
-            "type" : "boolean",
-            "description" : "The isLockedDown. Describes if a route was undergoing lockdown.",
-            "example" : false
-          },
           "isInactive" : {
             "type" : "boolean",
             "description" : "The isInactive boolean describes if a route is deactivated.",
+            "example" : false
+          },
+          "isLockedDown" : {
+            "type" : "boolean",
+            "description" : "The isLockedDown. Describes if a route was undergoing lockdown.",
             "example" : false
           }
         },
@@ -3891,13 +3974,13 @@
         "required" : [ "isMasterNodeWorkingStart", "isRelatedNodeWorkingStart" ],
         "type" : "object",
         "properties" : {
-          "isMasterNodeWorkingStart" : {
-            "type" : "boolean",
-            "description" : "Defines if the master nodes start is used as comparison point (true). If false, the end of the master node will be used."
-          },
           "isRelatedNodeWorkingStart" : {
             "type" : "boolean",
             "description" : "Defines if the related nodes start is used as comparison point (true). If false, the end of the related node will be used."
+          },
+          "isMasterNodeWorkingStart" : {
+            "type" : "boolean",
+            "description" : "Defines if the master nodes start is used as comparison point (true). If false, the end of the master node will be used."
           }
         },
         "description" : "The timeComparisonJuncture of the relation."
@@ -4281,7 +4364,9 @@
           },
           "localPostFlexTimeOnlyOnOvertime" : {
             "type" : "boolean",
-            "description" : "The post flextime is only applied to reduce overtime."
+            "description" : "The post flextime is only applied to reduce overtime.",
+            "nullable" : true,
+            "default" : false
           },
           "maxLocalPillarAfterHoursTime" : {
             "type" : "string",
@@ -4316,13 +4401,34 @@
               "$ref" : "#/components/schemas/Qualification"
             }
           },
+          "routeStartTimeHook" : {
+            "type" : "string",
+            "description" : "The routeStartTimeHook",
+            "example" : "PT30M"
+          },
+          "hookElementConnections" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The list of hook connections",
+            "items" : {
+              "$ref" : "#/components/schemas/b"
+            }
+          },
           "isAvailableForStay" : {
             "type" : "boolean",
-            "description" : "The boolean isAvailableForStay defines if this working hour is allowed to end at an overnight stay."
+            "description" : "The boolean isAvailableForStay defines if this working hour is allowed to end at an overnight stay.",
+            "nullable" : true,
+            "default" : true
           },
           "isClosedRoute" : {
             "type" : "boolean",
-            "description" : "The isClosedRoute boolean describes if a Resource has to visit the termination element of the Route. By default, the start element and the termination element of a Route is the Resource itself. In case of a closed route, by default, the Resource returns to its original starting location."
+            "description" : "The isClosedRoute boolean describes if a Resource has to visit the termination element of the Route. By default, the start element and the termination element of a Route is the Resource itself. In case of a closed route, by default, the Resource returns to its original starting location.",
+            "nullable" : true,
+            "default" : true
           }
         },
         "description" : "The list of non-overlapping workingHours."
@@ -4398,6 +4504,33 @@
           }
         } ]
       },
+      "b" : {
+        "required" : [ "distance", "fromElementId", "time", "toElementId" ],
+        "type" : "object",
+        "properties" : {
+          "distance" : {
+            "type" : "string",
+            "description" : "The distance of the hook connection.",
+            "example" : "100.0 km"
+          },
+          "time" : {
+            "type" : "string",
+            "description" : "The time needed to pass the hook connection.",
+            "example" : "PT30M"
+          },
+          "fromElementId" : {
+            "type" : "string",
+            "description" : "The fromElementId defines the element where the connections starts.",
+            "example" : "MyStartElementId"
+          },
+          "toElementId" : {
+            "type" : "string",
+            "description" : "The toElementId defines the element where the connections ends.",
+            "example" : "MyToElementId"
+          }
+        },
+        "description" : "The list of hook connections"
+      },
       "DatabaseInfoSearch" : {
         "type" : "object",
         "properties" : {
@@ -4433,59 +4566,7 @@
             "format" : "date-time"
           },
           "timeOut" : {
-            "type" : "object",
-            "properties" : {
-              "seconds" : {
-                "type" : "integer",
-                "format" : "int64"
-              },
-              "negative" : {
-                "type" : "boolean"
-              },
-              "units" : {
-                "type" : "array",
-                "items" : {
-                  "type" : "object",
-                  "properties" : {
-                    "duration" : {
-                      "type" : "object",
-                      "properties" : {
-                        "seconds" : {
-                          "type" : "integer",
-                          "format" : "int64"
-                        },
-                        "negative" : {
-                          "type" : "boolean"
-                        },
-                        "nano" : {
-                          "type" : "integer",
-                          "format" : "int32"
-                        },
-                        "zero" : {
-                          "type" : "boolean"
-                        }
-                      }
-                    },
-                    "durationEstimated" : {
-                      "type" : "boolean"
-                    },
-                    "dateBased" : {
-                      "type" : "boolean"
-                    },
-                    "timeBased" : {
-                      "type" : "boolean"
-                    }
-                  }
-                }
-              },
-              "nano" : {
-                "type" : "integer",
-                "format" : "int32"
-              },
-              "zero" : {
-                "type" : "boolean"
-              }
-            },
+            "type" : "string",
             "description" : "The timeOut for the request. By default one minute",
             "example" : "PT1M"
           }
@@ -4624,59 +4705,7 @@
             "example" : "6274e36cc36712358912bf35"
           },
           "timeOut" : {
-            "type" : "object",
-            "properties" : {
-              "seconds" : {
-                "type" : "integer",
-                "format" : "int64"
-              },
-              "negative" : {
-                "type" : "boolean"
-              },
-              "units" : {
-                "type" : "array",
-                "items" : {
-                  "type" : "object",
-                  "properties" : {
-                    "duration" : {
-                      "type" : "object",
-                      "properties" : {
-                        "seconds" : {
-                          "type" : "integer",
-                          "format" : "int64"
-                        },
-                        "negative" : {
-                          "type" : "boolean"
-                        },
-                        "nano" : {
-                          "type" : "integer",
-                          "format" : "int32"
-                        },
-                        "zero" : {
-                          "type" : "boolean"
-                        }
-                      }
-                    },
-                    "durationEstimated" : {
-                      "type" : "boolean"
-                    },
-                    "dateBased" : {
-                      "type" : "boolean"
-                    },
-                    "timeBased" : {
-                      "type" : "boolean"
-                    }
-                  }
-                }
-              },
-              "nano" : {
-                "type" : "integer",
-                "format" : "int32"
-              },
-              "zero" : {
-                "type" : "boolean"
-              }
-            },
+            "type" : "string",
             "description" : "The timeOut for the request. By default one minute",
             "example" : "PT1M"
           }
@@ -4790,59 +4819,7 @@
             "example" : "6274e36cc36712358912bf35"
           },
           "timeOut" : {
-            "type" : "object",
-            "properties" : {
-              "seconds" : {
-                "type" : "integer",
-                "format" : "int64"
-              },
-              "negative" : {
-                "type" : "boolean"
-              },
-              "units" : {
-                "type" : "array",
-                "items" : {
-                  "type" : "object",
-                  "properties" : {
-                    "duration" : {
-                      "type" : "object",
-                      "properties" : {
-                        "seconds" : {
-                          "type" : "integer",
-                          "format" : "int64"
-                        },
-                        "negative" : {
-                          "type" : "boolean"
-                        },
-                        "nano" : {
-                          "type" : "integer",
-                          "format" : "int32"
-                        },
-                        "zero" : {
-                          "type" : "boolean"
-                        }
-                      }
-                    },
-                    "durationEstimated" : {
-                      "type" : "boolean"
-                    },
-                    "dateBased" : {
-                      "type" : "boolean"
-                    },
-                    "timeBased" : {
-                      "type" : "boolean"
-                    }
-                  }
-                }
-              },
-              "nano" : {
-                "type" : "integer",
-                "format" : "int32"
-              },
-              "zero" : {
-                "type" : "boolean"
-              }
-            },
+            "type" : "string",
             "description" : "The timeOut for the request. By default one minute",
             "example" : "PT1M"
           },

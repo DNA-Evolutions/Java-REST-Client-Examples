@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +32,7 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFou
 import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.OpeningHours;
 import com.dna.jopt.rest.client.model.OptimizationOptions;
+import com.dna.jopt.rest.client.model.OptimizationOptionsProperties;
 
 public class PNDBakeryChainFlexLoadExample {
 
@@ -76,11 +76,15 @@ public class PNDBakeryChainFlexLoadExample {
 
 	List<ElementConnection> emptyConnections = new ArrayList<>();
 
+	
 	OptimizationOptions optimizationOptions = new OptimizationOptions();
-	optimizationOptions.setProperties(new HashMap<>());
-	optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "100000");
-	optimizationOptions.putPropertiesItem("JOptExitCondition.JOptGenerationCount", "10000");
-	optimizationOptions.putPropertiesItem("JOptWeight.Capacity", "200");
+	
+	OptimizationOptionsProperties props = new OptimizationOptionsProperties();
+	props.put("JOpt.Algorithm.PreOptimization.SA.NumIterations", "10000");
+	props.put("JOptExitCondition.JOptGenerationCount", "1000");
+	props.put("JOptWeight.Capacity", "200");
+	
+	optimizationOptions.setProperties(props);
 
 	RestOptimization result = tourOptimizerCaller.optimize(createExampleNodes(), createExampleResources(),
 		emptyConnections, Optional.of(m.get("joptlic")), Optional.of(optimizationOptions));
@@ -99,6 +103,8 @@ public class PNDBakeryChainFlexLoadExample {
 	if (isSave2JSON) {
 
 	    String jsonFile = "OptimizationTest" + ".json";
+	    
+	    System.out.println(RestJSONParser.toJSONString(result, tourOptimizerCaller.getMapper()));
 
 	    RestJSONParser.toJsonFile(result, new File(jsonFile), tourOptimizerCaller.getMapper());
 	}
