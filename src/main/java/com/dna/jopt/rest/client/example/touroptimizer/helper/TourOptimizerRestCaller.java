@@ -84,6 +84,10 @@ public class TourOptimizerRestCaller {
 
 	// Get the mapper from the generated files
 	this.tourOptimizerObjectMapper = this.geoOptimizerApi.getApiClient().getObjectMapper();
+	
+	this.tourOptimizerObjectMapper.setSerializationInclusion(Include.NON_NULL)
+		.setSerializationInclusion(Include.NON_ABSENT).registerModule(new JavaTimeModule())
+		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 	// Invoke api key if desired
 	if (azureApiKeyOpt.isPresent()) {

@@ -72,6 +72,9 @@ public class RoutePlannerRestCaller {
 
 	// Get the mapper from the generated files
 	this.routePlannerObjectMapper = this.geoRouterMatrixApi.getApiClient().getObjectMapper();
+	
+	this.routePlannerObjectMapper.setSerializationInclusion(Include.NON_NULL).registerModule(new JavaTimeModule())
+		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 	// Invoke api key if desired
 	if (azureApiKeyOpt.isPresent()) {

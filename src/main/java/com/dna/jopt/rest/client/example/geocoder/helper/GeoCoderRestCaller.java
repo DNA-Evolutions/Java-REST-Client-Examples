@@ -69,6 +69,9 @@ public class GeoCoderRestCaller {
 
 	// Get the mapper from the generated files
 	this.geoCoderObjectMapper = this.geoCoderBatchForwardApi.getApiClient().getObjectMapper();
+	
+	this.geoCoderObjectMapper.setSerializationInclusion(Include.NON_NULL).registerModule(new JavaTimeModule())
+		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 	// Invoke api key if desired
 	if (azureApiKeyOpt.isPresent()) {
