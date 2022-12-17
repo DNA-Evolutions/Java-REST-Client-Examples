@@ -54,8 +54,8 @@ public class TourOptimizerExample {
 	 * Modify me
 	 * 
 	 */
-	boolean isAzureCall = true;
-	boolean isSave2JSON = true;
+	boolean isAzureCall = !true;
+	boolean isSave2JSON = !true;
 
 	List<Position> nodePoss = TestPositionsInput.defaultSydneyNodePositions();
 	List<Position> resourcePoss = TestPositionsInput.defaultSydneyResourcePositions();
