@@ -178,19 +178,6 @@ public class TourOptimizerRestCaller {
 		jsonLicenseOpt,optimizationOptionsOpt);
 
 	optimization.setElementConnections(connections);
-
-	// This will keep the example alive. Otherwise just subscribe
-	
-	try {
-	    String test = tourOptimizerObjectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(optimization);
-	    
-	    System.out.println(test);
-	    
-	} catch (JsonProcessingException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	
 	
 	return optimize(optimization);
     }
