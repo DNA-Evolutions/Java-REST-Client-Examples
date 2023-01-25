@@ -48,11 +48,11 @@ import reactor.core.publisher.Mono;
 public class RoutePlannerRestCaller {
 
     private GeoMatrixRoutingServiceControllerApi geoRouterMatrixApi = createGeoMatrixRoutingServiceControllerApi();
-    private GeoTurnByTurnRoutingServiceControllerApi geoRouterTBTApi = new GeoTurnByTurnRoutingServiceControllerApi();
+    private GeoTurnByTurnRoutingServiceControllerApi geoRouterTBTApi = createTurnByTurnRoutingServiceControllerApi();
 
     public final ObjectMapper routePlannerObjectMapper;
 
-    public static final int MAX_TOUROPIMIZER_RESPONSESIZE_MB = 16;
+    public static final int MAX_TOUROPIMIZER_RESPONSESIZE_MB = 200;
 
     /*
      *
@@ -110,6 +110,25 @@ public class RoutePlannerRestCaller {
 	return new GeoMatrixRoutingServiceControllerApi(myApiClient);
 
     }
+    
+    private static GeoTurnByTurnRoutingServiceControllerApi createTurnByTurnRoutingServiceControllerApi() {
+
+	DateFormat dateFormat = ApiClient.createDefaultDateFormat();
+	ObjectMapper objectMapper = ApiClient.createDefaultObjectMapper(dateFormat);
+
+	// Vital step! - We need to the generated mapper how to treat our JSON data
+	objectMapper.setSerializationInclusion(Include.NON_NULL).setSerializationInclusion(Include.NON_ABSENT)
+		.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+	WebClient webClient = ApiClient.buildWebClientBuilder(objectMapper).codecs(configurer -> configurer
+		.defaultCodecs().maxInMemorySize(MAX_TOUROPIMIZER_RESPONSESIZE_MB * 1024 * 1024)).build();
+
+	ApiClient myApiClient = new ApiClient(webClient);
+
+	return new GeoTurnByTurnRoutingServiceControllerApi(myApiClient);
+
+    }
+    
 
     /*
      *
