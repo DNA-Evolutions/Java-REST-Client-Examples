@@ -203,8 +203,8 @@ public class RestSolutionKMLExporter {
 	// boolean isFirstElement = true;
 
 	for (RouteElementDetail d : details) {
-
-	    String curId = d.getElementId();
+	    
+	    String curId = d.getEffectivePosition().getLocationId();
 
 	    Optional<ResourceTrip> curTripOpt = extractResoureTrip(resourceTripsOpt, lastKnowId, curId);
 
@@ -236,7 +236,10 @@ public class RestSolutionKMLExporter {
 	Optional<Position> terminationPosOpt = Optional.ofNullable(r.getEndPosition());
 
 	if (terminationPosOpt.isPresent()) {
-	    String endElementId = r.getEndElementId();
+	    
+	    
+	    
+	    String endElementId = terminationPosOpt.get().getLocationId();
 
 	    Optional<ResourceTrip> curTripOpt = extractResoureTrip(resourceTripsOpt, lastKnowId, endElementId);
 
