@@ -24,11 +24,13 @@ import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.GeoAddress;
 import com.dna.jopt.rest.client.model.MatrixRoutingRequest;
 import com.dna.jopt.rest.client.model.Node;
+import com.dna.jopt.rest.client.model.OptimizationOptions;
 import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.model.Status;
+import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FullStackRestCaller {
@@ -122,6 +124,12 @@ public class FullStackRestCaller {
 
 	return this.tourOptimizer.optimize(nodePoss, ressPoss, connections, jsonLicenseOpt);
 
+    }
+    
+    public RestOptimization optimize(List<Node> nodes, List<Resource> ress,
+	    List<ElementConnection> connections, Optional<String> jsonLicenseOpt, Optional<OptimizationOptions> optimizationOptionsOpt) {
+
+	return this.tourOptimizer.optimize(nodes, ress, connections, jsonLicenseOpt,optimizationOptionsOpt);
     }
 
     public Solution optimizeOnlyResult(List<Position> nodePoss, List<Position> ressPoss,
