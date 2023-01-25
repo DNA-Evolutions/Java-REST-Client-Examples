@@ -20,6 +20,7 @@ import java.util.List;
 import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.RestOptimization;
+import com.dna.jopt.rest.client.model.Solution;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,6 +33,13 @@ public class RestJSONLoader {
     public static RestOptimization readRestOptimization(File src, ObjectMapper mapper) throws IOException {
 
 	return mapper.readValue(src, new TypeReference<RestOptimization>() {
+	});
+
+    }
+    
+    public static Solution readSolution(File src, ObjectMapper mapper) throws IOException {
+
+	return mapper.readValue(src, new TypeReference<Solution>() {
 	});
 
     }
