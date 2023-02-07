@@ -2,13 +2,13 @@
   "openapi" : "3.0.1",
   "info" : {
     "title" : "DNA Evolutions - JOpt.TourOptimizer",
-    "description" : "This is DNA's JOpt.TourOptimizer service. A RESTful Spring Boot application using springdoc-openapi and OpenAPI 3. JOpt.TourOpptimizer is a service that delivers route optimization and automatic scheduling features to be easily integrated into any third-party application. JOpt.TourOpptimizer encapsulates all necessary optimization functionality and provides a comprehensive REST API that offers a domain-specific optimization interface for the transportation industry. The service is stateless and does not come with graphical user interfaces, map depiction or any databases. These extensions and adjustments are supposed to be introduced by the consumer of the service while integrating it into his/her own application. The service will allow for many suitable adjustments and user-specific settings to adjust the behaviour and optimization goals (e.g. minimizing distance, maximizing resource utilization, etc.) through a comprehensive set of functions. This will enable you to gain control of the complete optimization processes.This service is based on JOpt (7.4.9-SNAPSHOT)",
+    "description" : "This is DNA's JOpt.TourOptimizer service. A RESTful Spring Boot application using springdoc-openapi and OpenAPI 3. JOpt.TourOpptimizer is a service that delivers route optimization and automatic scheduling features to be easily integrated into any third-party application. JOpt.TourOpptimizer encapsulates all necessary optimization functionality and provides a comprehensive REST API that offers a domain-specific optimization interface for the transportation industry. The service is stateless and does not come with graphical user interfaces, map depiction or any databases. These extensions and adjustments are supposed to be introduced by the consumer of the service while integrating it into his/her own application. The service will allow for many suitable adjustments and user-specific settings to adjust the behaviour and optimization goals (e.g. minimizing distance, maximizing resource utilization, etc.) through a comprehensive set of functions. This will enable you to gain control of the complete optimization processes.This service is based on JOpt (7.5.1-SNAPSHOT)",
     "contact" : {
       "name" : "DNA Evolutions GmbH",
       "url" : "https://dna-evolutions.com",
       "email" : "info@dna-evolutions.com"
     },
-    "version" : "1.1.0-SNAPSHOT"
+    "version" : "1.2.1-SNAPSHOT"
   },
   "servers" : [ {
     "url" : "/"
@@ -62,22 +62,22 @@
               }
             }
           },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Once the optimizer has started, it will return a started signal.",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Solution"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -192,22 +192,22 @@
               }
             }
           },
-          "504" : {
-            "description" : "Timeout / Optimization took too long",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Once the optimizer has finished the optimization run, it will return an OptimizationConfig JSON that contains the initial definition and the solution.",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/RestOptimization"
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Timeout / Optimization took too long",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -242,16 +242,6 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Once the optimizer has finished the optimization run, it will return a solution/result JSON.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Solution"
-                }
-              }
-            }
-          },
           "401" : {
             "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
@@ -268,6 +258,16 @@
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "Once the optimizer has finished the optimization run, it will return a solution/result JSON.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Solution"
                 }
               }
             }
@@ -431,16 +431,6 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting status",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get status triggered by the creator in fire and forget mode.",
             "content" : {
@@ -450,6 +440,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/JOptOptimizationStatus"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting status",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -514,6 +514,16 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting progress",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "Get progress triggered by the creator in fire and forget mode.",
             "content" : {
@@ -523,16 +533,6 @@
                   "items" : {
                     "$ref" : "#/components/schemas/JOptOptimizationProgress"
                   }
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting progress",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -720,6 +720,16 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
             "content" : {
@@ -727,16 +737,6 @@
                 "schema" : {
                   "type" : "string",
                   "format" : "binary"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting optimizations",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -761,6 +761,16 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
             "content" : {
@@ -768,16 +778,6 @@
                 "schema" : {
                   "type" : "string",
                   "format" : "binary"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting optimizations",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -802,6 +802,16 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
             "content" : {
@@ -809,16 +819,6 @@
                 "schema" : {
                   "type" : "string",
                   "format" : "binary"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting optimizations",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -843,6 +843,16 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimizations",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "Get Optimizations triggered by the creator in fire and forget mode.",
             "content" : {
@@ -850,16 +860,6 @@
                 "schema" : {
                   "type" : "string",
                   "format" : "binary"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting optimizations",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -1405,10 +1405,6 @@
             "type" : "boolean",
             "description" : "The onlyScheduledInCompany"
           },
-          "isSchedulableAfterWorkingHours" : {
-            "type" : "boolean",
-            "description" : "The isSchedulableAfterWorkingHours"
-          },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
             "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
@@ -1416,6 +1412,10 @@
           "isSchedulableBeforeWorkingHours" : {
             "type" : "boolean",
             "description" : "The isSchedulableBeforeWorkingHours"
+          },
+          "isSchedulableAfterWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableAfterWorkingHours"
           },
           "isTimeAdjustableAnchor" : {
             "type" : "boolean",
@@ -1574,13 +1574,17 @@
           "connectionRelatedLateMargin" : {
             "$ref" : "#/components/schemas/ConnectionRelatedLateMargin"
           },
-          "isSchedulableAfterWorkingHours" : {
+          "isForcedStayNode" : {
             "type" : "boolean",
-            "description" : "The isSchedulableAfterWorkingHours"
+            "description" : "The isForcedStayNode"
           },
           "isAutoTransformable2StartAnchor" : {
             "type" : "boolean",
             "description" : "The isAutoTransformable2StartAnchor"
+          },
+          "isOverwritingRouteStart" : {
+            "type" : "boolean",
+            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
           },
           "isOverwritingRouteTermination" : {
             "type" : "boolean",
@@ -1590,17 +1594,13 @@
             "type" : "boolean",
             "description" : "The isSchedulableBeforeWorkingHours"
           },
+          "isSchedulableAfterWorkingHours" : {
+            "type" : "boolean",
+            "description" : "The isSchedulableAfterWorkingHours"
+          },
           "isTimeAdjustableAnchor" : {
             "type" : "boolean",
             "description" : "The isTimeAdjustableAnchor"
-          },
-          "isOverwritingRouteStart" : {
-            "type" : "boolean",
-            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
-          },
-          "isForcedStayNode" : {
-            "type" : "boolean",
-            "description" : "The isForcedStayNode"
           }
         },
         "description" : "The optional pillarNode. If a node has the pillarNode attibute attached, it becomes a pillar node itself. A pillar nodes openingHour cannot be violated. If a violation cannot be avoided, the pillar will be unassigned instead of being violated."
@@ -1613,14 +1613,14 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "fuzzyVisit" : {
-            "type" : "boolean"
-          },
           "loadValue" : {
             "type" : "number",
             "format" : "double"
           },
           "request" : {
+            "type" : "boolean"
+          },
+          "fuzzyVisit" : {
             "type" : "boolean"
           },
           "id" : {
@@ -1650,13 +1650,13 @@
             "type" : "number",
             "format" : "double"
           },
-          "currentLoad" : {
-            "type" : "number",
-            "format" : "double"
-          },
           "loadPickupTime" : {
             "type" : "integer",
             "format" : "int64"
+          },
+          "currentLoad" : {
+            "type" : "number",
+            "format" : "double"
           },
           "id" : {
             "type" : "string"
@@ -1941,6 +1941,38 @@
         },
         "description" : "The mongoSettings"
       },
+      "MultiTimeWindowNodeRelation" : {
+        "required" : [ "isNeedSameVisitor", "isOverlapAllowed", "typeName" ],
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NodeRelationType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "MultiTimeWindow",
+              "default" : "MultiTimeWindow"
+            },
+            "anchorDetails" : {
+              "type" : "array",
+              "description" : "The anchorDetails. The list of anchorDetails biasing the relation.",
+              "items" : {
+                "$ref" : "#/components/schemas/RouteElementDetail"
+              }
+            },
+            "isNeedSameVisitor" : {
+              "type" : "boolean",
+              "description" : "Do we want the same visitor for all elements of the relation?"
+            },
+            "isOverlapAllowed" : {
+              "type" : "boolean",
+              "description" : "Do we want to allow overlaps - makes sense if isNeedSameVisitor is false?"
+            }
+          }
+        } ]
+      },
       "Node" : {
         "required" : [ "id", "openingHours", "type", "visitDuration" ],
         "type" : "object",
@@ -2099,15 +2131,15 @@
             "nullable" : true,
             "default" : true
           },
-          "isWaitOnEarlyArrival" : {
-            "type" : "boolean",
-            "description" : "The boolean isWaitOnEarlyArrival. In case a Resources reaches a node too early (before the start of the node's OpeningHours), the Resource can either start working direclty (false) or wait for the node to open (true, default).",
-            "nullable" : true,
-            "default" : true
-          },
           "isCausingIdleTimeCost" : {
             "type" : "boolean",
             "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created.",
+            "nullable" : true,
+            "default" : true
+          },
+          "isWaitOnEarlyArrival" : {
+            "type" : "boolean",
+            "description" : "The boolean isWaitOnEarlyArrival. In case a Resources reaches a node too early (before the start of the node's OpeningHours), the Resource can either start working direclty (false) or wait for the node to open (true, default).",
             "nullable" : true,
             "default" : true
           },
@@ -2196,16 +2228,25 @@
         } ]
       },
       "NodeRelation" : {
-        "required" : [ "masterNodeId", "relatedNodeId", "type" ],
+        "required" : [ "masterNodeId", "relatedNodeIds", "type" ],
         "type" : "object",
         "properties" : {
           "masterNodeId" : {
             "type" : "string",
             "description" : "The masterNodeId"
           },
-          "relatedNodeId" : {
-            "type" : "string",
-            "description" : "The relatedNodeId"
+          "relatedNodeIds" : {
+            "type" : "array",
+            "properties" : {
+              "empty" : {
+                "type" : "boolean"
+              }
+            },
+            "description" : "The relatedNodeIds",
+            "items" : {
+              "type" : "string",
+              "description" : "The relatedNodeIds"
+            }
           },
           "type" : {
             "$ref" : "#/components/schemas/NodeRelationType"
@@ -2232,7 +2273,8 @@
           "mapping" : {
             "TimeWindow" : "#/components/schemas/TimeWindowNodeRelation",
             "DifferentVisitor" : "#/components/schemas/DifferentVisitorNodeRelation",
-            "SameVisitor" : "#/components/schemas/SameVisitorNodeRelation"
+            "SameVisitor" : "#/components/schemas/SameVisitorNodeRelation",
+            "MultiTimeWindow" : "#/components/schemas/MultiTimeWindowNodeRelation"
           }
         }
       },
@@ -2413,7 +2455,7 @@
             "$ref" : "#/components/schemas/LocationParameters"
           }
         },
-        "description" : "The effective position of the element. In case events are used, this position is inherited."
+        "description" : "The end position of the route."
       },
       "Qualification" : {
         "required" : [ "type" ],
@@ -2443,6 +2485,33 @@
             "UKPostCodeQualification" : "#/components/schemas/UKPostCodeQualification"
           }
         }
+      },
+      "ReducedNodeEdgeConnectorItem" : {
+        "required" : [ "distance", "fromElementId", "time", "toElementId" ],
+        "type" : "object",
+        "properties" : {
+          "distance" : {
+            "type" : "string",
+            "description" : "The distance of the hook connection.",
+            "example" : "100.0 km"
+          },
+          "time" : {
+            "type" : "string",
+            "description" : "The time needed to pass the hook connection.",
+            "example" : "PT30M"
+          },
+          "fromElementId" : {
+            "type" : "string",
+            "description" : "The fromElementId defines the element where the connections starts.",
+            "example" : "MyStartElementId"
+          },
+          "toElementId" : {
+            "type" : "string",
+            "description" : "The toElementId defines the element where the connections ends.",
+            "example" : "MyToElementId"
+          }
+        },
+        "description" : "The list of hook connections"
       },
       "RequestFlexLoad" : {
         "required" : [ "typeName" ],
@@ -2729,15 +2798,15 @@
             "example" : 1.5,
             "default" : 1.0
           },
-          "isReductionTimeIncludedInTotalWorkingTime" : {
-            "type" : "boolean",
-            "description" : "The isReductionTimeIncludedInTotalWorkingTime. Use StartReductionTimeIncludeDefinition instead",
-            "nullable" : true,
-            "default" : false
-          },
           "isReductionTimeOnlyUsedForDriving" : {
             "type" : "boolean",
             "description" : "The isReductionTimeOnlyUsedForDriving. Use startReductionTimeDefinition instead.",
+            "nullable" : true,
+            "default" : false
+          },
+          "isReductionTimeIncludedInTotalWorkingTime" : {
+            "type" : "boolean",
+            "description" : "The isReductionTimeIncludedInTotalWorkingTime. Use StartReductionTimeIncludeDefinition instead",
             "nullable" : true,
             "default" : false
           }
@@ -2915,7 +2984,7 @@
           }
         },
         "example" : {
-          "ident" : "JOpt-Run-1670923233059",
+          "ident" : "JOpt-Run-1675799021330",
           "nodes" : [ {
             "id" : "Koeln",
             "type" : {
@@ -3025,10 +3094,11 @@
               "JOpt.Clustering.AutoZoneCodeClusters" : "FALSE",
               "JOpt.Clustering.AutoZoneCodeClusters.isHard" : "FALSE",
               "JOpt.Clustering.ReassignOrphanedNodes" : "TRUE",
-              "JOpt.Clustering.ResourceSplitValue" : "10",
+              "JOpt.Clustering.ResourceDutyHoursSplitValue" : "10",
+              "JOpt.Clustering.ResourceSplitValue" : "30",
               "JOpt.Clustering.ShowDebugOutput" : "FALSE",
               "JOpt.CostAssessment.suppressInactiveFinalizedRouteCosts" : "TRUE",
-              "JOpt.CostAssessment.useAverageCost" : "TRUE",
+              "JOpt.CostAssessment.useAverageCost" : "FALSE",
               "JOpt.DebugMode.NodeChecking" : "TRUE",
               "JOpt.EntityValidation.Debug" : "FALSE",
               "JOpt.FuzzyDemand" : "0",
@@ -3098,20 +3168,20 @@
           "coreBuildOptions" : {
             "buildCoreProperties" : {
               "jopt.core.maven-surefire-plugin.version" : "3.0.0-M7",
-              "jopt.core.git.commit.author.time" : "20221212-175329",
-              "jopt.core.jopt.version.number" : "7.4.9",
+              "jopt.core.git.commit.author.time" : "20230207-182443",
+              "jopt.core.jopt.version.number" : "7.5.1",
               "jopt.core.jackson-databind.version" : "2.14.1",
               "jopt.core.git.dirty" : "true",
               "jopt.core.testng.version" : "7.5",
-              "jopt.core.git.build.host" : "cac0ed70-8fcf-46bf-9ff9-6779728a8c50-nlnrx",
-              "jopt.core.git.build.time" : "20221212-182635",
+              "jopt.core.git.build.host" : "11dc3fe9-2613-4b5a-88bf-806c35fa8776-jzg9g",
+              "jopt.core.git.build.time" : "20230207-191237",
               "jopt.core.jackson-datatype-guava.version" : "2.14.1",
               "jopt.core.git.commit.user.name" : "Jens Richter",
               "jopt.core.jackson-datatype-jdk8.version" : "2.14.1",
               "jopt.core.git.local.branch.ahead" : "0",
               "jopt.core.maven-shade-plugin.version" : "3.4.1",
               "jopt.core.bson.version" : "4.8.0",
-              "jopt.core.git.closest.tag.commit.count" : "2",
+              "jopt.core.git.closest.tag.commit.count" : "16",
               "jopt.core.wagon-maven-plugin.version" : "2.0.2",
               "jopt.core.maven-deploy-plugin.version" : "3.0.0",
               "jopt.core.commons-math3.version" : "3.6.1",
@@ -3130,30 +3200,30 @@
               "jopt.core.datafactory.version" : "0.8",
               "jopt.core.commons-compress.version" : "1.22",
               "jopt.core.jackson-datatype-jsr310.version" : "2.14.1",
-              "jopt.core.build.time.utc" : "2022-12-12T18:26:32Z",
-              "jopt.core.git.commit.id.describe" : "v7.4.9-rc4_1-2-ge357e07-dirty",
+              "jopt.core.build.time.utc" : "2023-02-07T19:12:31Z",
+              "jopt.core.git.commit.id.describe" : "v7.5.0-16-g4b6eeab-dirty",
               "jopt.core.properties-maven-plugin.version" : "1.1.0",
               "jopt.core.unit-ri.version" : "1.0.3",
               "jopt.core.value.version" : "2.9.2",
               "jopt.core.git.tags" : "",
-              "jopt.core.git.commit.id" : "e357e07d9c1758d954789fd53147bb1c6be7170f",
-              "jopt.core.git.commit.id.describe-short" : "v7.4.9-rc4_1-2-dirty",
+              "jopt.core.git.commit.id" : "4b6eeab39a66f3e3a11d7d210e8c841b31764a67",
+              "jopt.core.git.commit.id.describe-short" : "v7.5.0-16-dirty",
               "jopt.core.commons-lang3.version" : "3.12.0",
               "jopt.core.maven.test.skip" : "false",
               "jopt.core.jackson-module-parameter-names.version" : "2.14.1",
               "jopt.core.maven.compiler.source" : "1.8",
               "jopt.core.git.local.branch.behind" : "0",
-              "jopt.core.git.build.number" : "2323",
-              "jopt.core.git.commit.committer.time" : "20221212-175329",
-              "jopt.core.git.build.version" : "7.4.9-SNAPSHOT",
-              "jopt.core.git.commit.id.abbrev" : "e357e07",
+              "jopt.core.git.build.number" : "2349",
+              "jopt.core.git.commit.committer.time" : "20230207-182443",
+              "jopt.core.git.build.version" : "7.5.1-SNAPSHOT",
+              "jopt.core.git.commit.id.abbrev" : "4b6eeab",
               "jopt.core.guava.version" : "31.1-jre",
               "jopt.core.swagger-annotations.version" : "2.2.7",
               "jopt.core.license-maven-plugin.version" : "2.0.0",
               "jopt.core.javafaker.version" : "1.0.2",
-              "jopt.core.git.total.commit.count" : "2993",
-              "jopt.core.git.closest.tag.name" : "v7.4.9-rc4_1",
-              "jopt.core.git.commit.time" : "20221212-175329",
+              "jopt.core.git.total.commit.count" : "3024",
+              "jopt.core.git.closest.tag.name" : "v7.5.0",
+              "jopt.core.git.commit.time" : "20230207-182443",
               "jopt.core.hamcrest.version" : "2.2",
               "jopt.core.maven-compiler-plugin.version" : "3.10.1",
               "jopt.core.proguard-maven-plugin.version" : "2.6.0",
@@ -3316,14 +3386,14 @@
               "enum" : [ "FINALIZED_PILLARFORCEARRANGER", "INACTIVE_PILLARFORCEARRANGER", "FINALIZED_ROUTE_FINALIZER", "INACTIVE_ROUTE_FINALIZER" ]
             }
           },
-          "isFinalized" : {
-            "type" : "boolean",
-            "description" : "The isFinalized. Describes if a route was undergoing finalization.",
-            "example" : false
-          },
           "isInactive" : {
             "type" : "boolean",
             "description" : "The isInactive boolean describes if a route is deactivated.",
+            "example" : false
+          },
+          "isFinalized" : {
+            "type" : "boolean",
+            "description" : "The isFinalized. Describes if a route was undergoing finalization.",
             "example" : false
           },
           "isLockedDown" : {
@@ -3335,7 +3405,7 @@
         "description" : "The routes of the solution."
       },
       "RouteElementDetail" : {
-        "required" : [ "arrivalTime", "departureTime", "durationTime", "elementId", "idleTime", "startTime", "transitionDistance", "transitionTime" ],
+        "required" : [ "arrivalTime", "departureTime", "durationTime", "elementId", "idleTime", "startTime", "transitionDistance", "transitionTime", "zoneId" ],
         "type" : "object",
         "properties" : {
           "elementId" : {
@@ -3373,6 +3443,11 @@
             "type" : "string",
             "description" : "The idleTime is the time the Visitor has to wait until a node can be served. By default idle time arrises at the node to be visited. For example, a the arrival time of a Visitor is at 7 in the morning but the node opens at 8. The Visitor has to wait for one hour at the node location until the node can be served.",
             "example" : "PT60M"
+          },
+          "zoneId" : {
+            "type" : "string",
+            "description" : "The zoneId of detail",
+            "example" : "UTC"
           },
           "whiteSpaceIdleTime" : {
             "type" : "string",
@@ -4307,7 +4382,7 @@
             "example" : 5
           }
         },
-        "description" : "The nodeViolations. The violations collected at the element/node. For example, lateViolation, early violation etc."
+        "description" : "The routeViolations. Violations that occur on route level. For example, overtime, overdistance etc."
       },
       "WorkingHours" : {
         "required" : [ "begin", "end", "zoneId" ],
@@ -4415,7 +4490,7 @@
             },
             "description" : "The list of hook connections",
             "items" : {
-              "$ref" : "#/components/schemas/b"
+              "$ref" : "#/components/schemas/ReducedNodeEdgeConnectorItem"
             }
           },
           "isAvailableForStay" : {
@@ -4503,33 +4578,6 @@
             }
           }
         } ]
-      },
-      "b" : {
-        "required" : [ "distance", "fromElementId", "time", "toElementId" ],
-        "type" : "object",
-        "properties" : {
-          "distance" : {
-            "type" : "string",
-            "description" : "The distance of the hook connection.",
-            "example" : "100.0 km"
-          },
-          "time" : {
-            "type" : "string",
-            "description" : "The time needed to pass the hook connection.",
-            "example" : "PT30M"
-          },
-          "fromElementId" : {
-            "type" : "string",
-            "description" : "The fromElementId defines the element where the connections starts.",
-            "example" : "MyStartElementId"
-          },
-          "toElementId" : {
-            "type" : "string",
-            "description" : "The toElementId defines the element where the connections ends.",
-            "example" : "MyToElementId"
-          }
-        },
-        "description" : "The list of hook connections"
       },
       "DatabaseInfoSearch" : {
         "type" : "object",
