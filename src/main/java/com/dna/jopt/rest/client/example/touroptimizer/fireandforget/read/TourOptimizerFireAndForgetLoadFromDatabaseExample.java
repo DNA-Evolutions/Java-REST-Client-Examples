@@ -1,10 +1,10 @@
-package com.dna.jopt.rest.client.example.touroptimizer.fireandforget;
+package com.dna.jopt.rest.client.example.touroptimizer.fireandforget.read;
 
 /*-
  * #%L
  * JOpt Java REST Client Examples
  * %%
- * Copyright (C) 2017 - 2022 DNA Evolutions GmbH
+ * Copyright (C) 2017 - 2023 DNA Evolutions GmbH
  * %%
  * This file is subject to the terms and conditions defined in file 'LICENSE.md',
  * which is part of this repository.
@@ -14,27 +14,25 @@ package com.dna.jopt.rest.client.example.touroptimizer.fireandforget;
  */
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller;
-import com.dna.jopt.rest.client.model.CreatorSetting;
-import com.dna.jopt.rest.client.model.ElementConnection;
-import com.dna.jopt.rest.client.model.Position;
+import com.dna.jopt.rest.client.model.DatabaseItemSearch;
+import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
-import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
 /**
- * The Class TourOptimizerExample. Optimize a list of Nodes and Resources in fire and forget mode. If the TourOptimizer is not
- * started with an active Mongo Database connection, the call will result in a 404 not found exception.
- * Connections are not provided; moreover, they will be created using haversine
- * calculations on the server-side.
+ * The Class TourOptimizerFireAndForgetLoadFromDatabaseExample. If the TourOptimizer is not started with an active
+ * Mongo Database connection, the call will result in a 404 not found exception.
+ * 
+ * Find the first Optimization that matches the criteria defined in DatabaseItemSearch.
+ * As it is mandatory to provide the database generated unique id, only one Optimization should match the criteria.
+ * 
  */
-public class TourOptimizerFireAndForgetExample {
+public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
 
     /**
      * The main method of TourOptimizerExample
@@ -54,11 +52,6 @@ public class TourOptimizerFireAndForgetExample {
 	 */
 	boolean isAzureCall = !true;
 
-	List<Position> nodePoss = TestPositionsInput.defaultSydneyNodePositions();
-	List<Position> resourcePoss = TestPositionsInput.defaultSydneyResourcePositions();
-
-	// Define the data to be used
-
 	/*
 	 * 
 	 * 
@@ -75,24 +68,14 @@ public class TourOptimizerFireAndForgetExample {
 	    tourOptimizerCaller = new TourOptimizerRestCaller(Endpoints.LOCAL_SWAGGER_TOUROPTIMIZER_URL);
 	}
 
-	/*
-	 *
-	 * Optimize
-	 *
-	 */
+	DatabaseItemSearch searchItem = new DatabaseItemSearch();
+	searchItem.setCreator("TEST_CREATOR");
+	searchItem.setId("645b5b7dc73a8250a670deb1"); // Needs to be a valid id. Either save externally, or search it first
+	searchItem.setTimeOut("PT1M");
 
-	// We simply provide empty connections => This will trigger automatic haversine
-	// distance calculations
+	RestOptimization result = tourOptimizerCaller.findOptimizationInDatabase(searchItem);
 
-	List<ElementConnection> emptyConnections = new ArrayList<>();
-	
-	CreatorSetting creatorSettings = new CreatorSetting().creator("MY_TEST_CREATOR");
-	String myOptiIdent = "MY_OPTIMIZATION";
-
-	Boolean wasStarted = tourOptimizerCaller.optimizeFireAndForget(nodePoss, resourcePoss, emptyConnections, myOptiIdent, creatorSettings,
-		Optional.of(m.get("joptlic")));
-	
-	System.out.print("wasStarted: "+wasStarted);
+	System.out.print(result);
 
     }
 
