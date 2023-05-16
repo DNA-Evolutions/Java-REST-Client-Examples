@@ -59,8 +59,8 @@ public class TourOptimizerFireAndForgetExample {
 	 */
 	boolean isAzureCall = !true;
 
-	List<Position> nodePoss = TestPositionsInput.defaultSydneyNodePositions();
-	List<Position> resourcePoss = TestPositionsInput.defaultSydneyResourcePositions();
+	List<Position> nodePoss = TestPositionsInput.defaultSmallSydneyNodePositions();
+	List<Position> resourcePoss = TestPositionsInput.defaultSmallSydneyResourcePositions();
 
 	// Define the data to be used
 
