@@ -212,6 +212,14 @@
 			<artifactId>httpclient5</artifactId>
 			<version>${httpclient.version}</version>
 		</dependency>
+		
+		<!-- for intellij -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 
