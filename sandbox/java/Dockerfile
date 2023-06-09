@@ -1,4 +1,4 @@
-FROM codercom/code-server:4.7.1
+FROM codercom/code-server:4.13.0
 
 ARG DEBIAN_FRONTEND=noninteractive 
 
