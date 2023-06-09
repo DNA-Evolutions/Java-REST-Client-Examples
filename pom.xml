@@ -1,6 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- General info -->
@@ -19,7 +18,7 @@
 
 		<swagger-annotations.version>1.6.6</swagger-annotations.version>
 		<jersey.version>2.35</jersey.version>
-		
+
 		<jackson-jaxrs-base.version>2.14.1</jackson-jaxrs-base.version>
 		<jackson-annotations.version>2.14.1</jackson-annotations.version>
 		<jackson-databind.version>2.14.1</jackson-databind.version>
@@ -28,24 +27,27 @@
 		<jackson-datatype-threetenbp.version>2.13.0-rc2</jackson-datatype-threetenbp.version>
 		<jackson-datatype-joda.version>2.14.1</jackson-datatype-joda.version>
 		<jackson-datatype-jsr310.version>2.14.1</jackson-datatype-jsr310.version>
-		
-		
+
+
 		<joda-time.version>2.12.2</joda-time.version>
 		<scribejava-apis.version>8.3.3</scribejava-apis.version>
-		
+
 		<spring-web.version>6.0.2</spring-web.version>
 		<spring-webflux.version>6.0.2</spring-webflux.version>
 		<spring-boot-starter-webflux.version>3.0.0</spring-boot-starter-webflux.version>
-				
+
 		<jsr305.version>3.0.2</jsr305.version>
 		<httpclient.version>5.2.1</httpclient.version>
 		<migbase64.version>2.2</migbase64.version>
 		<threetenbp.version>1.6.5</threetenbp.version>
-		
+
 		<!-- During build -->
 		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
 		<openapi-generator-maven-plugin.version>6.2.1</openapi-generator-maven-plugin.version>
 		
+		<!-- Fix a problem sometimes occurring using intellij -->
+		<junit.version>4.13.2</junit.version>
+
 	</properties>
 
 
@@ -205,7 +207,6 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 			<version>${spring-boot-starter-webflux.version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
