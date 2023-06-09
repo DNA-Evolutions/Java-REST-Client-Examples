@@ -35,9 +35,11 @@ ENV PASSWORD=joptrest
 
 USER coder
 
-# Install java pack extension
-# TODO versions >= code-server:4.8.0 are leading to infinite install loop
-RUN code-server --install-extension vscjava.vscode-java-pack
+# Install java pack extension 
+RUN code-server --install-extension vscjava.vscode-maven
+RUN code-server --install-extension vscjava.vscode-java-dependency
+RUN code-server --install-extension vscjava.vscode-java-debug
+RUN code-server --install-extension redhat.java
 
 WORKDIR /home/coder/project
 
