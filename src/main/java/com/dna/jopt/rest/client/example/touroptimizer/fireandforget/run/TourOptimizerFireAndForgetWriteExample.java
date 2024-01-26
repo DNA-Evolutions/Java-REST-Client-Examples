@@ -38,8 +38,15 @@ import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
  * Mongo Database connection, the call will result in a 404 not found exception.
  * Connections are not provided; moreover, they will be created using haversine
  * calculations on the server-side.
+ * 
+ * Please visit:
+ * 
+ * <a href=
+ * "https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md</a>
+ * for more information.
+ * 
  */
-public class TourOptimizerFireAndForgetExample {
+public class TourOptimizerFireAndForgetWriteExample {
 
     /**
      * The main method of TourOptimizerExample
@@ -104,6 +111,10 @@ public class TourOptimizerFireAndForgetExample {
 
 	String rawCreator = "TEST_CREATOR";
 
+	/*
+	 * Optionally -  Later on, when searching for the Optimization, you can direclty search for the hashed creator or use
+	 * the magic keyword hash: in front of the unhashed creator.
+	 */
 	boolean doHashCreatorName = false;
 
 	if (doHashCreatorName) {
@@ -117,6 +128,7 @@ public class TourOptimizerFireAndForgetExample {
 		myOptiIdent, creatorSettings, createPersistenceSetting(), Optional.of(m.get("joptlic")));
 
 	System.out.print("wasStarted: " + wasStarted);
+	System.out.print("creator: " + rawCreator);
 
     }
 

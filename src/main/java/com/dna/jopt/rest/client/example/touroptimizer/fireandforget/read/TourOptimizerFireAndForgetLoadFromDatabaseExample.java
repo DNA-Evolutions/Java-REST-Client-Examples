@@ -20,16 +20,25 @@ import com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCa
 import com.dna.jopt.rest.client.model.DatabaseItemSearch;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
+import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 
 /**
- * The Class TourOptimizerFireAndForgetLoadFromDatabaseExample. If the TourOptimizer is not started with an active
- * Mongo Database connection, the call will result in a 404 not found exception.
+ * The Class TourOptimizerFireAndForgetLoadFromDatabaseExample. If the
+ * TourOptimizer is not started with an active Mongo Database connection, the
+ * call will result in a 404 not found exception.
  * 
- * Find the first Optimization that matches the criteria defined in DatabaseItemSearch.
- * As it is mandatory to provide the database generated unique id, only one Optimization should match the criteria.
+ * Find the first Optimization that matches the criteria defined in
+ * DatabaseItemSearch. As it is mandatory to provide the database generated
+ * unique id, only one Optimization should match the criteria.
+ * 
+ * Please visit:
+ * 
+ * <a href=
+ * "https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md</a>
+ * for more information.
  * 
  */
 public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
@@ -43,7 +52,7 @@ public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
      * @throws NoSecretFileFoundException the no secret file found exception
      * @throws SecretNotFoundException    the secret not found exception
      */
-    public static void main(String[] args) throws NoSecretFileFoundException, SecretNotFoundException {
+    public static void main(String[] args) throws NoSecretFileFoundException, SecretNotFoundException, IOException {
 
 	/*
 	 * 
@@ -67,15 +76,33 @@ public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
 	} else {
 	    tourOptimizerCaller = new TourOptimizerRestCaller(Endpoints.LOCAL_SWAGGER_TOUROPTIMIZER_URL);
 	}
+	
+	
+	/*
+	 * 
+	 * 
+	 */
+	
+	String mongoId = "65b3ab6a5292b22226f525d2";
+	
+	String rawCreator = "TEST_CREATOR";
+
+	boolean doHashCreatorName = false;
+
+	if (doHashCreatorName) {
+	    rawCreator = "hash:" + rawCreator;
+	}
 
 	DatabaseItemSearch searchItem = new DatabaseItemSearch();
-	searchItem.setCreator("TEST_CREATOR");
-	searchItem.setId("645b5b7dc73a8250a670deb1"); // Needs to be a valid id. Either save externally, or search it first
+	searchItem.setCreator(rawCreator);
+	searchItem.setId(mongoId); // Needs to be a valid id. Either save externally, or search it first
 	searchItem.setTimeOut("PT1M");
 
 	RestOptimization result = tourOptimizerCaller.findOptimizationInDatabase(searchItem);
-
-	System.out.print(result);
+	
+	// For easier representation with transform the result back to JSON
+	String resultJSON = RestJSONParser.toJSONString(result, tourOptimizerCaller.getMapper());
+	System.out.println(resultJSON);
 
     }
 
