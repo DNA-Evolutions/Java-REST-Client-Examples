@@ -14,7 +14,14 @@ Explanation of keys:
 
 ## Changelog REST-Examples
 
-**v1.0.0**
+**v1.2.0**
+- Update: Update dependency versions
+- Update: Use base image for sandbox
+- Feature: Adding examples
+- Fix: Fixing broken properties model
+- Update: Update touroptimizer-spec to version 1.2.6-SNAPSHOT
+
+**v1.1.0**
 - Update: Update dependency versions
 - Update: Use JDK 17 in sandbox
 - Feature: Adding examples
