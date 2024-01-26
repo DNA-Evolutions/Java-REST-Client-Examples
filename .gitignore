@@ -5,3 +5,8 @@
 src/main/resources/secrets/secrets.json
 target/
 secrets/
+temp/
+src/main/java/com/dna/jopt/rest/client/example/excluded/
+src/main/resources/data/rsbk/
+src/test/java/com/dna/jopt/rest/client/example/rbsk/
+src/main/resources/data/germanysupportsanta/

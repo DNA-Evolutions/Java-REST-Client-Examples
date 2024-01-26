@@ -6,12 +6,14 @@
 
 	"artifactDescription": "DNA GeoCoder OpenApi Java",
 	"artifactId": "com.dna.client.geocoder ",
-	"artifactVersion": "0.0.1",
+	"artifactVersion": "0.0.2",
 	"groupId": "com.dna",
 	"dateLibrary": "java8",
 	"developerEmail": "info@dna-evolutions.com",
 	"developerName": "Dirk Maassen, Dr. Jens Richter",
 	"developerOrganization": "DNA Evolutions",
-	"developerOrganizationUrl": "https: //dna-evolutions.com"
+	"developerOrganizationUrl": "https: //dna-evolutions.com",
+	"hideGenerationTimestamp":true,
+	"useJakartaEe":true
 
 }

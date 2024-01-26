@@ -11,7 +11,7 @@
     "version" : "1.2.6-SNAPSHOT"
   },
   "servers" : [ {
-    "url" : "/"
+    "url" : "https://joptaas.azure-api.net/touroptimizer/V2"
   } ],
   "tags" : [ {
     "name" : "OptimizationServiceController",

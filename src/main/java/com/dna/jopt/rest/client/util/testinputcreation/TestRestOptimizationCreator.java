@@ -20,7 +20,6 @@ import com.dna.jopt.rest.client.model.JSONConfig;
 import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.OptimizationKeySetting;
 import com.dna.jopt.rest.client.model.OptimizationOptions;
-import com.dna.jopt.rest.client.model.OptimizationOptionsProperties;
 import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
 
@@ -71,11 +70,8 @@ public class TestRestOptimizationCreator {
 	} else {
 	    optimizationOptions = new OptimizationOptions();
 
-	    OptimizationOptionsProperties props = new OptimizationOptionsProperties();
-	    props.put("JOpt.Algorithm.PreOptimization.SA.NumIterations", "100000");
-	    props.put("JOptExitCondition.JOptGenerationCount", "10000");
-
-	    optimizationOptions.setProperties(props);
+	    optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "100000");
+	    optimizationOptions.putPropertiesItem("JOptExitCondition.JOptGenerationCount", "10000");
 	}
 
 	myOpti.setOptimizationOptions(optimizationOptions);

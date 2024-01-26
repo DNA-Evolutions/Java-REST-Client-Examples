@@ -6,12 +6,14 @@
 
 	"artifactDescription": "DNA GeoRouter OpenApi Java",
 	"artifactId": "com.dna.client.georouter ",
-	"artifactVersion": "0.0.1",
+	"artifactVersion": "0.0.2",
 	"groupId": "com.dna",
 	"dateLibrary": "java8",
 	"developerEmail": "info@dna-evolutions.com",
 	"developerName": "Dr. Jens Richter, Dirk Maassen",
 	"developerOrganization": "DNA Evolutions",
-	"developerOrganizationUrl": "https: //dna-evolutions.com"
+	"developerOrganizationUrl": "https: //dna-evolutions.com",
+	"hideGenerationTimestamp":true,
+	"useJakartaEe":true
 
 }
