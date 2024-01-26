@@ -29,10 +29,10 @@ import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
 import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
+import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator;
 import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.OpeningHours;
 import com.dna.jopt.rest.client.model.OptimizationOptions;
-import com.dna.jopt.rest.client.model.OptimizationOptionsProperties;
 
 public class PNDBakeryChainFlexLoadExample {
 
@@ -76,18 +76,18 @@ public class PNDBakeryChainFlexLoadExample {
 
 	List<ElementConnection> emptyConnections = new ArrayList<>();
 
-	
 	OptimizationOptions optimizationOptions = new OptimizationOptions();
-	
-	OptimizationOptionsProperties props = new OptimizationOptionsProperties();
-	props.put("JOpt.Algorithm.PreOptimization.SA.NumIterations", "10000");
-	props.put("JOptExitCondition.JOptGenerationCount", "1000");
-	props.put("JOptWeight.Capacity", "200");
-	
-	optimizationOptions.setProperties(props);
 
-	RestOptimization result = tourOptimizerCaller.optimize(createExampleNodes(), createExampleResources(),
-		emptyConnections, Optional.of(m.get("joptlic")), Optional.of(optimizationOptions));
+	optimizationOptions.putPropertiesItem("JOpt.Algorithm.PreOptimization.SA.NumIterations", "10000");
+	optimizationOptions.putPropertiesItem("JOptExitCondition.JOptGenerationCount", "1000");
+	optimizationOptions.putPropertiesItem("JOptWeight.Capacity", "200");
+
+	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(createExampleNodes(),
+		createExampleResources(), Optional.of(m.get("joptlic")), Optional.of(optimizationOptions));
+
+	optimization.setElementConnections(emptyConnections);
+
+	RestOptimization result = tourOptimizerCaller.optimize(optimization);
 
 	textSolutionOpt = Optional.ofNullable(result.getExtension().getTextSolution());
 
