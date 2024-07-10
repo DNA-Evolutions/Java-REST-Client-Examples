@@ -6,7 +6,7 @@
 
 	"artifactDescription": "DNA TourOptimizer OpenApi Java",
 	"artifactId": "com.dna.client.touroptimizer ",
-	"artifactVersion": "0.0.2",
+	"artifactVersion": "1.0.0",
 	"groupId": "com.dna",
 	"developerEmail": "info@dna-evolutions.com",
 	"developerName": "Dr. Jens Richter, Dirk Maassen",
