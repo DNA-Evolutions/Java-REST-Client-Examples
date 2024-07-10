@@ -127,7 +127,33 @@ After starting the container, you can open [http://localhost:8043/](http://local
 joptrest
 ```
 
-During the run of your first example file, some dependencies are downloaded, and it will take some time (below 1 minute depending on your internet connection). In case you need help, contact us.
+During the run of your first example file, some dependencies are downloaded, and it will take some time (below 1 minute depending on your internet connection). Further, all client classes are generated on the fly. Be patient, the whole process can take a few minutes. In case you need help, contact us.
+
+
+### Common problems: ###
+
+- If you see the following error:
+
+```
+Exception in thread "main" com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException: There is no secret file present in: /home/coder/project/jopt.rest.examples/secrets/secrets.json
+        at com.dna.jopt.rest.client.util.secretsmanager.SecretsManager.<init>(SecretsManager.java:73)
+        at com.dna.jopt.rest.client.util.secretsmanager.SecretsManager.<init>(SecretsManager.java:52)
+        at com.dna.jopt.rest.client.example.touroptimizer.optimize.TourOptimizerExample.main(TourOptimizerExample.java:71)
+```
+
+you did not provide a `secrets.json`. Run `SecretsCreatorExampleHelper` in the package `com.dna.jopt.rest.client.example.secretscreation` once.
+
+
+- If you see the error:
+
+```
+Error while processing. finishConnect(..) failed: Connection refused: localhost/127.0.0.1:8081
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "com.dna.jopt.rest.client.model.RestOptimization.getExtension()" because "result" is null
+        at com.dna.jopt.rest.client.example.touroptimizer.optimize.TourOptimizerExample.main(TourOptimizerExample.java:96)
+```
+
+You are trying to connect to a local JOpt server but have not adjusted the endpoint. Remember, the sandbox is a docker container and you need to connect to it via the endpoint `http://host.docker.internal:8081` instead of ~`http://localhost:8081`~. You can run `TourOptimizerSimpleLocalDockerExample` from the package `com.dna.jopt.rest.client.example.touroptimizer.dockerhosted`
+
 
 ---
 
