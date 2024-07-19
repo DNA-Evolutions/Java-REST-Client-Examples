@@ -129,6 +129,7 @@ joptrest
 
 During the run of your first example file, some dependencies are downloaded, and it will take some time (below 1 minute depending on your internet connection). Further, all client classes are generated on the fly. Be patient, the whole process can take a few minutes. In case you need help, contact us.
 
+Please visit our **[tutorial video](https://www.youtube.com/watch?v=-LT1xxzrpBE)** (approx. 3 minutes duration) hosted on YouTube on how to use our sandbox.
 
 ### Common problems: ###
 
