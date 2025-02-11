@@ -17,38 +17,38 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<maven.compiler.source>17</maven.compiler.source>
 
 		<!-- Potentially deactivate swagger annotations -->
-		<swagger-annotations.version>2.2.22</swagger-annotations.version>
+		<swagger-annotations.version>2.2.28</swagger-annotations.version>
 		
-		<jersey.version>4.0.0-M1</jersey.version>
+		<jersey.version>4.0.0-M2</jersey.version>
 
-		<jackson-jaxrs-base.version>2.17.2</jackson-jaxrs-base.version>
-		<jackson-annotations.version>2.17.2</jackson-annotations.version>
-		<jackson-databind.version>2.17.2</jackson-databind.version>
-		<jackson-jaxrs-json-provider.version>2.17.2</jackson-jaxrs-json-provider.version>
-		<jackson-datatype-joda.version>2.17.2</jackson-datatype-joda.version>
-		<jackson-datatype-jsr310.version>2.17.2</jackson-datatype-jsr310.version>
+		<jackson-jaxrs-base.version>2.18.2</jackson-jaxrs-base.version>
+		<jackson-annotations.version>2.18.2</jackson-annotations.version>
+		<jackson-databind.version>2.18.2</jackson-databind.version>
+		<jackson-jaxrs-json-provider.version>2.18.2</jackson-jaxrs-json-provider.version>
+		<jackson-datatype-joda.version>2.18.2</jackson-datatype-joda.version>
+		<jackson-datatype-jsr310.version>2.18.2</jackson-datatype-jsr310.version>
 		
-		<jackson-datatype-threetenbp.version>2.15.2</jackson-datatype-threetenbp.version>
+		<jackson-datatype-threetenbp.version>2.18.2</jackson-datatype-threetenbp.version>
 		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
-		<joda-time.version>2.12.7</joda-time.version>
+		<joda-time.version>2.13.1</joda-time.version>
 		<scribejava-apis.version>8.3.3</scribejava-apis.version>
 
-		<spring-web.version>6.1.10</spring-web.version>
-		<spring-webflux.version>6.1.10</spring-webflux.version>
-		<spring-boot-starter-webflux.version>3.3.1</spring-boot-starter-webflux.version>
+		<spring-web.version>6.2.2</spring-web.version>
+		<spring-webflux.version>6.2.2</spring-webflux.version>
+		<spring-boot-starter-webflux.version>3.4.2</spring-boot-starter-webflux.version>
 
-		<jsr305.version>3.0.2</jsr305.version>
-		<httpclient.version>5.3</httpclient.version>
+		<jsr305.version>3.0.2</jsr305.version> <!-- debracted use  SpotBugs Annotations » 4.9.0 ? -->
+		<httpclient.version>5.4.2</httpclient.version>
 		<migbase64.version>2.2</migbase64.version>
-		<threetenbp.version>1.6.9</threetenbp.version>
+		<threetenbp.version>1.7.0</threetenbp.version>
 
 		<!-- During build -->
 		<maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
-		<openapi-generator-maven-plugin.version>7.2.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.11.0</openapi-generator-maven-plugin.version>
 		
 		<!-- Fix a problem sometimes occurring using intellij -->
-		<junit.version>4.13.2</junit.version>
+		<junit.version>4.13.2</junit.version> <!-- Deprecated use junit-jupiter-api ? -->
 
 	</properties>
 
@@ -318,6 +318,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
 						</configuration>
 					</execution>
+					
 
 					<execution>
 						<id>touroptimizer</id>

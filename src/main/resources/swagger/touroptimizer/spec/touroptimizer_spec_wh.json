@@ -2,13 +2,13 @@
   "openapi" : "3.0.1",
   "info" : {
     "title" : "DNA Evolutions - JOpt.TourOptimizer",
-    "description" : "This is DNA's JOpt.TourOptimizer service. A RESTful Spring Boot application using springdoc-openapi and OpenAPI 3. JOpt.TourOpptimizer is a service that delivers route optimization and automatic scheduling features to be easily integrated into any third-party application. JOpt.TourOpptimizer encapsulates all necessary optimization functionality and provides a comprehensive REST API that offers a domain-specific optimization interface for the transportation industry. The service is stateless and does not come with graphical user interfaces, map depiction or any databases. These extensions and adjustments are supposed to be introduced by the consumer of the service while integrating it into his/her own application. The service will allow for many suitable adjustments and user-specific settings to adjust the behaviour and optimization goals (e.g. minimizing distance, maximizing resource utilization, etc.) through a comprehensive set of functions. This will enable you to gain control of the complete optimization processes.This service is based on JOpt (7.5.1-rc2-j17)",
+    "description" : "This is DNA's JOpt.TourOptimizer service. A RESTful Spring Boot application using springdoc-openapi and OpenAPI 3. JOpt.TourOptimizer is a service that delivers route optimization and automatic scheduling features to be easily integrated into any third-party application. JOpt.TourOptimizer encapsulates all necessary optimization functionality and provides a comprehensive REST API that offers a domain-specific optimization interface for the transportation industry. The service is stateless and does not come with graphical user interfaces, map depiction or any databases. These extensions and adjustments are supposed to be introduced by the consumer of the service while integrating it into his/her own application. The service will allow for many suitable adjustments and user-specific settings to adjust the behaviour and optimization goals (e.g. minimizing distance, maximizing resource utilization, etc.) through a comprehensive set of functions. This will enable you to gain control of the complete optimization processes.This service is based on JOpt (7.5.1-rc3-j17-SNAPSHOT)",
     "contact" : {
       "name" : "DNA Evolutions GmbH",
       "url" : "https://dna-evolutions.com",
       "email" : "info@dna-evolutions.com"
     },
-    "version" : "1.2.8-alpha-SNAPSHOT)"
+    "version" : "1.3.0-SNAPSHOT"
   },
   "servers" : [ {
     "url" : "https://joptaas.azure-api.net/touroptimizer/V2"
@@ -20,14 +20,14 @@
     "name" : "OptimizationHealthController",
     "description" : "Provides the basic functionality to check if Optimization endpoint is still healthy."
   }, {
+    "name" : "OptimizationFAFServiceController",
+    "description" : "OptimizationFAFServiceController is a service controller that is used as entry-point for JOpt.TourOptimizer. It runs an optimization in FAF (Fire and Forget) mode. After the optimization is done, the result is persisted via an externally provided database."
+  }, {
     "name" : "ReadDatabaseDownloadEncryptedServiceController",
     "description" : "ReadDatabaseDownloadEncryptedServiceController is a service controller that is used to read and download encrypted persisted data."
   }, {
     "name" : "ReadDatabaseDownloadServiceController",
     "description" : "ReadDatabaseDownloadServiceController is a service controller that is used to read persisted data."
-  }, {
-    "name" : "OptimizationFAFServiceController",
-    "description" : "OptimizationFAFServiceController is a service controller that is used as entry-point for JOpt.TourOptimizer. It runs an optimization in FAF (Fire and Forget) mode. After the optimization is done, the result is persited via an externally provided database."
   }, {
     "name" : "ReadDatabaseServiceController",
     "description" : "ReadDatabaseServiceController is a service controller that is used to read persisted data."
@@ -52,8 +52,8 @@
           "required" : true
         },
         "responses" : {
-          "401" : {
-            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -62,8 +62,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -182,6 +182,26 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "504" : {
             "description" : "Timeout / Optimization took too long",
             "content" : {
@@ -198,26 +218,6 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/RestOptimization"
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Unauthorized Access / License not valid / Limited Endpoint",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -242,8 +242,8 @@
           "required" : true
         },
         "responses" : {
-          "504" : {
-            "description" : "Timeout / Optimization took too long",
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during Optimization",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -272,8 +272,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during Optimization",
+          "504" : {
+            "description" : "Timeout / Optimization took too long",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -302,16 +302,6 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting solution infos",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get solution-infos triggered by the creator in fire and forget mode.",
             "content" : {
@@ -321,6 +311,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/DatabaseInfoSearchResult"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting solution infos",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -345,16 +345,6 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting optimization infos",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get optimization-infos triggered by the creator in fire and forget mode.",
             "content" : {
@@ -364,6 +354,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/DatabaseInfoSearchResult"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting optimization infos",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -431,16 +431,6 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting status",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get status triggered by the creator in fire and forget mode.",
             "content" : {
@@ -450,6 +440,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/JOptOptimizationStatus"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting status",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -514,16 +514,6 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting progress",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get progress triggered by the creator in fire and forget mode.",
             "content" : {
@@ -533,6 +523,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/JOptOptimizationProgress"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting progress",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -640,22 +640,22 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "Internal Server Error / A problem occured during requesting solutions",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "Get encrypted Solutions triggered by the creator in fire and forget mode.",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Solution"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error / A problem occured during requesting solutions",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -874,8 +874,8 @@
         "description" : "Get the health status of this endpoint.",
         "operationId" : "healthStatus",
         "responses" : {
-          "200" : {
-            "description" : "The endpoint is up and running.",
+          "503" : {
+            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -884,8 +884,8 @@
               }
             }
           },
-          "503" : {
-            "description" : "The server is in UNKNOWN, OUT_OF_SERVICE, or DOWN state.",
+          "200" : {
+            "description" : "The endpoint is up and running.",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -989,12 +989,12 @@
         }
       }
     },
-    "/api/optimize/startedSginal" : {
+    "/api/optimize/startedSignal" : {
       "get" : {
         "tags" : [ "OptimizationServiceController" ],
-        "summary" : "Emmits once an optimization started",
-        "description" : "Emmits once an optimization started",
-        "operationId" : "runStartedSginal",
+        "summary" : "Emits once an optimization started",
+        "description" : "Emits once an optimization started",
+        "operationId" : "runStartedSignal",
         "responses" : {
           "200" : {
             "description" : "successful operation",
@@ -1055,6 +1055,32 @@
               "description" : "The typeName of the object",
               "example" : "AbsoluteNodeColorMultiRouteConstraint",
               "default" : "AbsoluteNodeColorMultiRouteConstraint"
+            }
+          }
+        } ]
+      },
+      "AnyDef" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/DateDef"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "timeDefs" : {
+              "type" : "array",
+              "items" : {
+                "oneOf" : [ {
+                  "$ref" : "#/components/schemas/AnyDef"
+                }, {
+                  "$ref" : "#/components/schemas/Day"
+                }, {
+                  "$ref" : "#/components/schemas/DayMonth"
+                }, {
+                  "$ref" : "#/components/schemas/DayMonthYear"
+                }, {
+                  "$ref" : "#/components/schemas/WeekDay"
+                } ]
+              }
             }
           }
         } ]
@@ -1136,7 +1162,17 @@
             "type" : "array",
             "description" : "The timeDefinitions describe at which times, what connection should be used.",
             "items" : {
-              "$ref" : "#/components/schemas/DateDef"
+              "oneOf" : [ {
+                "$ref" : "#/components/schemas/AnyDef"
+              }, {
+                "$ref" : "#/components/schemas/Day"
+              }, {
+                "$ref" : "#/components/schemas/DayMonth"
+              }, {
+                "$ref" : "#/components/schemas/DayMonthYear"
+              }, {
+                "$ref" : "#/components/schemas/WeekDay"
+              } ]
             }
           },
           "timeMillis" : {
@@ -1158,7 +1194,7 @@
             }
           }
         },
-        "description" : "The connectionByTime defines an extension to the connection. For example, on Monday morning we need 2 hours to path a conneciton, whereas on Sunday morning we only need 1 hour."
+        "description" : "The connectionByTime defines an extension to the connection. For example, on Monday morning we need 2 hours to path a connection, whereas on Sunday morning we only need 1 hour."
       },
       "ConnectionRelatedLateMargin" : {
         "required" : [ "marginFactor", "maxMargin" ],
@@ -1223,19 +1259,35 @@
             "NodeColorMultiRouteConstraint" : "#/components/schemas/NodeColorMultiRouteConstraint",
             "AbsoluteNodeColorMultiRouteConstraint" : "#/components/schemas/AbsoluteNodeColorMultiRouteConstraint"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/ConnectedConstraint"
+        }, {
+          "$ref" : "#/components/schemas/BindingResourceConstraint"
+        }, {
+          "$ref" : "#/components/schemas/ExcludingResourceConstraint"
+        }, {
+          "$ref" : "#/components/schemas/ResourceLocationConstraint"
+        }, {
+          "$ref" : "#/components/schemas/TypeConstraint"
+        }, {
+          "$ref" : "#/components/schemas/TypeWithExpertiseConstraint"
+        }, {
+          "$ref" : "#/components/schemas/ZoneNumberConstraint"
+        }, {
+          "$ref" : "#/components/schemas/UKPostCodeConstraint"
+        }, {
+          "$ref" : "#/components/schemas/NodeColorMultiRouteConstraint"
+        }, {
+          "$ref" : "#/components/schemas/AbsoluteNodeColorMultiRouteConstraint"
+        } ]
       },
       "CoreBuildOptions" : {
         "required" : [ "buildCoreProperties" ],
         "type" : "object",
         "properties" : {
           "buildCoreProperties" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "string",
-              "description" : "The buildCoreProperties give information about the library and its version that was used for the optimization run."
-            },
-            "description" : "The buildCoreProperties give information about the library and its version that was used for the optimization run."
+            "$ref" : "#/components/schemas/ImmutableMapStringString"
           }
         },
         "description" : "The coreBuildOptions provided by the library"
@@ -1262,6 +1314,54 @@
         "discriminator" : {
           "propertyName" : "typeName"
         }
+      },
+      "Day" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/DateDef"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "from" : {
+              "$ref" : "#/components/schemas/Day"
+            },
+            "to" : {
+              "$ref" : "#/components/schemas/Day"
+            }
+          }
+        } ]
+      },
+      "DayMonth" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/DateDef"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "to" : {
+              "$ref" : "#/components/schemas/DayMonth"
+            },
+            "from" : {
+              "$ref" : "#/components/schemas/DayMonth"
+            }
+          }
+        } ]
+      },
+      "DayMonthYear" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/DateDef"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "from" : {
+              "$ref" : "#/components/schemas/DayMonthYear"
+            },
+            "to" : {
+              "$ref" : "#/components/schemas/DayMonthYear"
+            }
+          }
+        } ]
       },
       "DegradingLoadCapacity" : {
         "required" : [ "typeName" ],
@@ -1377,13 +1477,16 @@
             "type" : "string"
           }
         },
-        "description" : "The type of the connection. Usually a connection of tyoe 'Edge' is used.",
+        "description" : "The type of the connection. Usually a connection of type 'Edge' is used.",
         "discriminator" : {
           "propertyName" : "typeName",
           "mapping" : {
             "Edge" : "#/components/schemas/EdgeElementConnection"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/EdgeElementConnection"
+        } ]
       },
       "EncodedPolyline" : {
         "required" : [ "encodedPolyline", "precision" ],
@@ -1410,7 +1513,7 @@
           "type" : "object",
           "properties" : {
             "pillarNode" : {
-              "$ref" : "#/components/schemas/EventPillarNode"
+              "$ref" : "#/components/schemas/PillarType"
             },
             "typeName" : {
               "type" : "string",
@@ -1428,38 +1531,49 @@
         } ]
       },
       "EventPillarNode" : {
+        "required" : [ "typeName" ],
         "type" : "object",
-        "properties" : {
-          "attachedResourceId" : {
-            "type" : "string",
-            "description" : "The attached resourceId. A geoPillar must be visited by this resource."
-          },
-          "onlyScheduledInCompany" : {
-            "type" : "boolean",
-            "description" : "The onlyScheduledInCompany"
-          },
-          "isTimeAdjustableAnchor" : {
-            "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
-          },
-          "isSchedulableBeforeWorkingHours" : {
-            "type" : "boolean",
-            "description" : "The isSchedulableBeforeWorkingHours"
-          },
-          "isSchedulableAfterWorkingHours" : {
-            "type" : "boolean",
-            "description" : "The isSchedulableAfterWorkingHours"
-          },
-          "isOverwritingRouteTermination" : {
-            "type" : "boolean",
-            "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
-          },
-          "isExtendableEnd" : {
-            "type" : "boolean",
-            "description" : "The isExtendableEnd"
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/PillarType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "attachedResourceId" : {
+              "type" : "string",
+              "description" : "The attached resourceId. A geoPillar must be visited by this resource."
+            },
+            "onlyScheduledInCompany" : {
+              "type" : "boolean",
+              "description" : "The onlyScheduledInCompany"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "EventPillarNode",
+              "default" : "EventPillarNode"
+            },
+            "isSchedulableBeforeWorkingHours" : {
+              "type" : "boolean",
+              "description" : "The isSchedulableBeforeWorkingHours"
+            },
+            "isOverwritingRouteTermination" : {
+              "type" : "boolean",
+              "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
+            },
+            "isTimeAdjustableAnchor" : {
+              "type" : "boolean",
+              "description" : "The isTimeAdjustableAnchor"
+            },
+            "isSchedulableAfterWorkingHours" : {
+              "type" : "boolean",
+              "description" : "The isSchedulableAfterWorkingHours"
+            },
+            "isExtendableEnd" : {
+              "type" : "boolean",
+              "description" : "The isExtendableEnd"
+            }
           }
-        },
-        "description" : "The pillarNode"
+        } ]
       },
       "ExcludingResourceConstraint" : {
         "required" : [ "resources", "typeName" ],
@@ -1577,7 +1691,7 @@
               "$ref" : "#/components/schemas/Position"
             },
             "pillarNode" : {
-              "$ref" : "#/components/schemas/GeoPillarNode"
+              "$ref" : "#/components/schemas/PillarType"
             },
             "typeName" : {
               "type" : "string",
@@ -1589,49 +1703,60 @@
         } ]
       },
       "GeoPillarNode" : {
+        "required" : [ "typeName" ],
         "type" : "object",
-        "properties" : {
-          "attachedResourceId" : {
-            "type" : "string",
-            "description" : "The attached resourceId. A geoPillar must be visited by this resource."
-          },
-          "onlyScheduledInCompany" : {
-            "type" : "boolean",
-            "description" : "The onlyScheduledInCompany"
-          },
-          "connectionRelatedLateMargin" : {
-            "$ref" : "#/components/schemas/ConnectionRelatedLateMargin"
-          },
-          "isTimeAdjustableAnchor" : {
-            "type" : "boolean",
-            "description" : "The isTimeAdjustableAnchor"
-          },
-          "isSchedulableBeforeWorkingHours" : {
-            "type" : "boolean",
-            "description" : "The isSchedulableBeforeWorkingHours"
-          },
-          "isSchedulableAfterWorkingHours" : {
-            "type" : "boolean",
-            "description" : "The isSchedulableAfterWorkingHours"
-          },
-          "isOverwritingRouteStart" : {
-            "type" : "boolean",
-            "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
-          },
-          "isOverwritingRouteTermination" : {
-            "type" : "boolean",
-            "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
-          },
-          "isAutoTransformable2StartAnchor" : {
-            "type" : "boolean",
-            "description" : "The isAutoTransformable2StartAnchor"
-          },
-          "isForcedStayNode" : {
-            "type" : "boolean",
-            "description" : "The isForcedStayNode"
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/PillarType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "attachedResourceId" : {
+              "type" : "string",
+              "description" : "The attached resourceId. A geoPillar must be visited by this resource."
+            },
+            "onlyScheduledInCompany" : {
+              "type" : "boolean",
+              "description" : "The onlyScheduledInCompany"
+            },
+            "connectionRelatedLateMargin" : {
+              "$ref" : "#/components/schemas/ConnectionRelatedLateMargin"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "GeoPillarNode",
+              "default" : "GeoPillarNode"
+            },
+            "isForcedStayNode" : {
+              "type" : "boolean",
+              "description" : "The isForcedStayNode"
+            },
+            "isSchedulableBeforeWorkingHours" : {
+              "type" : "boolean",
+              "description" : "The isSchedulableBeforeWorkingHours"
+            },
+            "isOverwritingRouteStart" : {
+              "type" : "boolean",
+              "description" : "The boolean isOverwritingRouteStart. Instead of using the default start element of the route, the geoPillar will be used as so-called startAnchor."
+            },
+            "isOverwritingRouteTermination" : {
+              "type" : "boolean",
+              "description" : "The boolean isOverwritingRouteTermination. Instead of using the default termination element of the route, the geoPillar will be used as so-called endAnchor."
+            },
+            "isTimeAdjustableAnchor" : {
+              "type" : "boolean",
+              "description" : "The isTimeAdjustableAnchor"
+            },
+            "isAutoTransformable2StartAnchor" : {
+              "type" : "boolean",
+              "description" : "The isAutoTransformable2StartAnchor"
+            },
+            "isSchedulableAfterWorkingHours" : {
+              "type" : "boolean",
+              "description" : "The isSchedulableAfterWorkingHours"
+            }
           }
-        },
-        "description" : "The optional pillarNode. If a node has the pillarNode attibute attached, it becomes a pillar node itself. A pillar nodes openingHour cannot be violated. If a violation cannot be avoided, the pillar will be unassigned instead of being violated."
+        } ]
       },
       "ILoad" : {
         "required" : [ "typeName" ],
@@ -1641,14 +1766,14 @@
             "type" : "integer",
             "format" : "int32"
           },
+          "request" : {
+            "type" : "boolean"
+          },
           "loadValue" : {
             "type" : "number",
             "format" : "double"
           },
           "fuzzyVisit" : {
-            "type" : "boolean"
-          },
-          "request" : {
             "type" : "boolean"
           },
           "id" : {
@@ -1668,13 +1793,24 @@
             "SupplyFlexLoad" : "#/components/schemas/SupplyFlexLoad",
             "RequestFlexLoad" : "#/components/schemas/RequestFlexLoad"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/SimpleLoad"
+        }, {
+          "$ref" : "#/components/schemas/UnloadAllLoad"
+        }, {
+          "$ref" : "#/components/schemas/MixedFlexLoad"
+        }, {
+          "$ref" : "#/components/schemas/SupplyFlexLoad"
+        }, {
+          "$ref" : "#/components/schemas/RequestFlexLoad"
+        } ]
       },
       "ILoadCapacity" : {
         "required" : [ "typeName" ],
         "type" : "object",
         "properties" : {
-          "currentLoad" : {
+          "maximalIndividualLoadCapacity" : {
             "type" : "number",
             "format" : "double"
           },
@@ -1682,7 +1818,7 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "maximalIndividualLoadCapacity" : {
+          "currentLoad" : {
             "type" : "number",
             "format" : "double"
           },
@@ -1700,7 +1836,12 @@
             "SimpleLoadCapacity" : "#/components/schemas/SimpleLoadCapacity",
             "DegradingLoadCapacity" : "#/components/schemas/DegradingLoadCapacity"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/SimpleLoadCapacity"
+        }, {
+          "$ref" : "#/components/schemas/DegradingLoadCapacity"
+        } ]
       },
       "INodeDepot" : {
         "required" : [ "typeName" ],
@@ -1712,16 +1853,16 @@
               "$ref" : "#/components/schemas/ILoad"
             }
           },
-          "hasFlexLoad" : {
-            "type" : "boolean",
-            "writeOnly" : true
+          "depotId" : {
+            "type" : "string"
           },
           "hasTimedLoads" : {
             "type" : "boolean",
             "writeOnly" : true
           },
-          "depotId" : {
-            "type" : "string"
+          "hasFlexLoad" : {
+            "type" : "boolean",
+            "writeOnly" : true
           },
           "typeName" : {
             "type" : "string"
@@ -1733,7 +1874,10 @@
           "mapping" : {
             "SimpleNodeDepot" : "#/components/schemas/SimpleNodeDepot"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/SimpleNodeDepot"
+        } ]
       },
       "IResourceDepot" : {
         "required" : [ "typeName" ],
@@ -1744,6 +1888,10 @@
             "items" : {
               "$ref" : "#/components/schemas/ILoadCapacity"
             }
+          },
+          "maximalTotalCapacity" : {
+            "type" : "number",
+            "format" : "double"
           },
           "depotId" : {
             "type" : "string"
@@ -1756,10 +1904,6 @@
             },
             "writeOnly" : true
           },
-          "maximalTotalCapacity" : {
-            "type" : "number",
-            "format" : "double"
-          },
           "typeName" : {
             "type" : "string"
           }
@@ -1770,7 +1914,10 @@
           "mapping" : {
             "SimpleResourceDepot" : "#/components/schemas/SimpleResourceDepot"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/SimpleResourceDepot"
+        } ]
       },
       "IdleEventNode" : {
         "required" : [ "typeName" ],
@@ -1781,7 +1928,7 @@
           "type" : "object",
           "properties" : {
             "pillarNode" : {
-              "$ref" : "#/components/schemas/EventPillarNode"
+              "$ref" : "#/components/schemas/PillarType"
             },
             "masterId" : {
               "type" : "string",
@@ -1804,6 +1951,14 @@
             }
           }
         } ]
+      },
+      "ImmutableMapStringString" : {
+        "type" : "object",
+        "additionalProperties" : {
+          "type" : "string",
+          "description" : "The properties of the Optimization run. For example, the number of iterations for the Optimization run or the weight for certain Optimization goals can be defined."
+        },
+        "description" : "The properties of the Optimization run. For example, the number of iterations for the Optimization run or the weight for certain Optimization goals can be defined."
       },
       "IntegerMultiConstraintHelperItem" : {
         "required" : [ "pairs" ],
@@ -2021,7 +2176,7 @@
           "constraintAliasId" : {
             "type" : "string",
             "description" : "The constraintAliasId. If set is used during constraint assessment instead of using the normal id.",
-            "example" : "MyNode"
+            "example" : "MyNodeXXX"
           },
           "type" : {
             "$ref" : "#/components/schemas/NodeType"
@@ -2147,15 +2302,9 @@
             "nullable" : true,
             "default" : false
           },
-          "isStayNode" : {
+          "isCausingIdleTimeCost" : {
             "type" : "boolean",
-            "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'.",
-            "nullable" : true,
-            "default" : false
-          },
-          "isWorkNode" : {
-            "type" : "boolean",
-            "description" : "The isWorkNode",
+            "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created.",
             "nullable" : true,
             "default" : true
           },
@@ -2165,11 +2314,11 @@
             "nullable" : true,
             "default" : true
           },
-          "isCausingIdleTimeCost" : {
+          "isWaitOnEarlyArrivalFirstNode" : {
             "type" : "boolean",
-            "description" : "The boolean isCausingIdleTimeCost. By default, waiting at a node to open is creating idle time cost. As the Optimizer tries to reduce cost, it will also try to reschedule nodes if idle time cost is generated. In some problem setups (especially problems of the kind: Low node count, high WorkingHours availability) it may be desired to keep the position of the nodes, even though idle time is created.",
+            "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true.",
             "nullable" : true,
-            "default" : true
+            "default" : false
           },
           "isOpeningHoursIncludesDuration" : {
             "type" : "boolean",
@@ -2177,9 +2326,15 @@
             "nullable" : true,
             "default" : true
           },
-          "isWaitOnEarlyArrivalFirstNode" : {
+          "isWorkNode" : {
             "type" : "boolean",
-            "description" : "The boolean isWaitOnEarlyArrivalFirstNode. In case a Resources reaches the FIRST node of a route too early (before the start of the node's OpeningHours),\"\r\n            + \" the Resource can either start working direclty (true) or wait for the FIRST node to open (false, default). This setting only takes action if isWaitOnEarlyArrival is set to true.",
+            "description" : "The isWorkNode",
+            "nullable" : true,
+            "default" : true
+          },
+          "isStayNode" : {
+            "type" : "boolean",
+            "description" : "The boolean isStayNode defines if a node is capable to be a stay node. A stay node overrides the route termination element of a route, and the route start element of the next route and is  used in the context of 'overnight-stays'.",
             "nullable" : true,
             "default" : false
           }
@@ -2293,7 +2448,16 @@
             "SameVisitor" : "#/components/schemas/SameVisitorNodeRelation",
             "MultiTimeWindow" : "#/components/schemas/MultiTimeWindowNodeRelation"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/TimeWindowNodeRelation"
+        }, {
+          "$ref" : "#/components/schemas/DifferentVisitorNodeRelation"
+        }, {
+          "$ref" : "#/components/schemas/SameVisitorNodeRelation"
+        }, {
+          "$ref" : "#/components/schemas/MultiTimeWindowNodeRelation"
+        } ]
       },
       "NodeType" : {
         "required" : [ "typeName" ],
@@ -2311,7 +2475,14 @@
             "Event" : "#/components/schemas/EventNode",
             "IdleEvent" : "#/components/schemas/IdleEventNode"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/GeoNode"
+        }, {
+          "$ref" : "#/components/schemas/EventNode"
+        }, {
+          "$ref" : "#/components/schemas/IdleEventNode"
+        } ]
       },
       "OfferedNode" : {
         "type" : "object",
@@ -2439,6 +2610,28 @@
         },
         "description" : "The status of the optimization"
       },
+      "PillarType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The PillarType that can contain different Pillars",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "GeoPillarNode" : "#/components/schemas/GeoPillarNode",
+            "EventPillarNode" : "#/components/schemas/EventPillarNode"
+          }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/GeoPillarNode"
+        }, {
+          "$ref" : "#/components/schemas/EventPillarNode"
+        } ]
+      },
       "PluginSetting" : {
         "required" : [ "isActive", "jsonSetting", "pluginName" ],
         "type" : "object",
@@ -2529,7 +2722,16 @@
             "ZoneNumberQualification" : "#/components/schemas/ZoneNumberQualification",
             "UKPostCodeQualification" : "#/components/schemas/UKPostCodeQualification"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/TypeQualification"
+        }, {
+          "$ref" : "#/components/schemas/TypeWithExpertiseQualification"
+        }, {
+          "$ref" : "#/components/schemas/ZoneNumberQualification"
+        }, {
+          "$ref" : "#/components/schemas/UKPostCodeQualification"
+        } ]
       },
       "ReducedNodeEdgeConnectorItem" : {
         "required" : [ "distance", "fromElementId", "time", "toElementId" ],
@@ -2905,7 +3107,10 @@
           "mapping" : {
             "Capacity" : "#/components/schemas/CapacityResource"
           }
-        }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/CapacityResource"
+        } ]
       },
       "ResourceWithPriority" : {
         "required" : [ "priority", "resourceId" ],
@@ -2994,7 +3199,7 @@
           }
         },
         "example" : {
-          "ident" : "JOpt-Run-1730370048904",
+          "ident" : "JOpt-Run-1738927330498",
           "nodes" : [ {
             "id" : "Koeln",
             "type" : {
@@ -3045,6 +3250,34 @@
               "zoneId" : "Europe/Berlin"
             } ],
             "visitDuration" : "PT20M",
+            "priority" : 1
+          }, {
+            "id" : "Cologne Pillar",
+            "type" : {
+              "position" : {
+                "latitude" : 50.9333,
+                "longitude" : 6.95,
+                "locationId" : "Cologne Pillar"
+              },
+              "pillarNode" : {
+                "onlyScheduledInCompany" : false,
+                "typeName" : "GeoPillarNode",
+                "isForcedStayNode" : false,
+                "isSchedulableBeforeWorkingHours" : false,
+                "isOverwritingRouteStart" : false,
+                "isOverwritingRouteTermination" : false,
+                "isTimeAdjustableAnchor" : false,
+                "isAutoTransformable2StartAnchor" : false,
+                "isSchedulableAfterWorkingHours" : false
+              },
+              "typeName" : "Geo"
+            },
+            "openingHours" : [ {
+              "begin" : "2020-03-06T07:00:00Z",
+              "end" : "2020-03-06T16:00:00Z",
+              "zoneId" : "Europe/Berlin"
+            } ],
+            "visitDuration" : "PT9H",
             "priority" : 1
           } ],
           "resources" : [ {
@@ -3197,53 +3430,72 @@
           "coreBuildOptions" : {
             "buildCoreProperties" : {
               "jopt.core.maven-surefire-plugin.version" : "3.2.2",
-              "jopt.core.jopt.version.number" : "7.5.1-rc2-j17",
-              "jopt.core.jackson-databind.version" : "2.18.0-rc1",
+              "jopt.core.git.commit.author.time" : "20250205-123606",
+              "jopt.core.jopt.version.number" : "7.5.1-rc3-j17",
+              "jopt.core.jackson-databind.version" : "2.18.2",
+              "jopt.core.git.dirty" : "true",
               "jopt.core.testng.version" : "7.10.2",
-              "jopt.core.proguard.core.version" : "9.1.6",
-              "jopt.core.jackson-datatype-guava.version" : "2.18.0-rc1",
-              "jopt.core.jackson-datatype-jdk8.version" : "2.18.0-rc1",
+              "jopt.core.proguard.core.version" : "9.1.7",
+              "jopt.core.git.build.host" : "DESKTOP-Q9BKOAA",
+              "jopt.core.git.build.time" : "20250207-112143",
+              "jopt.core.jackson-datatype-guava.version" : "2.18.2",
+              "jopt.core.git.commit.user.name" : "Jens Richter",
+              "jopt.core.jackson-datatype-jdk8.version" : "2.18.2",
+              "jopt.core.git.local.branch.ahead" : "0",
               "jopt.core.maven-shade-plugin.version" : "3.5.1",
-              "jopt.core.bson.version" : "5.1.4",
+              "jopt.core.bson.version" : "5.2.1",
+              "jopt.core.git.closest.tag.commit.count" : "37",
               "jopt.core.wagon-maven-plugin.version" : "2.0.2",
               "jopt.core.maven-deploy-plugin.version" : "3.1.1",
               "jopt.core.commons-math3.version" : "3.6.1",
-              "jopt.core.maven.compiler.target" : "17",
               "jopt.core.jacoco-maven-plugin.version" : "0.8.8",
+              "jopt.core.maven.compiler.target" : "17",
               "jopt.core.unit-api.version" : "2.1",
               "jopt.core.jopt.version.postfix" : "-SNAPSHOT",
               "jopt.core.project.build.sourceEncoding" : "cp1252",
               "jopt.core.wagon-ssh.version" : "3.5.2",
+              "jopt.core.git.branch" : "j17",
               "jopt.core.git-commit-id-plugin.version" : "4.9.10",
               "jopt.core.maven-javadoc-plugin.version" : "3.6.3",
-              "jopt.core.log4j-core.version" : "2.24.0",
+              "jopt.core.log4j-core.version" : "2.24.3",
               "jopt.core.maven-source-plugin.version" : "3.3.0",
-              "jopt.core.spring-data-mongodb.version" : "4.3.4",
+              "jopt.core.spring-data-mongodb.version" : "4.4.2",
               "jopt.core.datafactory.version" : "0.8",
-              "jopt.core.java.version.target" : "17",
               "jopt.core.commons-compress.version" : "1.27.1",
-              "jopt.core.jackson-datatype-jsr310.version" : "2.18.0-rc1",
-              "jopt.core.build.time.utc" : "2024-10-30T17:51:14Z",
+              "jopt.core.java.version.target" : "17",
+              "jopt.core.jackson-datatype-jsr310.version" : "2.18.2",
+              "jopt.core.build.time.utc" : "2025-02-07T11:21:38Z",
+              "jopt.core.git.commit.id.describe" : "v7.5.1-rc2-j17-37-g2887d80-dirty",
               "jopt.core.java.version.source" : "17",
               "jopt.core.properties-maven-plugin.version" : "1.1.0",
               "jopt.core.unit-ri.version" : "1.0.3",
               "jopt.core.value.version" : "2.10.1",
-              "jopt.core.poi.version" : "5.3.0",
+              "jopt.core.git.tags" : "",
+              "jopt.core.git.commit.id" : "2887d805ca2dec4e2ca4afd2bd8c71b09d31887f",
+              "jopt.core.poi.version" : "5.4.0",
+              "jopt.core.git.commit.id.describe-short" : "v7.5.1-rc2-j17-37-dirty",
               "jopt.core.commons-lang3.version" : "3.17.0",
               "jopt.core.maven.test.skip" : "false",
-              "jopt.core.jackson-module-parameter-names.version" : "2.18.0-rc1",
+              "jopt.core.jackson-module-parameter-names.version" : "2.18.2",
               "jopt.core.maven.compiler.source" : "17",
-              "jopt.core.guava.version" : "33.3.0-jre",
-              "jopt.core.swagger-annotations.version" : "2.2.23",
+              "jopt.core.git.local.branch.behind" : "0",
+              "jopt.core.git.commit.committer.time" : "20250205-123606",
+              "jopt.core.git.build.version" : "7.5.1-rc3-j17-SNAPSHOT",
+              "jopt.core.git.commit.id.abbrev" : "2887d80",
+              "jopt.core.guava.version" : "33.4.0-jre",
+              "jopt.core.swagger-annotations.version" : "2.2.28",
               "jopt.core.license-maven-plugin.version" : "2.0.0",
               "jopt.core.jts-core.version" : "1.20.0",
               "jopt.core.javafaker.version" : "1.0.2",
-              "jopt.core.poi-ooxml.version" : "5.3.0",
+              "jopt.core.git.total.commit.count" : "3293",
+              "jopt.core.git.closest.tag.name" : "v7.5.1-rc2-j17",
+              "jopt.core.poi-ooxml.version" : "5.4.0",
+              "jopt.core.git.commit.time" : "20250205-123606",
               "jopt.core.hamcrest.version" : "3.0",
               "jopt.core.maven-compiler-plugin.version" : "3.12.1",
               "jopt.core.proguard-maven-plugin.version" : "2.6.0",
-              "jopt.core.proguard.base.version" : "7.5.0",
-              "jopt.core.rxjava.version" : "3.1.9",
+              "jopt.core.proguard.base.version" : "7.6.1",
+              "jopt.core.rxjava.version" : "3.1.10",
               "jopt.core.wagon-ftp.version" : "3.5.2"
             }
           },
@@ -3252,7 +3504,7 @@
               "creator" : "PUBLIC_CREATOR"
             },
             "keySetting" : {
-              "jsonLicense" : "{\r\n\t\"version\": \"1.1\",\r\n\t\"identifier\": \"PUBLIC-\",\r\n\t\"description\": \"Key provided to for evaluation purpose from DNA evolutions GmbH.\",\r\n\t\"contact\": \"www.dna-evolutions.com\",\r\n\t\"modules\": [{\r\n\t\t\t\"Module:\": \"Elements\",\r\n\t\t\t\"max\": 15\r\n\t\t}, {\r\n\t\t\t\"Module:\": \"Date\",\r\n\t\t\t\"creation\": \"2021-05-25\",\r\n\t\t\t\"due\": \"2027-05-25\"\r\n\t\t}\r\n\t],\r\n\t\"key\": \"PUBLIC-bc799ef350fe9841c1354736d8f863cb85bac88cefd19960c1\"\r\n}"
+              "jsonLicense" : "{\r\n  \"version\" : \"1.2\",\r\n  \"identifier\" : \"PUBLIC-\",\r\n  \"description\" : \"Key provided to for evaluation purpose from DNA evolutions GmbH.\",\r\n  \"contact\" : \"www.dna-evolutions.com\",\r\n  \"modules\" : [ {\r\n    \"Module:\" : \"Elements\",\r\n    \"max\" : 20\r\n  }, {\r\n    \"Module:\" : \"Date\",\r\n    \"creation\" : \"2025-02-04\",\r\n    \"due\" : \"2029-01-28\"\r\n  } ],\r\n  \"key\" : \"PUBLIC-e6dc49fcbda599f45638d39794fd4f99b062c2ae96864e37ef\"\r\n}"
             },
             "persistenceSetting" : {
               "mongoSettings" : {
@@ -3394,14 +3646,14 @@
             "description" : "The isLockedDown. Describes if a route was undergoing lockdown.",
             "example" : false
           },
-          "isFinalized" : {
-            "type" : "boolean",
-            "description" : "The isFinalized. Describes if a route was undergoing finalization.",
-            "example" : false
-          },
           "isInactive" : {
             "type" : "boolean",
             "description" : "The isInactive boolean describes if a route is deactivated.",
+            "example" : false
+          },
+          "isFinalized" : {
+            "type" : "boolean",
+            "description" : "The isFinalized. Describes if a route was undergoing finalization.",
             "example" : false
           }
         },
@@ -3530,7 +3782,7 @@
             "description" : "The isUnlocatedIdleTime changes the representation of the idle time in the solution. By default idle time is located at the node to be waited for. If true, the idle time becomes unlocated. For example, a Visitor can reach a node (that opens at 8) by 7 in the morning. If the idle time is unlocated, the arrival time  will be represented as 8 (instead of 7). "
           }
         },
-        "description" : "The elementDetails. The list of details describing the route schedule."
+        "description" : "The RouteElementDetail describes the solution for a certain node element."
       },
       "RouteHeader" : {
         "required" : [ "cost", "distance", "idleTime", "isAlternateDestination", "isClosed", "prodTime", "routeViolations", "termiDistance", "termiTime", "time", "tranTime" ],
@@ -4205,33 +4457,37 @@
       "UKPostCode" : {
         "required" : [ "areaIdent", "typeName" ],
         "type" : "object",
-        "properties" : {
-          "areaIdent" : {
-            "type" : "string",
-            "description" : "The areaIdent"
-          },
-          "districtIdentOpt" : {
-            "type" : "integer",
-            "description" : "The districtIdentOpt",
-            "format" : "int32"
-          },
-          "sectorIdentOpt" : {
-            "type" : "integer",
-            "description" : "The sectorIdentOpt",
-            "format" : "int32"
-          },
-          "unitIdentOpt" : {
-            "type" : "string",
-            "description" : "The unitIdentOpt"
-          },
-          "typeName" : {
-            "type" : "string",
-            "description" : "The typeName of the object",
-            "example" : "UKPostCode",
-            "default" : "UKPostCode"
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ZoneCodeType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "areaIdent" : {
+              "type" : "string",
+              "description" : "The areaIdent"
+            },
+            "districtIdentOpt" : {
+              "type" : "integer",
+              "description" : "The districtIdentOpt",
+              "format" : "int32"
+            },
+            "sectorIdentOpt" : {
+              "type" : "integer",
+              "description" : "The sectorIdentOpt",
+              "format" : "int32"
+            },
+            "unitIdentOpt" : {
+              "type" : "string",
+              "description" : "The unitIdentOpt"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "UKPostCode",
+              "default" : "UKPostCode"
+            }
           }
-        },
-        "description" : "The myExtraCodes"
+        } ]
       },
       "UKPostCodeConstraint" : {
         "required" : [ "typeName", "zoneCodes" ],
@@ -4245,7 +4501,7 @@
               "type" : "array",
               "description" : "The zoneCodes",
               "items" : {
-                "$ref" : "#/components/schemas/UKPostCode"
+                "$ref" : "#/components/schemas/ZoneCodeType"
               }
             },
             "typeName" : {
@@ -4266,13 +4522,13 @@
           "type" : "object",
           "properties" : {
             "myCode" : {
-              "$ref" : "#/components/schemas/UKPostCode"
+              "$ref" : "#/components/schemas/ZoneCodeType"
             },
             "myExtraCodes" : {
               "type" : "array",
               "description" : "The myExtraCodes",
               "items" : {
-                "$ref" : "#/components/schemas/UKPostCode"
+                "$ref" : "#/components/schemas/ZoneCodeType"
               }
             },
             "typeName" : {
@@ -4347,6 +4603,22 @@
           }
         },
         "description" : "The routeViolations. Violations that occur on route level. For example, overtime, overdistance etc."
+      },
+      "WeekDay" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/DateDef"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "from" : {
+              "$ref" : "#/components/schemas/WeekDay"
+            },
+            "to" : {
+              "$ref" : "#/components/schemas/WeekDay"
+            }
+          }
+        } ]
       },
       "WorkingHours" : {
         "required" : [ "begin", "end", "zoneId" ],
@@ -4467,23 +4739,49 @@
         },
         "description" : "The list of non-overlapping workingHours."
       },
+      "ZoneCodeType" : {
+        "required" : [ "typeName" ],
+        "type" : "object",
+        "properties" : {
+          "typeName" : {
+            "type" : "string"
+          }
+        },
+        "description" : "The myCode",
+        "discriminator" : {
+          "propertyName" : "typeName",
+          "mapping" : {
+            "ZoneNumber" : "#/components/schemas/ZoneNumber",
+            "UKPostCode" : "#/components/schemas/UKPostCode"
+          }
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/ZoneNumber"
+        }, {
+          "$ref" : "#/components/schemas/UKPostCode"
+        } ]
+      },
       "ZoneNumber" : {
         "required" : [ "typeName", "zoneNumber" ],
         "type" : "object",
-        "properties" : {
-          "zoneNumber" : {
-            "type" : "integer",
-            "description" : "The zoneNumber",
-            "format" : "int32"
-          },
-          "typeName" : {
-            "type" : "string",
-            "description" : "The typeName of the object",
-            "example" : "ZoneNumber",
-            "default" : "ZoneNumber"
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ZoneCodeType"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "zoneNumber" : {
+              "type" : "integer",
+              "description" : "The zoneNumber",
+              "format" : "int32"
+            },
+            "typeName" : {
+              "type" : "string",
+              "description" : "The typeName of the object",
+              "example" : "ZoneNumber",
+              "default" : "ZoneNumber"
+            }
           }
-        },
-        "description" : "The myExtraCodes"
+        } ]
       },
       "ZoneNumberConstraint" : {
         "required" : [ "typeName", "zoneCodes" ],
@@ -4497,7 +4795,7 @@
               "type" : "array",
               "description" : "The zoneCodes",
               "items" : {
-                "$ref" : "#/components/schemas/ZoneNumber"
+                "$ref" : "#/components/schemas/ZoneCodeType"
               }
             },
             "typeName" : {
@@ -4518,13 +4816,13 @@
           "type" : "object",
           "properties" : {
             "myCode" : {
-              "$ref" : "#/components/schemas/ZoneNumber"
+              "$ref" : "#/components/schemas/ZoneCodeType"
             },
             "myExtraCodes" : {
               "type" : "array",
               "description" : "The myExtraCodes",
               "items" : {
-                "$ref" : "#/components/schemas/ZoneNumber"
+                "$ref" : "#/components/schemas/ZoneCodeType"
               }
             },
             "typeName" : {

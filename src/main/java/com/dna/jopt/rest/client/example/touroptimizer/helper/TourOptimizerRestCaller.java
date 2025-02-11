@@ -290,9 +290,9 @@ public class TourOptimizerRestCaller {
     public void attachToStreams() {
 
 	if (biConsumer != null) {
-	    geoOptimizerApi.runStartedSginal().subscribe(b -> biConsumer.accept(geoOptimizerApi, b));
+	    geoOptimizerApi.runStartedSignal().subscribe(b -> biConsumer.accept(geoOptimizerApi, b));
 	} else {
-	    geoOptimizerApi.runStartedSginal().subscribe(b -> DEFAULT_STREAM_CONSUMER.accept(geoOptimizerApi, b));
+	    geoOptimizerApi.runStartedSignal().subscribe(b -> DEFAULT_STREAM_CONSUMER.accept(geoOptimizerApi, b));
 	}
 
     }

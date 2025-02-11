@@ -1068,19 +1068,7 @@
           "properties" : {
             "timeDefs" : {
               "type" : "array",
-              "items" : {
-                "oneOf" : [ {
-                  "$ref" : "#/components/schemas/AnyDef"
-                }, {
-                  "$ref" : "#/components/schemas/Day"
-                }, {
-                  "$ref" : "#/components/schemas/DayMonth"
-                }, {
-                  "$ref" : "#/components/schemas/DayMonthYear"
-                }, {
-                  "$ref" : "#/components/schemas/WeekDay"
-                } ]
-              }
+              "items" : { }
             }
           }
         } ]
@@ -1161,19 +1149,7 @@
           "timeDefinitions" : {
             "type" : "array",
             "description" : "The timeDefinitions describe at which times, what connection should be used.",
-            "items" : {
-              "oneOf" : [ {
-                "$ref" : "#/components/schemas/AnyDef"
-              }, {
-                "$ref" : "#/components/schemas/Day"
-              }, {
-                "$ref" : "#/components/schemas/DayMonth"
-              }, {
-                "$ref" : "#/components/schemas/DayMonthYear"
-              }, {
-                "$ref" : "#/components/schemas/WeekDay"
-              } ]
-            }
+            "items" : { }
           },
           "timeMillis" : {
             "type" : "array",
@@ -1259,28 +1235,7 @@
             "NodeColorMultiRouteConstraint" : "#/components/schemas/NodeColorMultiRouteConstraint",
             "AbsoluteNodeColorMultiRouteConstraint" : "#/components/schemas/AbsoluteNodeColorMultiRouteConstraint"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/ConnectedConstraint"
-        }, {
-          "$ref" : "#/components/schemas/BindingResourceConstraint"
-        }, {
-          "$ref" : "#/components/schemas/ExcludingResourceConstraint"
-        }, {
-          "$ref" : "#/components/schemas/ResourceLocationConstraint"
-        }, {
-          "$ref" : "#/components/schemas/TypeConstraint"
-        }, {
-          "$ref" : "#/components/schemas/TypeWithExpertiseConstraint"
-        }, {
-          "$ref" : "#/components/schemas/ZoneNumberConstraint"
-        }, {
-          "$ref" : "#/components/schemas/UKPostCodeConstraint"
-        }, {
-          "$ref" : "#/components/schemas/NodeColorMultiRouteConstraint"
-        }, {
-          "$ref" : "#/components/schemas/AbsoluteNodeColorMultiRouteConstraint"
-        } ]
+        }
       },
       "CoreBuildOptions" : {
         "required" : [ "buildCoreProperties" ],
@@ -1483,10 +1438,7 @@
           "mapping" : {
             "Edge" : "#/components/schemas/EdgeElementConnection"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/EdgeElementConnection"
-        } ]
+        }
       },
       "EncodedPolyline" : {
         "required" : [ "encodedPolyline", "precision" ],
@@ -1793,18 +1745,7 @@
             "SupplyFlexLoad" : "#/components/schemas/SupplyFlexLoad",
             "RequestFlexLoad" : "#/components/schemas/RequestFlexLoad"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/SimpleLoad"
-        }, {
-          "$ref" : "#/components/schemas/UnloadAllLoad"
-        }, {
-          "$ref" : "#/components/schemas/MixedFlexLoad"
-        }, {
-          "$ref" : "#/components/schemas/SupplyFlexLoad"
-        }, {
-          "$ref" : "#/components/schemas/RequestFlexLoad"
-        } ]
+        }
       },
       "ILoadCapacity" : {
         "required" : [ "typeName" ],
@@ -1836,12 +1777,7 @@
             "SimpleLoadCapacity" : "#/components/schemas/SimpleLoadCapacity",
             "DegradingLoadCapacity" : "#/components/schemas/DegradingLoadCapacity"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/SimpleLoadCapacity"
-        }, {
-          "$ref" : "#/components/schemas/DegradingLoadCapacity"
-        } ]
+        }
       },
       "INodeDepot" : {
         "required" : [ "typeName" ],
@@ -1874,10 +1810,7 @@
           "mapping" : {
             "SimpleNodeDepot" : "#/components/schemas/SimpleNodeDepot"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/SimpleNodeDepot"
-        } ]
+        }
       },
       "IResourceDepot" : {
         "required" : [ "typeName" ],
@@ -1914,10 +1847,7 @@
           "mapping" : {
             "SimpleResourceDepot" : "#/components/schemas/SimpleResourceDepot"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/SimpleResourceDepot"
-        } ]
+        }
       },
       "IdleEventNode" : {
         "required" : [ "typeName" ],
@@ -2448,16 +2378,7 @@
             "SameVisitor" : "#/components/schemas/SameVisitorNodeRelation",
             "MultiTimeWindow" : "#/components/schemas/MultiTimeWindowNodeRelation"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/TimeWindowNodeRelation"
-        }, {
-          "$ref" : "#/components/schemas/DifferentVisitorNodeRelation"
-        }, {
-          "$ref" : "#/components/schemas/SameVisitorNodeRelation"
-        }, {
-          "$ref" : "#/components/schemas/MultiTimeWindowNodeRelation"
-        } ]
+        }
       },
       "NodeType" : {
         "required" : [ "typeName" ],
@@ -2475,14 +2396,7 @@
             "Event" : "#/components/schemas/EventNode",
             "IdleEvent" : "#/components/schemas/IdleEventNode"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/GeoNode"
-        }, {
-          "$ref" : "#/components/schemas/EventNode"
-        }, {
-          "$ref" : "#/components/schemas/IdleEventNode"
-        } ]
+        }
       },
       "OfferedNode" : {
         "type" : "object",
@@ -2625,12 +2539,7 @@
             "GeoPillarNode" : "#/components/schemas/GeoPillarNode",
             "EventPillarNode" : "#/components/schemas/EventPillarNode"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/GeoPillarNode"
-        }, {
-          "$ref" : "#/components/schemas/EventPillarNode"
-        } ]
+        }
       },
       "PluginSetting" : {
         "required" : [ "isActive", "jsonSetting", "pluginName" ],
@@ -2722,16 +2631,7 @@
             "ZoneNumberQualification" : "#/components/schemas/ZoneNumberQualification",
             "UKPostCodeQualification" : "#/components/schemas/UKPostCodeQualification"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/TypeQualification"
-        }, {
-          "$ref" : "#/components/schemas/TypeWithExpertiseQualification"
-        }, {
-          "$ref" : "#/components/schemas/ZoneNumberQualification"
-        }, {
-          "$ref" : "#/components/schemas/UKPostCodeQualification"
-        } ]
+        }
       },
       "ReducedNodeEdgeConnectorItem" : {
         "required" : [ "distance", "fromElementId", "time", "toElementId" ],
@@ -3107,10 +3007,7 @@
           "mapping" : {
             "Capacity" : "#/components/schemas/CapacityResource"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/CapacityResource"
-        } ]
+        }
       },
       "ResourceWithPriority" : {
         "required" : [ "priority", "resourceId" ],
@@ -4754,12 +4651,7 @@
             "ZoneNumber" : "#/components/schemas/ZoneNumber",
             "UKPostCode" : "#/components/schemas/UKPostCode"
           }
-        },
-        "oneOf" : [ {
-          "$ref" : "#/components/schemas/ZoneNumber"
-        }, {
-          "$ref" : "#/components/schemas/UKPostCode"
-        } ]
+        }
       },
       "ZoneNumber" : {
         "required" : [ "typeName", "zoneNumber" ],
