@@ -1926,7 +1926,7 @@
         } ]
       },
       "HeuristicOptimizationAlgorithmConfig" : {
-        "required" : [ "algorithm", "simulatedAnnealingOverrideNumIterationsValue" ],
+        "required" : [ "algorithm"],
         "type" : "object",
         "properties" : {
           "algorithm" : {
