@@ -1,5 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- General info -->
@@ -17,35 +20,40 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<maven.compiler.source>17</maven.compiler.source>
 
 		<!-- Potentially deactivate swagger annotations -->
-		<swagger-annotations.version>2.2.28</swagger-annotations.version>
+		<swagger-annotations.version>2.2.42</swagger-annotations.version>
 		
-		<jersey.version>4.0.0-M2</jersey.version>
-
-		<jackson-jaxrs-base.version>2.18.2</jackson-jaxrs-base.version>
-		<jackson-annotations.version>2.18.2</jackson-annotations.version>
-		<jackson-databind.version>2.18.2</jackson-databind.version>
-		<jackson-jaxrs-json-provider.version>2.18.2</jackson-jaxrs-json-provider.version>
-		<jackson-datatype-joda.version>2.18.2</jackson-datatype-joda.version>
-		<jackson-datatype-jsr310.version>2.18.2</jackson-datatype-jsr310.version>
+		<jersey.version>4.0.2</jersey.version>
 		
+		
+		<jackson-annotations.version>2.21</jackson-annotations.version>
 		<jackson-datatype-threetenbp.version>2.18.2</jackson-datatype-threetenbp.version>
-		<jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+		
+		<jackson-default.version>2.21.0</jackson-default.version>
+		<jackson-jaxrs-base.version>${jackson-default.version}</jackson-jaxrs-base.version>
+		<jackson-databind.version>${jackson-default.version}</jackson-databind.version>
+		<jackson-jaxrs-json-provider.version>${jackson-default.version}</jackson-jaxrs-json-provider.version>
+		<jackson-datatype-joda.version>${jackson-default.version}</jackson-datatype-joda.version>
+		<jackson-datatype-jsr310.version>${jackson-default.version}</jackson-datatype-jsr310.version>
+		
+		
+		
+		<jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
 
-		<joda-time.version>2.13.1</joda-time.version>
+		<joda-time.version>2.14.0</joda-time.version>
 		<scribejava-apis.version>8.3.3</scribejava-apis.version>
 
-		<spring-web.version>6.2.2</spring-web.version>
-		<spring-webflux.version>6.2.2</spring-webflux.version>
-		<spring-boot-starter-webflux.version>3.4.2</spring-boot-starter-webflux.version>
+		<spring-web.version>6.2.15</spring-web.version>
+		<spring-webflux.version>6.2.15</spring-webflux.version>
+		<spring-boot-starter-webflux.version>3.5.10</spring-boot-starter-webflux.version>
 
-		<jsr305.version>3.0.2</jsr305.version> <!-- debracted use  SpotBugs Annotations » 4.9.0 ? -->
-		<httpclient.version>5.4.2</httpclient.version>
+		<jsr305.version>3.0.2</jsr305.version> <!-- deprecated use  SpotBugs Annotations » 4.9.0 ? -->
+		<httpclient.version>5.6</httpclient.version>
 		<migbase64.version>2.2</migbase64.version>
-		<threetenbp.version>1.7.0</threetenbp.version>
+		<threetenbp.version>1.7.2</threetenbp.version>
 
 		<!-- During build -->
-		<maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
-		<openapi-generator-maven-plugin.version>7.11.0</openapi-generator-maven-plugin.version>
+		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+		<openapi-generator-maven-plugin.version>7.19.0</openapi-generator-maven-plugin.version>
 		
 		<!-- Fix a problem sometimes occurring using intellij -->
 		<junit.version>4.13.2</junit.version> <!-- Deprecated use junit-jupiter-api ? -->
@@ -228,13 +236,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>5.3.0</version>
+			<version>5.5.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>5.3.0</version>
+			<version>5.5.1</version>
 			<scope>test</scope>
 		</dependency>
 
