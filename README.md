@@ -16,14 +16,18 @@ This repository is part of our JOpt-REST-Suite. It provides examples of how to s
 - JOpt-GeoCoder based on JOpt-Core and <a href="https://github.com/pelias/pelias" target="_blank">Pelias</a> (available via Azure)
 - JOpt-RoutePlanner based on JOpt-Core and <a href="https://github.com/valhalla/valhalla" target="_blank">Valhalla</a>  (available via Azure)
 
+A detailed documentation is available in our <a href="https://dna-evolutions.com/docs/learn-and-explore/rest/rest_client_touroptimizer" target="_blank">Documentation Hub</a>.
+
 You can find an extensive collection of examples for the core library in our <a href="https://github.com/DNA-Evolutions/Java-TourOptimizer-Examples" target="_blank">Java-TourOptimizer-Examples repository</a>. Please let us know if you need help to port an example and run it by a REST-Service.
 
 The service can be called via an API-Key using our Microsoft Azure-Kubernetes Infrastructure. If you are interested in hosting our JOpt-REST-GeoCoder and JOpt-REST-GeoRouter products in your environment, please get in touch with us.
 
 All our RESTful Services utilise <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html" target="_blank">Spring WebFlux</a> and <a href="https://swagger.io/" target="_blank">Swagger</a>. Internally the Java version of TourOptimizer is used. Indeed all specifications for the different services are derived from the core library, leading to guaranteed compatibility between all three services.
 
-<a href="https://dna-evolutions.com/" target="_blank"><img src="https://docs.dna-evolutions.com/indexres/dna-evolutions-product-infographic-jopt-cloud-integration-highres.svg" width="600"
+<a href="https://dna-evolutions.com/" target="_blank"><img src="https://www.dna-evolutions.com/images/docs/home/Part_Product_Overview.svg" width="90%"
 title="DNA-Evolutions Integration" alt="DNA-Evolutions Integration"></a>
+
+
 
 ### JOpt-GeoCoder
 Forward-/Reverse geocode Addresses or Positions.
@@ -160,17 +164,29 @@ You are trying to connect to a local JOpt server but have not adjusted the endpo
 
 # Further Documentation, Contact and Links
 
-- Further documentation 	- <a href="https://docs.dna-evolutions.com" target="_blank">docs.dna-evolutions.com</a>
-- Special features 	- <a href="https://docs.dna-evolutions.com/overview_docs/special_features/Special_Features.html" target="_blank">Overview of special features</a>
-- Our official repository 	- <a href="https://public.repo.dna-evolutions.com" target="_blank">public.repo.dna-evolutions.com</a>
+## Docs and Website
+- Our website - <a href="https://www.dna-evolutions.com" target="_blank">www.dna-evolutions.com</a>
+- Documentations Hub 	- <a href="https://www.dna-evolutions.com/docs/getting-started" target="_blank">dna-evolutions.com/docs/getting-started</a>
+- Special features 	- <a href="https://dna-evolutions.com/docs/learn-and-explore/special/special_features" target="_blank">Overview of special features</a>
 - Our official JavaDocs 		- <a href="https://public.javadoc.dna-evolutions.com" target="_blank">public.javadoc.dna-evolutions.com</a>
-- Our YouTube channel - <a href="https://www.youtube.com/channel/UCzfZjJLp5Rrk7U2UKsOf8Fw" target="_blank">DNA Tutorials</a>
-- Documentation - <a href="https://docs.dna-evolutions.com/rest/touroptimizer/rest_touroptimizer.html" target="_blank">DNA's RESTful Spring-TourOptimizer in Docker </a>
-- Our DockerHub channel - <a href="https://hub.docker.com/u/dnaevolutions" target="_blank">DNA DockerHub</a>
+- REST and interactive testing 		- <a href="https://dna-evolutions.com/api/" target="_blank">https://dna-evolutions.com/api/</a>
+
+## DNA Evolution Portal
+
+Get an extended free license designed for small businesses and customers looking to evaluate our features (sign-in required):
+- DNA Evolutions portal 	- <a href="https://www.dna-evolutions.com/portal" target="_blank">https://www.dna-evolutions.com/portal</a>
+
+## Registry etc.
+- Our official nexus repository 	- <a href="https://nexus.dna-evolutions.net" target="_blank">nexus.dna-evolutions.net</a>
+
+## Social
 - Our LinkedIn channel - <a href="https://www.linkedin.com/company/dna-evolutions/" target="_blank">DNA LinkedIn</a>
+- Our DockerHub channel - <a href="https://hub.docker.com/u/dnaevolutions" target="_blank">DNA DockerHub</a>
+- Our Sourceforge channel - <a href="https://sourceforge.net/software/product/JOpt.TourOptimizer/?pk_campaign=badge&amp;pk_source=vendor" target="_blank">DNA SourceForge</a>
+- Our YouTube channel - <a href="https://www.youtube.com/channel/UCzfZjJLp5Rrk7U2UKsOf8Fw" target="_blank">DNA Tutorials</a>
 
 
-If you need any help, please contact us via our company website <a href="https://www.dna-evolutions.com" target="_blank">www.dna-evolutions.com</a> or write an email to <a href="mailto:info@dna-evolutions.com">info@dna-evolutions.com</a>.
+If you need any help, please contact us via our company website <a href="https://www.dna-evolutions.com/contact" target="_blank">www.dna-evolutions.com/contact</a>.
 
 
 ---
@@ -180,7 +196,7 @@ Originally, JOpt is a flexible routing optimization-engine written in Java, allo
 
 Click, to open our video:
 
-<a href="https://www.youtube.com/watch?v=U4mDQGnZGZs" target="_blank"><img src="https://dna-evolutions.com/wp-content/uploads/2021/02/joptIntrox169_small.png" width="500"
+<a href="https://www.youtube.com/watch?v=U4mDQGnZGZs" target="_blank"><img src="https://dna-evolutions.com/images/docs/home/jopt_intro_prev.gif" width="600"
 title="Introduction Video for DNA's JOpt" alt="Introduction Video for DNA's JOpt"></a>
 
 ---
