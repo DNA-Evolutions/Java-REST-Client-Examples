@@ -23,6 +23,19 @@ import com.dna.jopt.rest.client.model.OptimizationOptions;
 import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
 
+/**
+ * Factory for assembling a ready-to-submit {@link com.dna.jopt.rest.client.model.RestOptimization}
+ * from lists of {@link com.dna.jopt.rest.client.model.Node}s and
+ * {@link com.dna.jopt.rest.client.model.Resource}s.
+ *
+ * <p>The {@link #defaultTouroptimizerTestInput} methods wire up default optimization options
+ * (SA pre-optimization iterations, generation count), a 2-hour timeout, and embed a license
+ * key via {@link com.dna.jopt.rest.client.model.OptimizationKeySetting}. The built-in
+ * {@link #PUBLIC_JSON_LICENSE} constant provides an evaluation license limited to 20 elements.</p>
+ *
+ * @see TestElementsCreator
+ * @see TestPositionsInput
+ */
 public class TestRestOptimizationCreator {
 
     private TestRestOptimizationCreator() {

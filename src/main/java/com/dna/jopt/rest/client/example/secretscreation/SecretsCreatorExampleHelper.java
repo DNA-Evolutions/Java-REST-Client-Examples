@@ -24,7 +24,25 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretFileAl
 import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator;
 
 /**
- * The Class SecretsCreatorExampleHelper.
+ * Bootstrap helper that creates the {@code secrets/secrets.json} file required by all examples.
+ *
+ * <p>Run this class once before running any optimization example. It writes a JSON map
+ * with two entries:</p>
+ * <ul>
+ *   <li>{@code "azure"} &ndash; your DNA Evolutions Azure API subscription key (leave as
+ *       placeholder if running locally only).</li>
+ *   <li>{@code "joptlic"} &ndash; the JOpt license JSON. Defaults to
+ *       {@link com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator#PUBLIC_JSON_LICENSE},
+ *       a free evaluation license limited to 20 elements.</li>
+ * </ul>
+ *
+ * <p>The file is written via
+ * {@link com.dna.jopt.rest.client.util.secretsmanager.SecretsManager#saveSecretsMap} and will
+ * fail with a
+ * {@link com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretFileAlreadyPresentException}
+ * if it already exists, to prevent accidental overwrites.</p>
+ *
+ * @see com.dna.jopt.rest.client.util.secretsmanager.SecretsManager
  */
 public class SecretsCreatorExampleHelper {
 

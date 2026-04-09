@@ -24,6 +24,21 @@ import com.dna.jopt.rest.client.model.EncodedPolyline;
 import com.dna.jopt.rest.client.model.Position;
 
 
+/**
+ * Exports encoded polyline shapes to KML (Keyhole Markup Language) format for
+ * visualization in Google Earth or similar geospatial tools.
+ *
+ * <p>Each shape is rendered as a color-coded {@code <LineString>} placemark with
+ * start/end push-pin icons. The encoded polyline strings are decoded using the
+ * Google polyline algorithm (precision 1&times;10<sup>6</sup>) and written to an
+ * {@link java.io.OutputStream}.</p>
+ *
+ * <p>This exporter works with raw encoded polyline strings. For exporting a full
+ * {@link com.dna.jopt.rest.client.model.Solution} with route-level detail, use
+ * {@link RestSolutionKMLExporter} instead.</p>
+ *
+ * @see RestSolutionKMLExporter
+ */
 public class KMLPolyLineExporter {
 
     private static final String URL_RES = "http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png";

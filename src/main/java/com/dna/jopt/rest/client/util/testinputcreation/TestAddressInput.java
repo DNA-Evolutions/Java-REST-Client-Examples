@@ -18,6 +18,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.dna.jopt.rest.client.model.GeoAddress;
 
+/**
+ * Provides pre-built {@link com.dna.jopt.rest.client.model.GeoAddress} lists for
+ * geocoding examples and tests.
+ *
+ * <p>Includes address sets for two regions:</p>
+ * <ul>
+ *   <li><b>Sydney, Australia</b> &ndash; node addresses (structured and label-only variants)
+ *       and resource addresses in the greater Sydney / Camden area.</li>
+ *   <li><b>Germany</b> &ndash; node addresses across Cologne, Essen, Aachen, etc. and a
+ *       resource address in Bonn.</li>
+ * </ul>
+ *
+ * <p>Node location IDs are automatically prefixed with {@code "NODE-"} and resource IDs
+ * with {@code "RES-"} so they can be matched unambiguously.</p>
+ *
+ * @see TestPositionsInput
+ */
 public final class TestAddressInput {
 
 
@@ -180,22 +197,22 @@ public final class TestAddressInput {
 
 	List<GeoAddress> adds = new ArrayList<>();
 
-	adds.add(new GeoAddress().city("Düsseldorf").streetname("Königsallee").housenumber("71").postalcode("40215")
+	adds.add(new GeoAddress().city("Dï¿½sseldorf").streetname("Kï¿½nigsallee").housenumber("71").postalcode("40215")
 		.locationId("Duessldorf Location"));
 
-	adds.add(new GeoAddress().city("Köln").postalcode("50667").locationId("Cologne Location"));
+	adds.add(new GeoAddress().city("Kï¿½ln").postalcode("50667").locationId("Cologne Location"));
 
-	adds.add(new GeoAddress().city("Essen").streetname("Kreuzeskirchstraße").housenumber("25").postalcode("45127")
+	adds.add(new GeoAddress().city("Essen").streetname("Kreuzeskirchstraï¿½e").housenumber("25").postalcode("45127")
 		.locationId("Essen Location"));
 
-	adds.add(new GeoAddress().city("Düsseldorf").streetname("Rollandstraße").locationId("Duessldorf Location 2"));
+	adds.add(new GeoAddress().city("Dï¿½sseldorf").streetname("Rollandstraï¿½e").locationId("Duessldorf Location 2"));
 
-	adds.add(new GeoAddress().city("Wuppertal").streetname("Herzogstraße").locationId("Wuppertal Location"));
+	adds.add(new GeoAddress().city("Wuppertal").streetname("Herzogstraï¿½e").locationId("Wuppertal Location"));
 
 	adds.add(new GeoAddress().city("Leverkusen").streetname("Hitdorfer Str.").housenumber("270").postalcode("51371")
 		.locationId("Hitdorf Location"));
 
-	adds.add(new GeoAddress().city("Aachen").streetname("Mauerstraße").locationId("Aachen Location"));
+	adds.add(new GeoAddress().city("Aachen").streetname("Mauerstraï¿½e").locationId("Aachen Location"));
 
 	return adds;
     }
@@ -203,7 +220,7 @@ public final class TestAddressInput {
     public static List<GeoAddress> defaultGermanyResourceAddresses() {
 	List<GeoAddress> adds = new ArrayList<>();
 
-	adds.add(new GeoAddress().city("Bonn").streetname("Dorotheenstraße").housenumber("135").postalcode("53111")
+	adds.add(new GeoAddress().city("Bonn").streetname("Dorotheenstraï¿½e").housenumber("135").postalcode("53111")
 		.locationId("Bonn Location"));
 
 	return adds;

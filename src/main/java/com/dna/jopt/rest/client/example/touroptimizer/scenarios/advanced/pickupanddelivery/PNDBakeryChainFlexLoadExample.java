@@ -34,6 +34,26 @@ import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.OpeningHours;
 import com.dna.jopt.rest.client.model.OptimizationOptions;
 
+/**
+ * Advanced scenario: Pickup-and-Delivery with flexible supply loads for a bakery chain.
+ *
+ * <p>Models a delivery network where trucks pick up bread from supply nodes (bakeries) and
+ * deliver to store nodes (retail locations). Uses:</p>
+ * <ul>
+ *   <li>{@link com.dna.jopt.rest.client.model.SupplyFlexLoad} on supply nodes &ndash; flexible
+ *       supply that can provide variable amounts of goods.</li>
+ *   <li>{@link com.dna.jopt.rest.client.model.SimpleLoad} on store nodes &ndash; fixed demand
+ *       requests with fuzzy visit support.</li>
+ *   <li>{@link com.dna.jopt.rest.client.model.SimpleLoadCapacity} on resources &ndash;
+ *       truck capacity constraints (max 20 units).</li>
+ * </ul>
+ *
+ * <p>The optimization weighs capacity constraints heavily ({@code JOptWeight.Capacity=200})
+ * to prioritize fulfilling delivery requests. Two trucks (Cologne, Aachen) serve six stores
+ * and two supply nodes in the German NRW region.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.optimize.TourOptimizerExample
+ */
 public class PNDBakeryChainFlexLoadExample {
 
     public static void main(String[] args) throws IOException, NoSecretFileFoundException, SecretNotFoundException {

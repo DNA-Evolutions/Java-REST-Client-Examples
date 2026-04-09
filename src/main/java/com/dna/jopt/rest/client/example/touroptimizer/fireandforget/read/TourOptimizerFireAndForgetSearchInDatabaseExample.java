@@ -27,20 +27,22 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFile
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 
 /**
- * 
- * The Class TourOptimizerFireAndForgetSearchInDatabaseExample. If the
- * TourOptimizer is not started with an active Mongo Database connection, the
- * call will result in a 404 not found exception.
- * 
- * Find all Optimizations metadata that matches the criteria defined in
- * DatabaseInfoSearch.
- * 
- * Please visit:
- * 
- * <a href=
- * "https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md</a>
- * for more information.
- * 
+ * Demonstrates searching for optimization job metadata in the database.
+ *
+ * <p>Uses a {@link com.dna.jopt.rest.client.model.DatabaseInfoSearch} to filter stored
+ * optimizations by creator, ident, date range, and other criteria via
+ * {@link com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller#findOptimizationInfosInDatabase}.
+ * Returns a list of {@link com.dna.jopt.rest.client.model.DatabaseInfoSearchResult} containing
+ * metadata (not the full optimization data). The {@code ident} field is user-defined and does
+ * <em>not</em> need to be unique; use the database-generated {@code id} to load specific results.</p>
+ *
+ * <p>The creator name supports the {@code "hash:"} prefix for searching by hashed creator identity.</p>
+ *
+ * <p><b>Requires</b> TourOptimizer started with an active MongoDB connection. See
+ * <a href="https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">TourOptimizerWithDatabase.md</a>.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.fireandforget.run.TourOptimizerFireAndForgetWriteExample
+ * @see com.dna.jopt.rest.client.example.touroptimizer.fireandforget.read.TourOptimizerFireAndForgetLoadFromDatabaseExample
  */
 public class TourOptimizerFireAndForgetSearchInDatabaseExample {
 
@@ -93,6 +95,8 @@ public class TourOptimizerFireAndForgetSearchInDatabaseExample {
 	DatabaseInfoSearch searchItem = new DatabaseInfoSearch();
 
 	String rawCreator = "TEST_CREATOR";
+	
+	String xTenantId = TourOptimizerRestCaller.DEFAULT_XTENANT_ID;
 
 	boolean doHashCreatorName = false;
 
@@ -101,7 +105,7 @@ public class TourOptimizerFireAndForgetSearchInDatabaseExample {
 	}
 	searchItem.creator(rawCreator);
 
-	List<DatabaseInfoSearchResult> result = tourOptimizerCaller.findOptimizationInfosInDatabase(searchItem);
+	List<DatabaseInfoSearchResult> result = tourOptimizerCaller.findOptimizationInfosInDatabase(xTenantId, searchItem);
 
 	// For easier representation with transform the result back to JSON - No result? Execute TourOptimizerFireAndForgetWriteExample.
 	// Further check that creator string is correct.

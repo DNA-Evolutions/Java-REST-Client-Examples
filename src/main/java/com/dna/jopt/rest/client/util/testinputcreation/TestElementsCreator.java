@@ -28,6 +28,20 @@ import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.WorkingHours;
 
+/**
+ * Factory for creating default {@link com.dna.jopt.rest.client.model.Node} and
+ * {@link com.dna.jopt.rest.client.model.Resource} instances from
+ * {@link com.dna.jopt.rest.client.model.Position} objects.
+ *
+ * <p>Nodes are created as {@link com.dna.jopt.rest.client.model.GeoNode} types with a
+ * default 30-minute visit duration, priority 1, and five days of opening hours (08:00 - 20:00,
+ * Europe/Berlin). Resources are created as
+ * {@link com.dna.jopt.rest.client.model.CapacityResource} types with 12-hour max working time,
+ * 1200 km max distance, and matching five-day working hours.</p>
+ *
+ * @see TestPositionsInput
+ * @see TestRestOptimizationCreator
+ */
 public class TestElementsCreator {
 
     private TestElementsCreator() {

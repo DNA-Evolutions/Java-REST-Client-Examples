@@ -31,14 +31,21 @@ import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
-import com.dna.jopt.rest.touroptimizer.client.api.OptimizationServiceControllerApi;
+import com.dna.jopt.rest.touroptimizer.client.api.StreamApi;
 
 /**
- * The Class TourOptimizerCustomStreamAttachExample. Optimize a list of Nodes
- * and Resources. Connections are not provided; moreover, they will be created
- * using haversine calculations on the server-side. Further, we attach a custom
- * stream-subscription via a BiConsumer function for receiving information like
- * current optimization progress.
+ * Demonstrates how to attach a custom stream subscription to receive real-time
+ * optimization progress, status, errors, and warnings during a synchronous run.
+ *
+ * <p>Instead of relying on the default stream consumer built into
+ * {@link com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller},
+ * this example defines a custom {@link java.util.function.BiConsumer} and passes it via
+ * {@link com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller#setStreamConsumer}.
+ * The custom consumer subscribes to the four SSE (Server-Sent Events) streams exposed by the
+ * {@link com.dna.jopt.rest.touroptimizer.client.api.StreamApi} and prefixes all output with
+ * "Custom" to distinguish it from the default output.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller#DEFAULT_STREAM_CONSUMER
  */
 public class TourOptimizerCustomStreamAttachExample {
 
@@ -58,7 +65,7 @@ public class TourOptimizerCustomStreamAttachExample {
 	 * Modify me
 	 * 
 	 */
-	boolean isAzureCall = true;
+	boolean isAzureCall = false;
 	boolean isSave2JSON = true;
 
 	List<Position> nodePoss = TestPositionsInput.defaultSydneyNodePositions();
@@ -83,17 +90,35 @@ public class TourOptimizerCustomStreamAttachExample {
 	}
 
 	// Define a custom biConsumer for streams like progress
-	BiConsumer<OptimizationServiceControllerApi, Boolean> myBiConsumer = (api, b) -> {
+	BiConsumer<StreamApi, String> myBiConsumer = (api, runId) -> {
 
-	    api.progress()
-		    .subscribe(pr -> System.out.println(" Custom: " + pr.getCallerId() + ", " + pr.getCurProgress()));
+		System.out.println("Custom subscribing to default streams...");
+		
 
-	    api.status().subscribe(s -> System.out.println(" Custom: " + s.getMessage()));
+		api.streamProgress(runId)
+		    .subscribe(
+		        pr  -> System.out.println(" Custom PROGRESS: " + pr.getCallerId() + ", " + pr.getCurProgress()),
+		        err -> System.err.println(" Custom PROGRESS ERROR: " + err.getMessage() + " / " + err.getClass().getName())
+		    );
 
-	    api.error().subscribe(e -> System.out.println(" Custom: " + e.getMessage()));
+		api.streamStatus(runId)
+		    .subscribe(
+		        s   -> System.out.println(" Custom STATUS: " + s.getMessage()),
+		        err -> System.err.println(" Custom STATUS ERROR: " + err.getMessage())
+		    );
 
-	    api.warning().subscribe(w -> System.out.println(" Custom: " + w.getMessage()));
-	};
+		api.streamErrors(runId)
+		    .subscribe(
+		        s   -> System.out.println(" Custom ERRORS: " + s.getMessage()),
+		        err -> System.err.println(" Custom ERRORS ERROR: " + err.getMessage())
+		    );
+		
+		api.streamWarnings(runId)
+		    .subscribe(
+		        s   -> System.out.println(" Custom WARNINGS: " + s.getMessage()),
+		        err -> System.err.println(" Custom WARNINGS ERROR: " + err.getMessage())
+		    );
+	    };
 
 	// Once the started signal is received the biConsumer will be accepted
 	tourOptimizerCaller.setStreamConsumer(myBiConsumer);

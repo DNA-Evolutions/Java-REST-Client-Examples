@@ -13,6 +13,19 @@ package com.dna.jopt.rest.client.util.testinputcreation;
  * #L%
  */
 
+/**
+ * Provides pre-built JSON strings containing {@link com.dna.jopt.rest.client.model.ElementConnection}
+ * data for the Sydney test scenario.
+ *
+ * <p>The constant {@link #SYDNEY_CONNECTION_JSON_TEST_INPUT} holds a full connection matrix
+ * (distance and travel time) between the default Sydney node and resource positions. These
+ * connections can be deserialized via
+ * {@link com.dna.jopt.rest.client.util.io.json.RestJSONLoader#readConnections(String, com.fasterxml.jackson.databind.ObjectMapper)}
+ * and passed to the optimizer instead of relying on server-side haversine calculations.</p>
+ *
+ * @see TestPositionsInput
+ * @see TestElementsCreator
+ */
 public class TestConnectionInput {
     
     

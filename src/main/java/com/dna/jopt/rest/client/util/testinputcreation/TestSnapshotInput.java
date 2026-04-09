@@ -13,6 +13,22 @@ package com.dna.jopt.rest.client.util.testinputcreation;
  * #L%
  */
 
+/**
+ * Provides a pre-built JSON snapshot string representing a complete
+ * {@link com.dna.jopt.rest.client.model.RestOptimization} input <em>without</em> an
+ * embedded license key.
+ *
+ * <p>The constant {@link #DEFAULT_PUBLIC_INPUT_JSON_WITHOUT_LICENSE} contains a small
+ * German-city scenario (Cologne, Essen, Bonn, etc.) with nodes, resources, opening/working
+ * hours, and optimization options. A license key must be attached separately before
+ * submitting the optimization (see
+ * {@link TestRestOptimizationCreator#PUBLIC_JSON_LICENSE}).</p>
+ *
+ * <p>This snapshot format is compatible with JOpt Core Java and Core .NET versions.</p>
+ *
+ * @see TestRestOptimizationCreator
+ * @see com.dna.jopt.rest.client.util.io.json.RestJSONLoader#readRestOptimization(String, com.fasterxml.jackson.databind.ObjectMapper)
+ */
 public class TestSnapshotInput {
     
     

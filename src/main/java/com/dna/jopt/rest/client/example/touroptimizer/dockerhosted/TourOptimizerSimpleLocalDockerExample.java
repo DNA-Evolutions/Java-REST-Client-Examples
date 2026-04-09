@@ -26,6 +26,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Self-contained example for running tour optimization when both the REST client (sandbox)
+ * and the TourOptimizer are hosted locally in Docker containers.
+ *
+ * <p>Unlike other examples that rely on {@link com.dna.jopt.rest.client.util.testinputcreation.TestElementsCreator},
+ * this class defines its own nodes, resources, opening/working hours, and mapping logic
+ * inline to serve as a standalone starting point. It uses a German-cities dataset (Aachen,
+ * Cologne, Essen, Berlin, etc.) with 2 resources.</p>
+ *
+ * <p>The endpoint is set to {@code http://host.docker.internal:8081} so two Docker containers
+ * on the same host can communicate. Before running, execute
+ * {@link com.dna.jopt.rest.client.example.secretscreation.SecretsCreatorExampleHelper} to
+ * generate a {@code secrets.json} with the public license.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.optimizelocal.TourOptimizerLocalRunExample
+ */
 public class TourOptimizerSimpleLocalDockerExample {
     /**
      * The main method of TourOptimizerSimpleLocalDockerExample

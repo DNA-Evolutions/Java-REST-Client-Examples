@@ -29,11 +29,15 @@ import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreat
 import com.dna.jopt.rest.client.util.testinputcreation.TestSnapshotInput;
 
 /**
- * The Class TourOptimizerFromJSONSnapshotExample.
- * 
- * Optimize a list of Nodes and Resources. The complete optimization definition
- * is loaded from a single snapshot. This snapshot is compatible with our core
- * Java and core .NET JOpt version.
+ * Demonstrates optimization from a pre-built JSON snapshot.
+ *
+ * <p>The complete optimization definition (nodes, resources, options) is loaded from a
+ * single JSON string ({@link com.dna.jopt.rest.client.util.testinputcreation.TestSnapshotInput#DEFAULT_PUBLIC_INPUT_JSON_WITHOUT_LICENSE})
+ * using {@link com.dna.jopt.rest.client.util.io.json.RestJSONLoader}. A license key is
+ * attached separately before submission. This snapshot format is compatible with JOpt
+ * Core Java and Core .NET.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.optimizefromloadedparts.TourOptimizerFromJSONPartsExample
  */
 public class TourOptimizerFromJSONSnapshotExample {
 

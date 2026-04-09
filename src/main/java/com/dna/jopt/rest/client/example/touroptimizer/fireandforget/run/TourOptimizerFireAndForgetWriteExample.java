@@ -21,11 +21,12 @@ import java.util.Optional;
 import com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller;
 import com.dna.jopt.rest.client.model.CreatorSetting;
 import com.dna.jopt.rest.client.model.ElementConnection;
+import com.dna.jopt.rest.client.model.JobAcceptedResponse;
 import com.dna.jopt.rest.client.model.MongoOptimizationPersistenceSetting;
 import com.dna.jopt.rest.client.model.OptimizationPersistenceSetting;
-import com.dna.jopt.rest.client.model.OptimizationPersistenceStratgySetting;
+import com.dna.jopt.rest.client.model.OptimizationPersistenceStrategySetting;
 import com.dna.jopt.rest.client.model.Position;
-import com.dna.jopt.rest.client.model.StreamPersistenceStratgySetting;
+import com.dna.jopt.rest.client.model.StreamPersistenceStrategySetting;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.secretsmanager.SecretsManager;
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException;
@@ -33,18 +34,24 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFou
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
 /**
- * The Class TourOptimizerExample. Optimize a list of Nodes and Resources in
- * fire and forget mode. If the TourOptimizer is not started with an active
- * Mongo Database connection, the call will result in a 404 not found exception.
- * Connections are not provided; moreover, they will be created using haversine
- * calculations on the server-side.
- * 
- * Please visit:
- * 
- * <a href=
- * "https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md</a>
- * for more information.
- * 
+ * Demonstrates submitting an optimization job in fire-and-forget mode with database persistence.
+ *
+ * <p>The job is submitted asynchronously via the Job API
+ * ({@link com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller#optimizeFireAndForget}).
+ * The server returns a {@link com.dna.jopt.rest.client.model.JobAcceptedResponse} immediately,
+ * containing a {@code jobId} that can later be used to retrieve the result from the database
+ * (see {@link com.dna.jopt.rest.client.example.touroptimizer.fireandforget.read.TourOptimizerFireAndForgetLoadFromDatabaseExample}).</p>
+ *
+ * <p>Persistence settings control encryption, TTL, whether to save connections, and stream
+ * cycling behavior. The creator name can optionally be hashed using a {@code "hash:"} prefix
+ * for privacy in subscription-based systems.</p>
+ *
+ * <p><b>Requires</b> TourOptimizer started with an active MongoDB connection. See
+ * <a href="https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">TourOptimizerWithDatabase.md</a>.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.fireandforget.read.TourOptimizerFireAndForgetLoadFromDatabaseExample
+ * @see com.dna.jopt.rest.client.example.touroptimizer.fireandforget.read.TourOptimizerFireAndForgetSearchInDatabaseExample
+ * @see com.dna.jopt.rest.client.example.touroptimizer.webhook.TourOptimizerWebhookExample
  */
 public class TourOptimizerFireAndForgetWriteExample {
 
@@ -110,6 +117,8 @@ public class TourOptimizerFireAndForgetWriteExample {
 	 */
 
 	String rawCreator = "TEST_CREATOR";
+	
+	String xTenantId = TourOptimizerRestCaller.DEFAULT_XTENANT_ID;
 
 	/*
 	 * Optionally -  Later on, when searching for the Optimization, you can direclty search for the hashed creator or use
@@ -124,10 +133,10 @@ public class TourOptimizerFireAndForgetWriteExample {
 	CreatorSetting creatorSettings = new CreatorSetting().creator(rawCreator);
 	String myOptiIdent = "MY_OPTIMIZATION";
 
-	Boolean wasStarted = tourOptimizerCaller.optimizeFireAndForget(nodePoss, resourcePoss, emptyConnections,
+	JobAcceptedResponse wasStartedResponse = tourOptimizerCaller.optimizeFireAndForget(xTenantId, nodePoss, resourcePoss, emptyConnections,
 		myOptiIdent, creatorSettings, createPersistenceSetting(), Optional.of(m.get("joptlic")));
 
-	System.out.print("wasStarted: " + wasStarted);
+	System.out.print("wasStartedResponse: " + wasStartedResponse);
 	System.out.print("creator: " + rawCreator);
 
     }
@@ -160,33 +169,31 @@ public class TourOptimizerFireAndForgetWriteExample {
 	/*
 	 * Saving the element connections etc.
 	 */
-	OptimizationPersistenceStratgySetting optimizationPersistenceStratgySetting = new OptimizationPersistenceStratgySetting();
+	OptimizationPersistenceStrategySetting optimizationPersistenceStrategySetting = new OptimizationPersistenceStrategySetting();
 
 	// Element connections usually make up most of the data size, therefore, when
 	// targeting to not further process the result, it might be a good idea
 	// to skip the connections saving to reduce space
-	optimizationPersistenceStratgySetting.setSaveConnections(false);
+	optimizationPersistenceStrategySetting.setSaveConnections(false);
 
-	// Do we want to only save the result object?
-	optimizationPersistenceStratgySetting.setSaveOnlyResult(false);
 
 	/*
 	 * How to treat streams? For example, do we want to continuously write the
 	 * current progress into a database? Do we want to cycle the progress?
 	 */
-	StreamPersistenceStratgySetting streamPersistenceStratgySetting = new StreamPersistenceStratgySetting();
-	streamPersistenceStratgySetting.saveProgress(true);
-	streamPersistenceStratgySetting.cycleProgress(true);
-	streamPersistenceStratgySetting.saveStatus(true);
-	streamPersistenceStratgySetting.cycleStatus(true);
-	streamPersistenceStratgySetting.saveWarning(true);
-	streamPersistenceStratgySetting.saveError(true);
+	StreamPersistenceStrategySetting streamPersistenceStrategySetting = new StreamPersistenceStrategySetting();
+	streamPersistenceStrategySetting.saveProgress(true);
+	streamPersistenceStrategySetting.cycleProgress(true);
+	streamPersistenceStrategySetting.saveStatus(true);
+	streamPersistenceStrategySetting.cycleStatus(true);
+	streamPersistenceStrategySetting.saveWarning(true);
+	streamPersistenceStrategySetting.saveError(true);
 
 	/*
 	 * Collect settings
 	 */
-	mongoSettings.setOptimizationPersistenceStratgySetting(optimizationPersistenceStratgySetting);
-	mongoSettings.setStreamPersistenceStratgySetting(streamPersistenceStratgySetting);
+	mongoSettings.setOptimizationPersistenceStrategySetting(optimizationPersistenceStrategySetting);
+	mongoSettings.setStreamPersistenceStrategySetting(streamPersistenceStrategySetting);
 
 	/*
 	 * Wrap

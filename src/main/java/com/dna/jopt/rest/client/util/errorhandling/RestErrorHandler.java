@@ -26,7 +26,6 @@ import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.model.Status;
-import com.dna.jopt.rest.client.model.TurnByTurnResponseItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +33,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * Centralized error-handling functions for reactive REST calls.
+ *
+ * <p>Each static method returns a {@link java.util.function.Function} suitable for use with
+ * {@link reactor.core.publisher.Mono#onErrorResume} or
+ * {@link reactor.core.publisher.Flux#onErrorResume}. When a
+ * {@link org.springframework.web.reactive.function.client.WebClientResponseException} is caught,
+ * the response body is deserialized into the expected model type so that server-side error
+ * details (e.g. validation messages) are preserved instead of being lost.</p>
+ *
+ * <p>Supported model types:</p>
+ * <ul>
+ *   <li>{@link com.dna.jopt.rest.client.model.RestOptimization} &ndash; TourOptimizer / RoutePlanner results</li>
+ *   <li>{@link com.dna.jopt.rest.client.model.Solution} &ndash; solution-only results</li>
+ *   <li>{@link com.dna.jopt.rest.client.model.Position} lists &ndash; geocoder results</li>
+ *   <li>{@link com.dna.jopt.rest.client.model.ElementConnection} lists &ndash; route planner connections</li>
+ *   <li>{@link com.dna.jopt.rest.client.model.Status} &ndash; health-check responses</li>
+ * </ul>
+ */
 public class RestErrorHandler {
 
     private static final Logger logger = LogManager.getLogger(RestErrorHandler.class);
@@ -131,37 +149,6 @@ public class RestErrorHandler {
 			    });
 
 		    return Flux.fromIterable(cons);
-
-		} catch (JsonProcessingException e1) {
-		    logger.warn("Non-Skippable error while processing. " + e1.getMessage());
-		}
-
-	    }
-
-	    return Mono.empty();
-	};
-
-    }
-
-    public static Function<Throwable, Mono<TurnByTurnResponseItem>> tbtResponseErrorResumer(ObjectMapper mapper) {
-
-	return t -> {
-
-	    logger.warn("Error while processing. " + t.getMessage());
-	    System.out.println("Error while processing. " + t.getMessage());
-
-	    if (t instanceof WebClientResponseException) {
-
-		WebClientResponseException we = (WebClientResponseException) t;
-
-		String responseBody = we.getResponseBodyAsString();
-
-		try {
-		    TurnByTurnResponseItem tbtResponse = mapper.readValue(responseBody,
-			    new TypeReference<TurnByTurnResponseItem>() {
-			    });
-
-		    return Mono.just(tbtResponse);
 
 		} catch (JsonProcessingException e1) {
 		    logger.warn("Non-Skippable error while processing. " + e1.getMessage());

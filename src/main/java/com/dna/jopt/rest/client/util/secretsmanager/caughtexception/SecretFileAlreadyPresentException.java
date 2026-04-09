@@ -13,6 +13,10 @@ package com.dna.jopt.rest.client.util.secretsmanager.caughtexception;
  * #L%
  */
 
+/**
+ * Thrown when {@link com.dna.jopt.rest.client.util.secretsmanager.SecretsManager#saveSecretsMap}
+ * is called but a secrets file already exists at the target path, preventing accidental overwrites.
+ */
 public class SecretFileAlreadyPresentException extends Exception {
 
     /**

@@ -12,6 +12,30 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFou
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Manages API keys and license secrets stored in a JSON file.
+ *
+ * <p>On construction the manager reads a JSON file (default: {@code secrets/secrets.json}
+ * relative to the working directory) that maps string keys to secret values. The expected
+ * format is:</p>
+ * <pre>{@code
+ * {
+ *   "azure" : "YOUR_DNA_AZURE_API_KEY",
+ *   "joptlic": "YOUR_JOPT_JSON_LIC"
+ * }
+ * }</pre>
+ *
+ * <p>Secrets are then retrieved by key via {@link #get(String)}. A
+ * {@link com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFileFoundException}
+ * is thrown if the file is missing, and a
+ * {@link com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException}
+ * if a requested key does not exist in the map.</p>
+ *
+ * <p>The static {@link #saveSecretsMap(java.util.Map)} method can bootstrap a new
+ * secrets file (fails if one already exists to prevent accidental overwrites).</p>
+ *
+ * @see SecretsCreatorExampleHelper
+ */
 public class SecretsManager {
 
     private Map<String, String> secretsMap;

@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.Optional;
 
 import com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller;
-import com.dna.jopt.rest.client.model.DatabaseItemSearch;
 import com.dna.jopt.rest.client.model.RestOptimization;
 import com.dna.jopt.rest.client.util.endpoints.Endpoints;
 import com.dna.jopt.rest.client.util.io.json.RestJSONParser;
@@ -26,20 +25,19 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.NoSecretFile
 import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFoundException;
 
 /**
- * The Class TourOptimizerFireAndForgetLoadFromDatabaseExample. If the
- * TourOptimizer is not started with an active Mongo Database connection, the
- * call will result in a 404 not found exception.
- * 
- * Find the first Optimization that matches the criteria defined in
- * DatabaseItemSearch. As it is mandatory to provide the database generated
- * unique id, only one Optimization should match the criteria.
- * 
- * Please visit:
- * 
- * <a href=
- * "https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md</a>
- * for more information.
- * 
+ * Demonstrates retrieving a completed fire-and-forget optimization result from the database.
+ *
+ * <p>Uses the {@code jobId} (UUID v4) returned by a prior
+ * {@link com.dna.jopt.rest.client.example.touroptimizer.fireandforget.run.TourOptimizerFireAndForgetWriteExample}
+ * run to load the full {@link com.dna.jopt.rest.client.model.RestOptimization} from MongoDB
+ * via {@link com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller#findOptimizationInDatabase}.
+ * If the result was encrypted during persistence, the same {@code secret} must be provided.</p>
+ *
+ * <p><b>Requires</b> TourOptimizer started with an active MongoDB connection. See
+ * <a href="https://github.com/DNA-Evolutions/Docker-REST-TourOptimizer/blob/main/TourOptimizerWithDatabase.md">TourOptimizerWithDatabase.md</a>.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.fireandforget.run.TourOptimizerFireAndForgetWriteExample
+ * @see com.dna.jopt.rest.client.example.touroptimizer.fireandforget.read.TourOptimizerFireAndForgetSearchInDatabaseExample
  */
 public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
 
@@ -59,7 +57,7 @@ public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
 	 * Modify me
 	 * 
 	 */
-	boolean isAzureCall = !true;
+	boolean isAzureCall = false;
 
 	/*
 	 * 
@@ -83,9 +81,11 @@ public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
 	 * 
 	 */
 	
-	String mongoId = "65b3ab6a5292b22226f525d2";
+	String jobId = "2c835d4f-52c1-41c4-bfe9-052d93e9947f";
 	
 	String rawCreator = "TEST_CREATOR";
+	String xTenantId = TourOptimizerRestCaller.DEFAULT_XTENANT_ID;
+	String secret = "";
 
 	boolean doHashCreatorName = false;
 
@@ -93,12 +93,7 @@ public class TourOptimizerFireAndForgetLoadFromDatabaseExample {
 	    rawCreator = "hash:" + rawCreator;
 	}
 
-	DatabaseItemSearch searchItem = new DatabaseItemSearch();
-	searchItem.setCreator(rawCreator);
-	searchItem.setId(mongoId); // Needs to be a valid id. Either save externally, or search it first
-	searchItem.setTimeOut("PT1M");
-
-	RestOptimization result = tourOptimizerCaller.findOptimizationInDatabase(searchItem);
+	RestOptimization result = tourOptimizerCaller.findOptimizationInDatabase(jobId, xTenantId, secret, "PT1M");
 	
 	// For easier representation with transform the result back to JSON
 	String resultJSON = RestJSONParser.toJSONString(result, tourOptimizerCaller.getMapper());

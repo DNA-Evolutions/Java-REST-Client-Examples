@@ -18,6 +18,29 @@ import java.util.List;
 
 import com.dna.jopt.rest.client.model.Position;
 
+/**
+ * Provides pre-built {@link com.dna.jopt.rest.client.model.Position} lists for
+ * the Sydney test scenarios used across most examples.
+ *
+ * <p>Two dataset sizes are available:</p>
+ * <ul>
+ *   <li><b>Default</b> &ndash; 26 node positions and 4 resource positions
+ *       ({@link #defaultSydneyNodePositions()}, {@link #defaultSydneyResourcePositions()}).</li>
+ *   <li><b>Small</b> &ndash; 6 node positions and 1 resource position
+ *       ({@link #defaultSmallSydneyNodePositions()}, {@link #defaultSmallSydneyResourcePositions()}).
+ *       The small set stays within the 15-element limit of the free public license.</li>
+ * </ul>
+ *
+ * <p>Both sizes can be scaled with a {@code numRounds} parameter that duplicates
+ * positions with unique suffixes for load-testing.</p>
+ *
+ * <p>Additionally, raw JSON constants ({@link #SYDNEY_NODE_POSITIONS__JSON},
+ * {@link #SYDNEY_RESOURCE_POSITIONS__JSON}) are provided for the
+ * {@link com.dna.jopt.rest.client.util.io.json.RestJSONLoader}-based examples.</p>
+ *
+ * @see TestElementsCreator
+ * @see TestConnectionInput
+ */
 public class TestPositionsInput {
 
     private TestPositionsInput() {

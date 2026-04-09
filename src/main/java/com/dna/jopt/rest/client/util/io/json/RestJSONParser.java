@@ -19,6 +19,17 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+/**
+ * Utility for serializing JOpt REST model objects to JSON.
+ *
+ * <p>Provides convenience methods to convert any model object to a pretty-printed
+ * JSON string or write it directly to a {@link java.io.File}. The caller must
+ * supply the {@link com.fasterxml.jackson.databind.ObjectMapper} obtained from
+ * {@link com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller#getMapper()}
+ * to ensure consistent serialization settings (non-null inclusion, Java Time module, etc.).</p>
+ *
+ * @see RestJSONLoader
+ */
 public class RestJSONParser {
 
     private RestJSONParser() {

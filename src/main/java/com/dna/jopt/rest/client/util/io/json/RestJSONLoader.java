@@ -24,6 +24,19 @@ import com.dna.jopt.rest.client.model.Solution;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Utility for deserializing JOpt REST model objects from JSON.
+ *
+ * <p>Provides static methods to read {@link com.dna.jopt.rest.client.model.RestOptimization},
+ * {@link com.dna.jopt.rest.client.model.Solution},
+ * {@link com.dna.jopt.rest.client.model.ElementConnection} lists, and
+ * {@link com.dna.jopt.rest.client.model.Position} lists from either a
+ * {@link java.io.File} or a raw JSON string. The caller must supply the
+ * {@link com.fasterxml.jackson.databind.ObjectMapper} obtained from
+ * {@link com.dna.jopt.rest.client.example.touroptimizer.helper.TourOptimizerRestCaller#getMapper()}.</p>
+ *
+ * @see RestJSONParser
+ */
 public class RestJSONLoader {
 
     private RestJSONLoader() {

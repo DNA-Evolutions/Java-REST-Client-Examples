@@ -14,31 +14,40 @@ package com.dna.jopt.rest.client.example.touroptimizer.helper;
  */
 
 import java.text.DateFormat;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.dna.jopt.rest.client.model.CreatorSetting;
 import com.dna.jopt.rest.client.model.DatabaseInfoSearch;
 import com.dna.jopt.rest.client.model.DatabaseInfoSearchResult;
-import com.dna.jopt.rest.client.model.DatabaseItemSearch;
+
 import com.dna.jopt.rest.client.model.ElementConnection;
 import com.dna.jopt.rest.client.model.JSONConfig;
+import com.dna.jopt.rest.client.model.JobAcceptedResponse;
 import com.dna.jopt.rest.client.model.Node;
 import com.dna.jopt.rest.client.model.OptimizationOptions;
 import com.dna.jopt.rest.client.model.OptimizationPersistenceSetting;
 import com.dna.jopt.rest.client.model.Position;
 import com.dna.jopt.rest.client.model.Resource;
 import com.dna.jopt.rest.client.model.RestOptimization;
+import com.dna.jopt.rest.client.model.RunAcceptedResponse;
 import com.dna.jopt.rest.client.model.Solution;
 import com.dna.jopt.rest.client.util.errorhandling.RestErrorHandler;
 import com.dna.jopt.rest.client.util.testinputcreation.TestElementsCreator;
 import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreator;
 import com.dna.jopt.rest.touroptimizer.client.ApiClient;
-import com.dna.jopt.rest.touroptimizer.client.api.OptimizationFafServiceControllerApi;
-import com.dna.jopt.rest.touroptimizer.client.api.OptimizationServiceControllerApi;
-import com.dna.jopt.rest.touroptimizer.client.api.ReadDatabaseServiceControllerApi;
+import com.dna.jopt.rest.touroptimizer.client.api.JobApi;
+import com.dna.jopt.rest.touroptimizer.client.api.OptimizationApi;
+import com.dna.jopt.rest.touroptimizer.client.api.StreamApi;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -47,27 +56,76 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * High-level REST client that wraps the generated TourOptimizer API classes
+ * ({@link com.dna.jopt.rest.touroptimizer.client.api.OptimizationApi},
+ * {@link com.dna.jopt.rest.touroptimizer.client.api.JobApi},
+ * {@link com.dna.jopt.rest.touroptimizer.client.api.StreamApi}) and provides
+ * convenient entry points for the most common workflows.
+ *
+ * <h3>Supported workflows</h3>
+ * <ul>
+ * <li><b>Synchronous optimization</b> &ndash; {@link #optimize} methods submit
+ * a run, automatically subscribe to progress/status/error/warning streams, and
+ * block until the result is available (up to 10 minutes).</li>
+ * <li><b>Fire-and-forget (async with database)</b> &ndash;
+ * {@link #optimizeFireAndForget} methods submit a job via the Job API and
+ * return a {@link com.dna.jopt.rest.client.model.JobAcceptedResponse}
+ * immediately. Results are persisted in MongoDB and can be retrieved later with
+ * {@link #findOptimizationInDatabase} or searched with
+ * {@link #findOptimizationInfosInDatabase}.</li>
+ * <li><b>Solution-only</b> &ndash; {@link #optimizeOnlyResult} returns just the
+ * {@link com.dna.jopt.rest.client.model.Solution} without the full input
+ * echo.</li>
+ * </ul>
+ *
+ * <h3>Configuration</h3>
+ * <ul>
+ * <li>The base URL is set via the constructor (local Docker or Azure
+ * endpoint).</li>
+ * <li>An optional Azure API subscription key can be injected.</li>
+ * <li>A custom stream consumer can be set via {@link #setStreamConsumer} to
+ * override the default console-printing subscriber.</li>
+ * <li>Maximum response size is capped at
+ * {@value #MAX_TOUROPIMIZER_RESPONSESIZE_MB} MB.</li>
+ * </ul>
+ *
+ * @see com.dna.jopt.rest.client.util.endpoints.Endpoints
+ */
 public class TourOptimizerRestCaller {
 
-    private OptimizationServiceControllerApi geoOptimizerApi = createOptimizationControllerApi();
-    private OptimizationFafServiceControllerApi geoFafOptimizerApi = createFafOptimizationControllerApi();
-    private ReadDatabaseServiceControllerApi geoReadDatabaseApi = createReadDatabaseServiceControllerApi();
+    public static final String DEFAULT_XTENANT_ID = "local_tenantid";
+
+    private static final Logger logger = LogManager.getLogger(TourOptimizerRestCaller.class);
+
+    private OptimizationApi geoOptimizerApi = createOptimizationControllerApi();
+    private JobApi geoFafOptimizerApi = createFafOptimizationControllerApi();
+    private StreamApi streamApi = createStreamControllerApi();
 
     public final ObjectMapper tourOptimizerObjectMapper;
 
-    private BiConsumer<OptimizationServiceControllerApi, Boolean> biConsumer;
+    private BiConsumer<StreamApi, String> biStreamConsumer;
 
     public static final int MAX_TOUROPIMIZER_RESPONSESIZE_MB = 16;
 
-    public static final BiConsumer<OptimizationServiceControllerApi, Boolean> DEFAULT_STREAM_CONSUMER = (api, b) -> {
+    public static final BiConsumer<StreamApi, String> DEFAULT_STREAM_CONSUMER = (api, runId) -> {
 
-	api.progress().subscribe(pr -> System.out.println("  " + pr.getCallerId() + ", " + pr.getCurProgress()));
+	System.out.println("Subscribing to default streams...");
 
-	api.status().subscribe(s -> System.out.println("  " + s.getMessage()));
+	logger.info("Subscribing to default streams...");
 
-	api.error().subscribe(e -> System.out.println("  " + e.getMessage()));
+	api.streamProgress(runId).subscribe(
+		pr -> System.out.println("  PROGRESS: " + pr.getCallerId() + ", " + pr.getCurProgress()),
+		err -> System.err.println("  PROGRESS ERROR: " + err.getMessage() + " / " + err.getClass().getName()));
 
-	api.warning().subscribe(w -> System.out.println(" " + w.getMessage()));
+	api.streamStatus(runId).subscribe(s -> System.out.println("  STATUS: " + s.getMessage()),
+		err -> System.err.println("  STATUS ERROR: " + err.getMessage()));
+
+	api.streamErrors(runId).subscribe(s -> System.out.println("  ERRORS: " + s.getMessage()),
+		err -> System.err.println("  ERRORS ERROR: " + err.getMessage()));
+
+	api.streamWarnings(runId).subscribe(s -> System.out.println("  WARNINGS: " + s.getMessage()),
+		err -> System.err.println("  WARNINGS ERROR: " + err.getMessage()));
     };
 
     /*
@@ -82,19 +140,18 @@ public class TourOptimizerRestCaller {
 
 	// Modify endpoint to meet server
 	this.geoOptimizerApi.getApiClient().setBasePath(tourOptimizerUrl);
-	
+
 	// Modify endpoint to meet server
 	this.geoFafOptimizerApi.getApiClient().setBasePath(tourOptimizerUrl);
-	
+
 	// Modify endpoint to meet server
-	this.geoReadDatabaseApi.getApiClient().setBasePath(tourOptimizerUrl);
+	this.streamApi.getApiClient().setBasePath(tourOptimizerUrl);
 
 	// Get the mapper from the generated files
 	this.tourOptimizerObjectMapper = this.geoOptimizerApi.getApiClient().getObjectMapper();
-	
-	this.tourOptimizerObjectMapper.setSerializationInclusion(Include.NON_NULL)
-		.setSerializationInclusion(Include.NON_ABSENT).registerModule(new JavaTimeModule())
-		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+	this.tourOptimizerObjectMapper.setDefaultPropertyInclusion(Include.NON_ABSENT)
+		.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 	// Invoke api key if desired
 	if (azureApiKeyOpt.isPresent()) {
@@ -106,7 +163,7 @@ public class TourOptimizerRestCaller {
 	    this.geoFafOptimizerApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
 		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
 
-	    this.geoReadDatabaseApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
+	    this.streamApi.getApiClient().addDefaultHeader("Cache-Control", "no-cache")
 		    .addDefaultHeader("Ocp-Apim-Subscription-Key", azureApiKey);
 
 	}
@@ -116,62 +173,61 @@ public class TourOptimizerRestCaller {
 	return this.tourOptimizerObjectMapper;
     }
 
-    public void setStreamConsumer(BiConsumer<OptimizationServiceControllerApi, Boolean> biConsumer) {
-	this.biConsumer = biConsumer;
+    public void setStreamConsumer(BiConsumer<StreamApi, String> biConsumer) {
+	this.biStreamConsumer = biConsumer;
     }
 
-    private static OptimizationServiceControllerApi createOptimizationControllerApi() {
+    private static OptimizationApi createOptimizationControllerApi() {
 
 	DateFormat dateFormat = ApiClient.createDefaultDateFormat();
 	ObjectMapper objectMapper = ApiClient.createDefaultObjectMapper(dateFormat);
 
 	// Vital step! - We need to the generated mapper how to treat our JSON data
-	objectMapper.setSerializationInclusion(Include.NON_NULL).setSerializationInclusion(Include.NON_ABSENT)
-		.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+	objectMapper.setDefaultPropertyInclusion(Include.NON_ABSENT).registerModule(new JavaTimeModule())
+		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 	WebClient webClient = ApiClient.buildWebClientBuilder(objectMapper).codecs(configurer -> configurer
 		.defaultCodecs().maxInMemorySize(MAX_TOUROPIMIZER_RESPONSESIZE_MB * 1024 * 1024)).build();
 
 	ApiClient myApiClient = new ApiClient(webClient);
 
-	return new OptimizationServiceControllerApi(myApiClient);
+	return new OptimizationApi(myApiClient);
 
     }
 
-    private static OptimizationFafServiceControllerApi createFafOptimizationControllerApi() {
+    private static StreamApi createStreamControllerApi() {
 
 	DateFormat dateFormat = ApiClient.createDefaultDateFormat();
 	ObjectMapper objectMapper = ApiClient.createDefaultObjectMapper(dateFormat);
 
 	// Vital step! - We need to the generated mapper how to treat our JSON data
-	objectMapper.setSerializationInclusion(Include.NON_NULL).setSerializationInclusion(Include.NON_ABSENT)
-		.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+	objectMapper.setDefaultPropertyInclusion(Include.NON_ABSENT).registerModule(new JavaTimeModule())
+		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+	WebClient webClient = ApiClient.buildWebClientBuilder(objectMapper).codecs(configurer -> configurer
+		.defaultCodecs().maxInMemorySize(MAX_TOUROPIMIZER_RESPONSESIZE_MB * 1024 * 1024)).build();
+
+	ApiClient myApiClient = new ApiClient(webClient);
+	myApiClient.addDefaultHeader(HttpHeaders.ACCEPT, MediaType.TEXT_EVENT_STREAM_VALUE);
+	return new StreamApi(myApiClient);
+
+    }
+
+    private static JobApi createFafOptimizationControllerApi() {
+
+	DateFormat dateFormat = ApiClient.createDefaultDateFormat();
+	ObjectMapper objectMapper = ApiClient.createDefaultObjectMapper(dateFormat);
+
+	// Vital step! - We need to the generated mapper how to treat our JSON data
+	objectMapper.setDefaultPropertyInclusion(Include.NON_ABSENT).registerModule(new JavaTimeModule())
+		.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 	WebClient webClient = ApiClient.buildWebClientBuilder(objectMapper).codecs(configurer -> configurer
 		.defaultCodecs().maxInMemorySize(MAX_TOUROPIMIZER_RESPONSESIZE_MB * 1024 * 1024)).build();
 
 	ApiClient myApiClient = new ApiClient(webClient);
 
-	return new OptimizationFafServiceControllerApi(myApiClient);
-
-    }
-    
-    
-    private static ReadDatabaseServiceControllerApi createReadDatabaseServiceControllerApi() {
-
-	DateFormat dateFormat = ApiClient.createDefaultDateFormat();
-	ObjectMapper objectMapper = ApiClient.createDefaultObjectMapper(dateFormat);
-
-	// Vital step! - We need to the generated mapper how to treat our JSON data
-	objectMapper.setSerializationInclusion(Include.NON_NULL).setSerializationInclusion(Include.NON_ABSENT)
-		.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-	WebClient webClient = ApiClient.buildWebClientBuilder(objectMapper).codecs(configurer -> configurer
-		.defaultCodecs().maxInMemorySize(MAX_TOUROPIMIZER_RESPONSESIZE_MB * 1024 * 1024)).build();
-
-	ApiClient myApiClient = new ApiClient(webClient);
-
-	return new ReadDatabaseServiceControllerApi(myApiClient);
+	return new JobApi(myApiClient);
 
     }
 
@@ -187,8 +243,7 @@ public class TourOptimizerRestCaller {
 	List<Node> nodes = nodePoss.stream().map(p -> TestElementsCreator.defaultGeoNode(p, p.getLocationId()))
 		.toList();
 	List<Resource> ress = ressPoss.stream()
-		.map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
-		.toList();
+		.map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId())).toList();
 
 	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(nodes, ress,
 		jsonLicenseOpt, Optional.empty());
@@ -198,20 +253,19 @@ public class TourOptimizerRestCaller {
 	// This will keep the example alive. Otherwise just subscribe
 	return optimize(optimization);
     }
-    
-    
-    public RestOptimization optimize(List<Node> nodes, List<Resource> ress,
-	    List<ElementConnection> connections, Optional<String> jsonLicenseOpt, Optional<OptimizationOptions> optimizationOptionsOpt) {
+
+    public RestOptimization optimize(List<Node> nodes, List<Resource> ress, List<ElementConnection> connections,
+	    Optional<String> jsonLicenseOpt, Optional<OptimizationOptions> optimizationOptionsOpt) {
 
 	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(nodes, ress,
-		jsonLicenseOpt,optimizationOptionsOpt);
+		jsonLicenseOpt, optimizationOptionsOpt);
 
 	optimization.setElementConnections(connections);
-	
+
 	return optimize(optimization);
     }
 
-    public Boolean optimizeFireAndForget(List<Position> nodePoss, List<Position> ressPoss,
+    public JobAcceptedResponse optimizeFireAndForget(String xTenantId, List<Position> nodePoss, List<Position> ressPoss,
 	    List<ElementConnection> connections, String optiIdent, CreatorSetting creatorSettings,
 	    OptimizationPersistenceSetting persistenceSetting, Optional<String> jsonLicenseOpt) {
 	// Map to elements
@@ -234,7 +288,7 @@ public class TourOptimizerRestCaller {
 	curExt.setPersistenceSetting(persistenceSetting);
 
 	// This will keep the example alive. Otherwise just subscribe
-	return optimizeFireAndForget(optimization);
+	return optimizeFireAndForget(xTenantId, optimization);
     }
 
     public Solution optimizeOnlyResult(List<Position> nodePoss, List<Position> ressPoss,
@@ -243,76 +297,105 @@ public class TourOptimizerRestCaller {
 	List<Node> nodes = nodePoss.stream().map(p -> TestElementsCreator.defaultGeoNode(p, p.getLocationId()))
 		.toList();
 	List<Resource> ress = ressPoss.stream()
-		.map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId()))
-		.toList();
+		.map(p -> TestElementsCreator.defaultCapacityResource(p, p.getLocationId())).toList();
 
 	RestOptimization optimization = TestRestOptimizationCreator.defaultTouroptimizerTestInput(nodes, ress,
 		jsonLicenseOpt, Optional.empty());
 
 	optimization.setElementConnections(connections);
 
-	// Let us attach to streams - Internally the subscription is done on "real"
-	// optimization start
-	attachToStreams();
+	Function<Mono<RunAcceptedResponse>, Mono<Solution>> mapper = acceptedMono -> acceptedMono.flatMap(accepted -> {
 
-	// Trigger the Optimization
-	Mono<Solution> resultMono = geoOptimizerApi.runOnlyResult(optimization);
+	    // Let us attach to streams
+	    attachToSynchStreams(accepted.getRunId());
 
-	// This will keep the example alive. Otherwise just subscribe
-	return resultMono.onErrorResume(RestErrorHandler.solutionErrorResumer(tourOptimizerObjectMapper)).block();
+	    Mono<Solution> resultMono = this.geoOptimizerApi.getRunSolution(accepted.getRunId());
+
+	    return resultMono;
+	});
+
+	return this.optimize(optimization, mapper)
+		.onErrorResume(RestErrorHandler.solutionErrorResumer(tourOptimizerObjectMapper))
+		.block(Duration.ofMinutes(10));
+
     }
+
+    /*
+     * 
+     * 
+     * 
+     */
 
     public RestOptimization optimize(RestOptimization optimization) {
 
-	// Let us attach to streams - Internally the subscription is done on "real"
-	// optimization start
-	attachToStreams();
+	Function<Mono<RunAcceptedResponse>, Mono<RestOptimization>> mapper = acceptedMono -> acceptedMono
+		.flatMap(accepted -> {
+
+		    // Let us attach to streams
+		    attachToSynchStreams(accepted.getRunId());
+
+		    Mono<RestOptimization> resultMono = this.geoOptimizerApi.getRunResult(accepted.getRunId());
+
+		    return resultMono;
+		});
+
+	return this.optimize(optimization, mapper)
+		.onErrorResume(RestErrorHandler.restOptimizationErrorResumer(tourOptimizerObjectMapper))
+		.block(Duration.ofMinutes(10));
+
+    }
+
+    public <T> Mono<T> optimize(RestOptimization optimization, Function<Mono<RunAcceptedResponse>, Mono<T>> mapper) {
 
 	// Trigger the Optimization
-	Mono<RestOptimization> resultMono = geoOptimizerApi.run(optimization);
+	Mono<RunAcceptedResponse> resultMonoAccepted = this.geoOptimizerApi.startRun(optimization);
 
-	// This will keep the example alive. Otherwise just subscribe
-	return resultMono.onErrorResume(RestErrorHandler.restOptimizationErrorResumer(tourOptimizerObjectMapper))
-		.block();
+	return mapper.apply(resultMonoAccepted);
     }
 
-    public Boolean optimizeFireAndForget(RestOptimization optimization) {
+    public JobAcceptedResponse optimizeFireAndForget(String xTenantId, RestOptimization optimization) {
 
 	// Trigger the Optimization
-	Mono<Boolean> resultMono = geoFafOptimizerApi.runFAF(optimization);
+	Mono<JobAcceptedResponse> resultAcceptenceMono = this.geoFafOptimizerApi.createJob(xTenantId, optimization);
 
-	// This will keep the example alive. Otherwise just subscribe
-	// This will keep the example alive. Otherwise just subscribe
-	return resultMono.block();
+	return resultAcceptenceMono.block(Duration.ofSeconds(20));
 
     }
 
-    public void attachToStreams() {
+    public void attachToSynchStreams(String runId) {
 
-	if (biConsumer != null) {
-	    geoOptimizerApi.runStartedSignal().subscribe(b -> biConsumer.accept(geoOptimizerApi, b));
-	} else {
-	    geoOptimizerApi.runStartedSignal().subscribe(b -> DEFAULT_STREAM_CONSUMER.accept(geoOptimizerApi, b));
-	}
+	logger.info("Attaching to streams with runId: " + runId);
+	System.out.println("Attaching to streams with runId: " + runId);
+
+	this.geoOptimizerApi.getStartedSignal(runId).subscribe(b -> {
+	    System.out.println("Stated Signal: " + b);
+
+	    if (biStreamConsumer != null) {
+		biStreamConsumer.accept(streamApi, runId);
+	    } else {
+		DEFAULT_STREAM_CONSUMER.accept(streamApi, runId);
+	    }
+	});
 
     }
-    
-    
+
     /*
      * Read from database
      */
-    
-    public RestOptimization findOptimizationInDatabase(DatabaseItemSearch searchItem) {
 
-	Mono<RestOptimization> resultMono = this.geoReadDatabaseApi.findOptimization(searchItem);
+    public RestOptimization findOptimizationInDatabase(String jobId, String tenantId, String secret, String timeOut) {
+
+	Mono<RestOptimization> resultMono = this.geoFafOptimizerApi.getJobResult(jobId, tenantId, secret, timeOut);
 
 	return resultMono.onErrorResume(RestErrorHandler.restOptimizationErrorResumer(tourOptimizerObjectMapper))
 		.block();
     }
-    
-    public List<DatabaseInfoSearchResult> findOptimizationInfosInDatabase(DatabaseInfoSearch searchItem) {
-	Flux<DatabaseInfoSearchResult> resultFlux = this.geoReadDatabaseApi.findsOptimizationInfos(searchItem);
-	
+
+    public List<DatabaseInfoSearchResult> findOptimizationInfosInDatabase(String xTenantId,
+	    DatabaseInfoSearch searchItem) {
+
+	Flux<DatabaseInfoSearchResult> resultFlux = this.geoFafOptimizerApi.listJobs(searchItem, xTenantId);
+
 	// TODO some error handling
 	return resultFlux.collectList().block();
     }

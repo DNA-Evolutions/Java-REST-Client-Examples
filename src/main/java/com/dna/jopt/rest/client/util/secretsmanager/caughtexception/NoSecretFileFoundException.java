@@ -13,6 +13,10 @@ package com.dna.jopt.rest.client.util.secretsmanager.caughtexception;
  * #L%
  */
 
+/**
+ * Thrown when the secrets JSON file cannot be found at the expected location
+ * during {@link com.dna.jopt.rest.client.util.secretsmanager.SecretsManager} initialization.
+ */
 public class NoSecretFileFoundException extends Exception {
 
     /**

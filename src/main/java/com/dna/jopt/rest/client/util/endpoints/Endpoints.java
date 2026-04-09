@@ -13,6 +13,20 @@ package com.dna.jopt.rest.client.util.endpoints;
  * #L%
  */
 
+/**
+ * Constants for JOpt REST service endpoint URLs.
+ *
+ * <p>Provides base URLs for all three service types (GeoCoder, GeoRouter, TourOptimizer)
+ * in both local Docker and Azure-hosted deployments:</p>
+ * <ul>
+ *   <li><b>Local</b> &ndash; assumes the Docker container is running on {@code localhost}
+ *       with default ports (GeoCoder: 8082, GeoRouter: 8099, TourOptimizer: 8081).</li>
+ *   <li><b>Azure</b> &ndash; points to the DNA Evolutions Azure API Management gateway
+ *       ({@code joptaas.azure-api.net}). Requires a valid API subscription key.</li>
+ *   <li><b>Docker-internal</b> &ndash; uses {@code host.docker.internal} for container-to-host
+ *       communication when both the client and the optimizer run in Docker on the same host.</li>
+ * </ul>
+ */
 public final class Endpoints {
 
     private Endpoints() {

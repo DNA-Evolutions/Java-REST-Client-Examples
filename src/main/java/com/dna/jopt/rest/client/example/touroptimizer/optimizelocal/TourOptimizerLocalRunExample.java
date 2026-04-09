@@ -32,11 +32,22 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFou
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
 /**
- * The Class TourOptimizerLocalRunExample.
- * 
- * Optimize a list of Nodes and Resources on your local machine. A docker
- * environment is required.
- * 
+ * Demonstrates synchronous tour optimization against a locally hosted Docker TourOptimizer.
+ *
+ * <p>Uses the small Sydney dataset (6 nodes, 1 resource) so it stays within the free
+ * license limit. Connections are left empty, triggering server-side haversine distance
+ * calculations. The text solution is printed to stdout and optionally saved as a JSON
+ * snapshot file.</p>
+ *
+ * <h3>Prerequisites</h3>
+ * <ol>
+ *   <li>Start the TourOptimizer Docker container:
+ *       {@code docker run -d --rm --name myJOptTourOptimizer -e SPRING_PROFILES_ACTIVE="cors" -p 8081:8081 dnaevolutions/jopt_touroptimizer}</li>
+ *   <li>Verify at <a href="http://localhost:8081/">http://localhost:8081/</a>.</li>
+ *   <li>Create a {@code secrets/secrets.json} file (see {@link com.dna.jopt.rest.client.example.secretscreation.SecretsCreatorExampleHelper}).</li>
+ * </ol>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.optimize.TourOptimizerExample
  */
 public class TourOptimizerLocalRunExample {
 

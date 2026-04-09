@@ -32,9 +32,15 @@ import com.dna.jopt.rest.client.util.secretsmanager.caughtexception.SecretNotFou
 import com.dna.jopt.rest.client.util.testinputcreation.TestPositionsInput;
 
 /**
- * The Class TourOptimizerExample. Optimize a list of Nodes and Resources.
- * Connections are not provided; moreover, they will be created using haversine
- * calculations on the server-side.
+ * Demonstrates synchronous tour optimization with the full Sydney dataset (26 nodes, 4 resources).
+ *
+ * <p>Supports both local Docker and Azure-hosted TourOptimizer endpoints (toggle via
+ * {@code isAzureCall}). Connections are left empty, triggering server-side haversine distance
+ * calculations. The text solution is printed to stdout and optionally saved as a JSON snapshot
+ * file.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.optimizelocal.TourOptimizerLocalRunExample
+ * @see com.dna.jopt.rest.client.example.touroptimizer.optimizefromsnapshot.TourOptimizerFromJSONSnapshotExample
  */
 public class TourOptimizerExample {
 

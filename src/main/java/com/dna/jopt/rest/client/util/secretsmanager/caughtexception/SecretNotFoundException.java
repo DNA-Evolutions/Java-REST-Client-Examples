@@ -13,6 +13,10 @@ package com.dna.jopt.rest.client.util.secretsmanager.caughtexception;
  * #L%
  */
 
+/**
+ * Thrown when a requested key is not found in the secrets map managed by
+ * {@link com.dna.jopt.rest.client.util.secretsmanager.SecretsManager}.
+ */
 public class SecretNotFoundException extends Exception {
 
     /**

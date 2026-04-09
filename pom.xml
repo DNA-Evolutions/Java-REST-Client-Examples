@@ -272,62 +272,6 @@
 
 				<executions>
 
-
-					<execution>
-						<id>geocoder</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<verbose>false</verbose>
-							<typeMappings>
-								<typeMapping>OffsetDateTime=Instant</typeMapping>
-							</typeMappings>
-							<importMappings>
-								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
-							</importMappings>
-
-							<inputSpec>
-								${project.basedir}/src/main/resources/swagger/geocoder/spec/geocoder_spec.json</inputSpec>
-							<configurationFile>${project.basedir}/src/main/resources/swagger/geocoder/config/geocoder_openapi_config.json</configurationFile>
-							<generatorName>java</generatorName>
-							<library>webclient</library>
-							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
-						</configuration>
-					</execution>
-					<execution>
-						<id>georouter</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-
-							<verbose>false</verbose>
-							<typeMappings>
-								<typeMapping>OffsetDateTime=Instant</typeMapping>
-							</typeMappings>
-							<importMappings>
-								<importMapping>java.time.OffsetDateTime=java.time.Instant</importMapping>
-							</importMappings>
-
-							<!-- specify the swagger yaml -->
-							<inputSpec>
-								${project.basedir}/src/main/resources/swagger/georouter/spec/georouter_spec.json</inputSpec>
-							<configurationFile>${project.basedir}/src/main/resources/swagger/georouter/config/georouter_openapi_config.json</configurationFile>
-
-							<!-- target to generate java client code -->
-							<generatorName>java</generatorName>
-
-							<!-- override the default library to jersey2 - Need to be set here -->
-							<library>webclient</library>
-
-							<output>${project.build.directory}/generated-sources/dna-rest-java-clients</output>
-
-
-						</configuration>
-					</execution>
-					
-
 					<execution>
 						<id>touroptimizer</id>
 						<goals>

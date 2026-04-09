@@ -34,10 +34,16 @@ import com.dna.jopt.rest.client.util.testinputcreation.TestRestOptimizationCreat
 import com.dna.jopt.rest.client.util.testinputcreation.TestSnapshotInput;
 
 /**
- * The Class TourOptimizerFromJSONPartsExample.
- * 
- * Optimize a list of Nodes and Resources. The Resource positons, Node positions
- * and the connections are loaded from predefined JSON definitions.
+ * Demonstrates optimization using node positions, resource positions, and connections
+ * loaded individually from separate JSON strings.
+ *
+ * <p>Unlike {@link com.dna.jopt.rest.client.example.touroptimizer.optimizefromsnapshot.TourOptimizerFromJSONSnapshotExample}
+ * which loads a single monolithic snapshot, this example composes the optimization input
+ * from discrete JSON parts via {@link com.dna.jopt.rest.client.util.io.json.RestJSONLoader}:
+ * node positions, resource positions, and a pre-computed connection matrix. This approach
+ * is useful when the input components come from different sources or are stored separately.</p>
+ *
+ * @see com.dna.jopt.rest.client.example.touroptimizer.optimizefromsnapshot.TourOptimizerFromJSONSnapshotExample
  */
 public class TourOptimizerFromJSONPartsExample {
 
