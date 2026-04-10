@@ -120,7 +120,7 @@ public class TourOptimizerWebhookExample {
 		    Optional.of(m.get("joptlic")));
 
 	    String jobId = jobResponse.getJobId();
-	    System.out.println("Job submitted — jobId: " + jobId);
+	    System.out.println("Job submitted - jobId: " + jobId);
 	    System.out.println("Status: " + jobResponse.getStatus());
 	    System.out.println();
 	    System.out.println("Waiting for completion webhook...");
@@ -152,7 +152,7 @@ public class TourOptimizerWebhookExample {
 	    e.printStackTrace();
 	} finally {
 	    /*
-	     * 7) Clean up — stop the webhook server
+	     * 7) Clean up and stop the webhook server
 	     */
 	    webhookServer.stop();
 	}

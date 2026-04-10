@@ -1,8 +1,8 @@
-# JOpt.TourOptimizer — Java REST Client Examples
+# JOpt.TourOptimizer Java REST Client Examples
 
 <a href="https://dna-evolutions.com/" target="_blank"><img src="https://www.dna-evolutions.com/images/dna_logo.png" width="200" title="DNA Evolutions" alt="DNA Evolutions"></a>
 
-A fully functional Maven project demonstrating how to interact with the **JOpt.TourOptimizer REST API** from Java. Examples cover the full job lifecycle — submitting optimizations, tracking progress via Server-Sent Events, retrieving results, and working with the synchronous run mode. The generated client is built on Spring WebFlux, giving you reactive `Flux` and `Mono` access to every endpoint.
+A fully functional Maven project demonstrating how to interact with the **JOpt.TourOptimizer REST API** from Java. Examples cover the full job lifecycle submitting optimizations, tracking progress via Server-Sent Events, retrieving results, and working with the synchronous run mode. The generated client is built on Spring WebFlux, giving you reactive `Flux` and `Mono` access to every endpoint.
 
 - **Documentation hub:** [dna-evolutions.com/docs/learn-and-explore/rest/rest_client_touroptimizer](https://dna-evolutions.com/docs/learn-and-explore/rest/rest_client_touroptimizer)
 - **TourOptimizer server guide:** [dna-evolutions.com/docs/learn-and-explore/rest/rest-server-touroptimizer](https://dna-evolutions.com/docs/learn-and-explore/rest/rest-server-touroptimizer)
@@ -45,7 +45,7 @@ The project is subdivided into the following example packages. Each has its own 
 
 | Package | Description |
 |---|---|
-| [`touroptimizer`](https://github.com/DNA-Evolutions/Java-REST-Client-Examples/tree/master/src/main/java/com/dna/jopt/rest/client/example/touroptimizer) | Core optimization examples — submit jobs, poll status, stream progress, retrieve results |
+| [`touroptimizer`](https://github.com/DNA-Evolutions/Java-REST-Client-Examples/tree/master/src/main/java/com/dna/jopt/rest/client/example/touroptimizer) | Core optimization examples submit jobs, poll status, stream progress, retrieve results |
 | [`fullstack`](https://github.com/DNA-Evolutions/Java-REST-Client-Examples/tree/master/src/main/java/com/dna/jopt/rest/client/example/fullstack) | End-to-end examples combining multiple API features |
 | [`secretscreation`](https://github.com/DNA-Evolutions/Java-REST-Client-Examples/tree/master/src/main/java/com/dna/jopt/rest/client/example/secretscreation) | Create the `secrets.json` file required by all examples |
 
@@ -55,8 +55,8 @@ The project is subdivided into the following example packages. Each has its own 
 
 Two ways to start:
 
-1. **[Browser sandbox](#browser-sandbox-docker)** — zero installation, runs in your browser via Docker.
-2. **[Clone locally](#clone-and-run-locally)** — import as a Maven project in your IDE.
+1. **[Browser sandbox](#browser-sandbox-docker)** zero installation, runs in your browser via Docker.
+2. **[Clone locally](#clone-and-run-locally)** import as a Maven project in your IDE.
 
 In either case you need a `secrets.json` file and a running TourOptimizer instance. Run `SecretsCreatorExampleHelper` from the [`secretscreation`](https://github.com/DNA-Evolutions/Java-REST-Client-Examples/tree/master/src/main/java/com/dna/jopt/rest/client/example/secretscreation) package once to generate it.
 
